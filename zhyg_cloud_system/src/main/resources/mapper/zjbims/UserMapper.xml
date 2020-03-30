@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.UserDao" >
+    <resultMap type="User" id="userMap">
+        <association column="org_no" select="com.zjft.zhyg.system.dao.OrgDao.qryByNo" property="org" javaType="Org"/>
+        <association column="role_no" select="com.zjft.zhyg.system.dao.RoleDao.qryByNo" property="role" javaType="Role"/>
+    </resultMap>
+    <select id="findByNo" resultMap="userMap" parameterType="String" >
+        select * from sys_user where no=#{no}
+    </select>
+
+    <update id="updatePasswdError">
+        update sys_user set passwd_error=#{passwdError} where no=#{no}
+    </update>
+
+    <update id="updateOnlineFlag" parameterType="String">
+        update sys_user set online_flag=#{onlineFlag} where no=#{no}
+    </update>
+
+    <update id="updateLoginTime" parameterType="String">
+        update sys_user set login_time=#{loginTime} where no=#{no}
+    </update>
+
+    <select id="qry" resultMap="userMap" parameterType="Map">
+        select * from sys_user u left join (select name as orgName,no as orgNo from sys_org )o on u.org_no=o.orgNo left join (select
+        name as roleName,no as roleNo from sys_role)r on u.role_no=r.roleNo where 1=1
+        <if test="userNo!=null&amp;&amp;userNo!=''">
+            and u.no=#{userNo}
+        </if>
+        <if test="userName!=null&amp;&amp;userName!=''">
+            and u.name=#{userName}
+        </if>
+        <if test="roleNo!=null&amp;&amp;roleNo!=''">
+            and u.role_no=#{roleNo}
+        </if>
+        <if test="onlineFlag!=null&amp;&amp;onlineFlag!=''">
+            and u.online_flag=#{onlineFlag}
+        </if>
+        <if test="orgNo!=null&amp;&amp;orgNo!=''">
+            and u.org_no in (select no from sys_org where (left_no&gt;(select left_no from SYS_ORG where no=#{orgNo}) and right_no&lt;(select right_no from SYS_ORG where no=#{orgNo})) or no=#{orgNo})
+        </if>
+        order by u.no
+    </select>
+
+    <insert id="add" parameterType="User">
+        insert into SYS_USER (NO,PASSWD,NAME,STATUS,ONLINE_FLAG,ROLE_NO,ORG_NO,PHONE,MOBILE,EMAIL,LOGIN_IP,LOGIN_TIME,PASSWD_EXPIRATION)
+        values (#{no},#{passwd},#{name},#{status},#{onlineFlag},#{roleNo},#{orgNo},#{phone,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},#{loginIp,jdbcType=VARCHAR},#{loginTime,jdbcType=VARCHAR},#{passwdExpiration,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="qryByNo" resultMap="userMap" parameterType="String" >
+        select * from sys_user where name=#{name} and no!=#{no}
+    </select>
+
+    <update id="mod" parameterType="User">
+        update sys_user set name=#{name},role_No=#{roleNo},org_No=#{orgNo}, phone=#{phone,jdbcType=VARCHAR}, mobile=#{mobile,jdbcType=VARCHAR},
+         email=#{email,jdbcType=VARCHAR} where no=#{no}
+    </update>
+
+    <delete id="del" parameterType="String">
+        delete from sys_user where no=#{no}
+    </delete>
+
+    <update id="modPasswd" parameterType="String">
+        update sys_user set passwd=#{passwd},online_flag='0',passwd_expiration=#{passwdExpiration} where no=#{no}
+    </update>
+    <update id="updateUser" parameterType="String">
+        update sys_user set online_flag=#{onlineFlag},login_time=#{loginTime}  where  no =#{no}
+    </update>
+    <update id="updateUserStatus" parameterType="String">
+        update sys_user set status=#{status} where  no =#{no}
+    </update>
+    <update id="updatePasswdErrorAndStatus" parameterType="Map">
+        update sys_user set passwd_error=#{passwdError},status=#{status} where  no =#{no}
+    </update>
+
+    <select id="qryByRoleNo" parameterType="String" resultMap="userMap">
+        select * from sys_user where role_no like CONCAT('%',CONCAT(#{roleNo}, '%'))
+    </select>
+    <select id="getAllNo" resultType="String">
+        select no from sys_user
+    </select>
+    <select id="qryDevRole" resultType="String">
+        select dev_catalog from SYS_USER_DEVROLE where user_no=#{no}
+    </select>
+    <insert id="addDevRole" parameterType="String">
+        insert into SYS_USER_DEVROLE (USER_NO,DEV_CATALOG)
+        values (#{no},#{devCatalog})
+    </insert>
+    <update id="modDevRole" parameterType="String">
+        update SYS_USER_DEVROLE set DEV_CATALOG=#{devCatalog} where USER_NO =#{no}
+    </update>
+    <delete id="delDevRole" parameterType="String">
+        delete from SYS_USER_DEVROLE where USER_NO=#{no}
+    </delete>
+    <select id="getOnlineCount" resultType="Integer">
+        select count(*) from sys_user where online_flag=1
+    </select>
+</mapper>

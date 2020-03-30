@@ -1,0 +1,93 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'orgNo'">机构编号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24"
+                 [nzValidateStatus]="getFormControl('orgNo')">
+                <nz-input [nzSize]="'large'" formControlName="orgNo" [nzId]="'orgNo'" nzDisabled="true"></nz-input>
+            </div>
+        </div>
+
+        <div nz-col [nzSpan]="12">
+            <div nz-form-label nz-col [nzSm]="7" [nzXs]="24">
+                <label [attr.for]="'itemType'">价值指标</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <nz-select style="width: 150px;" (ngModelChange)="selectType($event)" formControlName="itemType" nzAllowClear
+                           [nzPlaceHolder]="'选择价值指标'">
+                    <nz-option *ngFor="let option of itemTypes" [nzLabel]="option.name" [nzValue]="option.no">
+                    </nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row *ngIf="showDateSelect">
+        <div nz-col [nzSpan]="12">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'startDate'">起始日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <nz-datepicker [nzSize]="'large'" style="margin-right: 100px;" [nzFormat]="'YYYY-MM-DD'"
+                               formControlName="startDate">
+                </nz-datepicker>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12">
+            <div nz-form-label nz-col [nzSm]="7" [nzXs]="24">
+                <label [attr.for]="'endDate'">结束日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <nz-datepicker [nzSize]="'large'" style="margin-right: 100px;" [nzFormat]="'YYYY-MM-DD'"
+                               formControlName="endDate">
+                </nz-datepicker>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row *ngIf="showTimeSelect">
+        <div nz-col [nzSpan]="12">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'startTime'">起始时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <nz-timepicker [nzSize]="'large'" style="margin-right: 100px;" [nzFormat]="'HH:mm:ss'"
+                               formControlName="startTime">
+                </nz-timepicker>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12">
+            <div nz-form-label nz-col [nzSm]="7" [nzXs]="24">
+                <label [attr.for]="'endTime'">结束时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <nz-timepicker [nzSize]="'large'" style="margin-right: 100px;" [nzFormat]="'HH:mm:ss'"
+                               formControlName="endTime">
+                </nz-timepicker>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'transValue'" nz-form-item-required>交易价值</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24"
+                 [nzValidateStatus]="getFormControl('transValue')">
+                <nz-input [nzSize]="'large'" formControlName="transValue" [nzId]="'transValue'"></nz-input>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading">提交</button>
+            <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading"
+                    (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

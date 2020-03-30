@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.LogDao">
+    <select id="qryOperate" resultType="String" parameterType="String">
+        select * from sys_operate where menu_No=#{menuNo} and btn_no=#{btnNo}
+    </select>
+
+    <insert id="saveLog" parameterType="Map">
+        insert into
+            SYS_LOG (USER_NO, OPERATE_TIME, MENU_NO,BTN_NO, NO, BEFORE_DETAIL, CURRENT_DETAIL, NOTE)
+        values (#{userNo},#{time},#{menuNo},#{btnNo},#{no},#{beforeDetail,jdbcType=BLOB}, #{currentDetail,jdbcType=BLOB}, #{note,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="qryLog" parameterType="Map" resultType="Log">
+        select su.name userName, sl.operate_time, so.BTN_NAME, so.MENU_NAME,sl.CURRENT_DETAIL,sl.BEFORE_DETAIL
+        from SYS_LOG sl left join SYS_OPERATE so on  sl.MENU_NO=so.MENU_NO and sl.BTN_NO=so.BTN_NO
+        left join sys_user su on sl.user_no = su.no where 1=1 and sl.USER_NO in (select no from SYS_USER suer
+        where suer.ORG_NO in (select no from sys_org where (left_no>=(select left_no from SYS_ORG where no=#{userOrgNo})
+        and right_no &lt;=(select right_no from SYS_ORG where no=#{userOrgNo}))))
+        <if test="userNo!=''">
+            and su.name=#{userNo}
+        </if>
+        <if test="menuNo!=''">
+            and sl.MENU_NO=#{menuNo}
+        </if>
+        <if test="btnName!=''">
+            and so.BTN_NAME=#{btnName}
+        </if>
+        <if test="startTime!=''">
+            and substr(sl.OPERATE_TIME,1,10)&gt;= substr(#{startTime},1,10)
+        </if>
+        <if test="endTime!=''">
+            and substr(sl.OPERATE_TIME,1,10)&lt;substr(#{endTime},1,10)
+        </if>
+        order by sl.OPERATE_TIME desc
+    </select>
+
+    <select id="qryAllOperate" resultType="Operate">
+        select * from SYS_OPERATE order by MENU_NAME,BTN_NAME
+    </select>
+
+</mapper>

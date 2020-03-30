@@ -1,0 +1,142 @@
+server:
+  port: 8091
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: securityGate
+          uri: lb://security
+          predicates:
+            - Path=/security/**
+          filters:
+            - StripPrefix=1
+
+        - id: systemGate
+          uri: lb://system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+            - name: Hystrix
+              args:
+                name : default
+                fallbackUri: 'forward:/fallback'
+
+        - id: monitorGate
+          uri: lb://monitor
+          predicates:
+            - Path=/monitor/**
+          filters:
+            - StripPrefix=1
+
+        - id: controlGate
+          uri: lb://control
+          predicates:
+            - Path=/control/**
+          filters:
+            - StripPrefix=1
+
+        - id: contentGate
+          uri: lb://content
+          predicates:
+            - Path=/content/**
+          filters:
+            - StripPrefix=1
+
+        - id: taskGate
+          uri: lb://task
+          predicates:
+            - Path=/task/**
+          filters:
+            - StripPrefix=1
+
+        - id: analysisGate
+          uri: lb://analysis
+          predicates:
+            - Path=/analysis/**
+          filters:
+            - StripPrefix=1
+
+        - id: elockGate
+          uri: lb://elock
+          predicates:
+            - Path=/elock/**
+          filters:
+            - StripPrefix=1
+
+        - id: ntsnamagerGate
+          uri: lb://ntsmanage
+          predicates:
+            - Path=/ntsmanage/**
+          filters:
+            - StripPrefix=1
+
+        - id: reportsGate
+          uri: lb://reports
+          predicates:
+            - Path=/reports/**
+          filters:
+            - StripPrefix=1
+
+        - id: mediaGate
+          uri: lb://mediashow
+          predicates:
+            - Path=/media/**
+          filters:
+            - StripPrefix=1
+
+        - id: queuemanageGate
+          uri: lb://queuemanage
+          predicates:
+              - Path=/queuemanage/**
+          filters:
+              - StripPrefix=1
+
+        - id: businessGate
+          uri: lb://business
+          predicates:
+            - Path=/business/**
+          filters:
+            - StripPrefix=1
+
+
+
+  redis:
+    #use:是否使用redis的标志 不可删除
+    use: false
+    host: 127.0.0.1
+    port: 6379
+    password: 917473
+    timeout: 10000
+    jedis:
+      pool:
+        maxTotal: 100
+        maxIdle: 10
+        maxWaitMillis: 100000
+    token:
+      expire-seconds: 1800
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8090/eureka/
+  instance:
+    prefer-ip-address: true
+logging:
+  config: classpath:${spring.application.name}-logback.xml
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000
+            circuitBreakerSleepWindowInMilliseconds: 5000
+  shareSecurityContext: true

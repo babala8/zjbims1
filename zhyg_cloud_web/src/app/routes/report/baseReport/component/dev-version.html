@@ -1,0 +1,94 @@
+<h3 style="text-align:center;">设备基本信息表</h3>
+<form nz-form #form="ngForm" [formGroup]="validateForm" class="search-form">
+
+    <div nz-form-item style=" width: 50%; ">
+        <div nz-form-label style="width: auto;">
+            <label [attr.for]="'org'">所属机构version</label>
+        </div>
+        <div nz-form-control>
+            <org-tree formControlName="org" [zjId]="'org'"></org-tree>
+        </div>
+    </div>
+    <div nz-form-item style=" width: 50%;">
+        <div nz-form-label style="width: auto;">
+            <label [attr.for]="'awayFlag'">离行在行标志</label>
+        </div>
+        <div nz-form-control>
+            <nz-select [nzSize]="'large'" formControlName="awayFlag" [nzPlaceHolder]="'----'">
+                <nz-option *ngFor="let o of awayFlagList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <!--<div nz-form-explain
+                 *ngIf="validateForm.controls['awayFlag'].dirty && validateForm.controls['awayFlag'].errors">
+                {{ validateForm.controls['awayFlag'].errors['explain'] }}
+            </div>-->
+        </div>
+    </div>
+
+    <div nz-form-item style=" width: 50%;">
+        <div nz-form-label style="width: auto;">
+            <label [attr.for]="'devCatalog'">设备类型</label>
+        </div>
+        <div nz-form-control>
+            <nz-select [nzSize]="'large'" formControlName="devCatalog" [nzPlaceHolder]="'--请选择设备类型--'">
+                <nz-option *ngFor="let o of devCatalogList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <!--<div nz-form-explain
+                 *ngIf="validateForm.controls['devCatalog'].dirty && validateForm.controls['devCatalog'].errors">
+                {{ validateForm.controls['devCatalog'].errors['explain'] }}
+            </div>-->
+        </div>
+    </div>
+
+    <div nz-form-item style=" width: 50%;">
+
+        <div nz-form-label>
+            <label [attr.for]="'devVendor'">设备品牌</label>
+        </div>
+        <div nz-form-control>
+            <nz-select [nzSize]="'large'" formControlName="devVendor" [nzPlaceHolder]="'--请选择设备品牌--'"
+                       (ngModelChange)="selectDevType($event)">
+                <nz-option *ngFor="let o of devVendorList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <!--<div nz-form-explain
+                 *ngIf="validateForm.controls['devVendor'].dirty && validateForm.controls['devVendor'].errors">
+                {{ validateForm.controls['devVendor'].errors['explain'] }}
+            </div>-->
+        </div>
+    </div>
+
+    <div nz-form-item style=" width: 50%;">
+        <div nz-form-label>
+            <label [attr.for]="'devType'">设备型号</label>
+        </div>
+        <div nz-form-control>
+            <nz-select [nzSize]="'large'" formControlName="devType" [nzPlaceHolder]="'--请选择设备型号--'">
+                <nz-option *ngFor="let o of devTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <!--<div nz-form-explain
+                 *ngIf="validateForm.controls['devType'].dirty && validateForm.controls['devType'].errors">
+                {{ validateForm.controls['devType'].errors['explain'] }}
+            </div>-->
+        </div>
+    </div>
+
+    <div nz-form-item  style=" width: 50%;">
+            <div nz-form-label >
+                <label [attr.for]="'devNo'" >设备号</label>
+            </div>
+            <div nz-form-control [nzValidateStatus]="getFormControl('devNo')">
+                <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'"></nz-input>
+            </div>
+            <!--<div nz-form-explain
+                 *ngIf="validateForm.controls['devNo'].dirty && validateForm.controls['devNo'].errors">
+                {{ validateForm.controls['devNo'].errors['explain'] }}
+            </div>-->
+    </div>
+
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align:center; margin-top:10px;">
+            <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="getDevExcel()"><i class="anticon anticon-export"></i><span>导出Excel</span></button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+        </div>
+    </div>
+
+</form>

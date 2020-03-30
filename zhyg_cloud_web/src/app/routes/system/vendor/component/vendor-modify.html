@@ -1,0 +1,32 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'no'" nz-form-item-required>编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('no')">
+            <nz-input [nzSize]="'large'" formControlName="no" [nzId]="'no'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'name'" nz-form-item-required>品牌名称</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('name')">
+            <nz-input [nzSize]="'large'" formControlName="name" [nzId]="'name'" (ngModelChange)="updateConfirmValidator()"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['name'].dirty && validateForm.controls['name'].errors">
+                <span>只能以汉字、数字或者字母开头，最大长度为20个字符</span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" >提交</button>
+            <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

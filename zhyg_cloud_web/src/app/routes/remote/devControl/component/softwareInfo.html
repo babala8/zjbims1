@@ -1,0 +1,23 @@
+<div class="">
+    <nz-table #nzTable
+              [nzSize]="'small'"
+              [nzAjaxData]="softwareInfo"
+              [nzCustomNoResult]="true"
+              [nzIsPagination]="false">
+        <thead nz-thead>
+        <tr>
+            <th nz-th ><span>软件名称</span></th>
+            <th nz-th ><span>版本</span></th>
+            <th nz-th ><span>发布者</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let data of softwareInfo ">
+            <td nz-td>{{data.name}}</td>
+            <td nz-td>{{data.version}}</td>
+            <td nz-td>{{data.publisher}}</td>
+        </tr>
+        </tbody>
+    </nz-table>
+
+</div>

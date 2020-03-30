@@ -1,0 +1,22 @@
+<div class="info-container">
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">设备号：</div>
+        <div nz-col [nzSpan]="18">{{deviceInfo.no || ''}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">IP地址：</div>
+        <div nz-col [nzSpan]="18">{{deviceInfo.ip || ''}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">操作系统：</div>
+        <div nz-col [nzSpan]="18">{{systemInfo.OperatingSys}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">操作版本：</div>
+        <div nz-col [nzSpan]="18">{{systemInfo.OperatingVersion}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">操作补丁版本：</div>
+        <div nz-col [nzSpan]="18">{{systemInfo.OperatingPatchVersion}}</div>
+    </div>
+</div>

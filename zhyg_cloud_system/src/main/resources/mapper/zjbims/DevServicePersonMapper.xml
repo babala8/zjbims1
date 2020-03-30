@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevServicePersonDao">
+    <resultMap type="DevServicePerson" id="devServicePersonMap">
+        <association column="belongTo" select="com.zjft.zhyg.system.dao.DevServiceCompanyDao.qryByNo" property="belongTo" javaType="DevServiceCompany"/>
+    </resultMap>
+    <insert id="add" parameterType="DevServicePerson">
+        insert into DEV_SERVICE_PERSON (no,name,belongTo,status,phone,mobile,email,leader)
+        values (#{no},#{name},#{belongToNo},#{status},#{phone,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{leader,jdbcType=VARCHAR})
+    </insert>
+    <select id="qry" resultMap="devServicePersonMap" parameterType="Map">
+        select * from DEV_SERVICE_PERSON  where 1=1
+        <if test="name!=null&amp;&amp;name!=''">
+            and name=#{name}
+        </if>
+        order by no
+    </select>
+    <select id="qryByNo" resultMap="devServicePersonMap" parameterType="String">
+        select * from DEV_SERVICE_PERSON where no=#{no}
+    </select>
+    <select id="qryByName" parameterType="String" resultType="DevServicePerson">
+        select * from DEV_SERVICE_PERSON where name=#{name}
+    </select>
+    <select id="qryByNameNo" parameterType="String" resultType="DevServicePerson">
+        select * from DEV_SERVICE_PERSON where name=#{name} and no!=#{no}
+    </select>
+    <update id="mod" parameterType="DevServicePerson">
+        update DEV_SERVICE_PERSON set name=#{name},belongTo=#{belongToNo},status=#{status},phone=#{phone,jdbcType=VARCHAR},
+        mobile=#{mobile,jdbcType=VARCHAR},email=#{email,jdbcType=VARCHAR},leader=#{leader,jdbcType=VARCHAR} where no=#{no}
+    </update>
+    <delete id="del" parameterType="String">
+        delete from DEV_SERVICE_PERSON where no=#{no}
+    </delete>
+    <select id="qryByNameAndBelongNo" resultType="DevServicePerson" parameterType="String">
+        select * from dev_service_person where name=#{name} and belongto=#{belongToNo}
+    </select>
+</mapper>

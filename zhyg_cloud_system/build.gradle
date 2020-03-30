@@ -1,0 +1,73 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.3.RELEASE'
+    id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+
+group = 'com.zjft.zhyg.system'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+
+    maven {
+        url 'http://maven.aliyun.com/nexus/content/groups/public'
+    }
+    maven {
+        url 'http://www.datanucleus.org/downloads/maven2/'
+    }
+    mavenCentral()
+
+    /*maven {
+        url 'http://ubuntu:8081/repository/maven-public/'
+    }*/
+}
+
+ext {
+    set('springCloud', 'Greenwich.RELEASE')
+    set('springSession', '2.1.4.RELEASE')
+    set('fastjson', '1.2.56')
+    set('zjftTools', '1.0-SNAPSHOT')
+    set('mapstruct', '1.3.0.Final')
+    set('lombok', '1.18.4')
+    set('druid', '1.1.10')
+    set('mybatis', '1.3.2')
+    set('oracle', '11.2.0.3')
+    set('pagehelper', '1.2.10')
+    set('mysql', '8.0.15')
+    set('joda', '2.10')
+    set('beanutils', '1.9.3')
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
+    implementation "com.alibaba:fastjson:${fastjson}"
+    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatis}"
+    implementation "com.alibaba:druid-spring-boot-starter:${druid}"
+    implementation "org.mapstruct:mapstruct:${mapstruct}"
+    implementation "org.mapstruct:mapstruct-processor:${mapstruct}"
+    implementation "com.github.pagehelper:pagehelper-spring-boot-starter:${pagehelper}"
+    implementation "mysql:mysql-connector-java:${mysql}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation "joda-time:joda-time:${joda}"
+    implementation "commons-beanutils:commons-beanutils:${beanutils}"
+    compileOnly "org.projectlombok:lombok:${lombok}"
+    annotationProcessor "org.projectlombok:lombok:${lombok}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct}"
+    compile fileTree(dir: 'lib', includes: ['*.jar'])
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloud}"
+    }
+}

@@ -1,0 +1,195 @@
+[
+    {
+        "id": "zijin-itms",
+        "text": "业务菜单",
+        "group": true,
+        "children": [
+            {
+                "id": "F",
+                "text": "系统管理",
+                "icon": "zijin-icon-options",
+                "type": 0,
+                "acl": "F",
+                "group": true,
+                "children": [
+                    {
+                        "id": "F01",
+                        "text": "机构管理",
+                        "type": 0,
+                        "acl": "F01",
+                        "group": true,
+                        "children": [
+                            {
+                                "id": "F0101",
+                                "text": "机构信息",
+                                "link": "/system/org",
+                                "type": 1,
+                                "acl": "F0101",
+                                "tile_size": "tile",
+                                "tile_image": "tile_userOrg.png"
+                            },
+                            {
+                                "id": "F0102",
+                                "text": "银行管机员",
+                                "link": "/system/devManager",
+                                "type": 1,
+                                "acl": "F0102",
+                                "tile_size": "tile",
+                                "tile_image": "F0102.png"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "F03",
+                        "text": "角色管理",
+                        "type": 0,
+                        "group": true,
+                        "children": [
+                            {
+                                "id": "F0301",
+                                "text": "角色信息",
+                                "link": "/system/role",
+                                "type": 1,
+                                "acl": "F0301",
+                                "tile_size": "tile",
+                                "textShowFlag": false,
+                                "tile_image": "tile_rolePrivilege.png"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "F02",
+                        "text": "用户管理",
+                        "type": 0,
+                        "group": true,
+                        "children": [
+                            {
+                                "id": "F0201",
+                                "text": "系统用户",
+                                "link": "/system/user",
+                                "type": 1,
+                                "acl": "F0201",
+                                "tile_size": "tile",
+                                "textShowFlag": false,
+                                "tile_image": "tile_userInfo.png"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "F05",
+                        "text": "设备管理",
+                        "type": 0,
+                        "group": true,
+                        "children": [
+                            {
+                                "id": "F0501",
+                                "text": "设备品牌",
+                                "link": "/system/vendor",
+                                "type": 1,
+                                "acl": "F0501",
+                                "tile_size": "tile",
+                                "textShowFlag": false,
+                                "tile_image": "tile_devconfig.png"
+                            },
+                            {
+                                "id": "F0502",
+                                "text": "设备型号",
+                                "link": "/system/type",
+                                "type": 1,
+                                "acl": "F0502",
+                                "tile_size": "tile",
+                                "textShowFlag": false,
+                                "tile_image": "F0502.png"
+                            },
+                            {
+                                "id": "F0504",
+                                "text": "设备信息",
+                                "link": "/system/dev",
+                                "type": 1,
+                                "acl": "F0504",
+                                "tile_size": "tile",
+                                "textShowFlag": false,
+                                "tile_image": "Equipment-information.png"
+                            },
+                            {
+                                "id": "F0505",
+                                "text": "设备详情",
+                                "link": "/system/devDetail/:devNo",
+                                "type": 1,
+                                "acl": "F0505",
+                                "tile_size": "tile",
+                                "textShowFlag": false,
+                                "tile_image": "Equipment-information.png"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "F06",
+                        "text": "系统参数设置",
+                        "type": 0,
+                        "group": true,
+                        "children": [
+                            {
+                                "id": "F0601",
+                                "text": "故障响应设定信息",
+                                "link": "/system/sysParam",
+                                "type": 1,
+                                "acl": "F0601",
+                                "tile_size": "tile",
+                                "textShowFlag": false,
+                                "tile_image": "Equipment-information.png"
+                            }
+                        ]
+                    }
+                ]
+            },
+
+            {
+                "id": "C",
+                "text": "版本管理",
+                "icon": "zijin-icon-checklist",
+                "type": 0,
+                "acl": "C",
+                "group": true,
+                "children": [
+                    {
+                        "id": "C01",
+                        "text": "应用管理",
+                        "type": 0,
+                        "acl": "C01",
+                        "group": true,
+                        "children": [
+                            {
+                                "id": "C0101",
+                                "text": "应用信息",
+                                "link": "/version/appstore",
+                                "type": 1,
+                                "acl": "C0101",
+                                "tile_size": "tile",
+                                "tile_image": "tile_appstore.png"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "C02",
+                        "text": "标杆管理",
+                        "type": 0,
+                        "acl": "C02",
+                        "group": true,
+                        "children": [
+                            {
+                                "id": "C0201",
+                                "text": "标杆信息",
+                                "link": "/version/benchmark",
+                                "type": 1,
+                                "acl": "C0201",
+                                "tile_size": "tile",
+                                "tile_image": "tile_benchmark.png"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

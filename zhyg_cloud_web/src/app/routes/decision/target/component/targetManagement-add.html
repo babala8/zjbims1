@@ -1,0 +1,102 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'org'" nz-form-item-required>所属机构</label>
+        </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <org-tree formControlName="org" [zjId]="'org'"  ></org-tree>
+            </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'year'" nz-form-item-required>年份</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('year')">
+            <nz-input [nzSize]="'large'" formControlName="year" [nzId]="'year'" ></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['year'].dirty && validateForm.controls['year'].errors">
+                <span>年份不为空</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'quarter'" nz-form-item-required>季度</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('quarter')">
+            <nz-input [nzSize]="'large'" formControlName="quarter" [nzId]="'quarter'" ></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['quarter'].dirty && validateForm.controls['quarter'].errors">
+                <span>季度不为空</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'openAccountCount'">开户笔数</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="openAccountCount" [nzId]="'openAccountCount'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['openAccountCount'].dirty && validateForm.controls['openAccountCount'].errors">
+                {{ validateForm.controls['openAccountCount'].errors['explain'] }}
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'depositCount'">存款笔数</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="depositCount" [nzId]="'depositCount'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['depositCount'].dirty && validateForm.controls['depositCount'].errors">
+                {{ validateForm.controls['depositCount'].errors['explain'] }}
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'depositAmount'">存款金额</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="depositAmount" [nzId]="'depositAmount'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['depositAmount'].dirty && validateForm.controls['depositAmount'].errors">
+                {{ validateForm.controls['depositAmount'].errors['explain'] }}
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'financingCount'">理财笔数</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="financingCount" [nzId]="'financingCount'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['financingCount'].dirty && validateForm.controls['financingCount'].errors">
+                {{ validateForm.controls['financingCount'].errors['explain'] }}
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'financingAmount'">理财金额</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="financingAmount" [nzId]="'financingAmount'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['financingAmount'].dirty && validateForm.controls['financingAmount'].errors">
+                {{ validateForm.controls['financingAmount'].errors['explain'] }}
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" >提交</button>
+            <button nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

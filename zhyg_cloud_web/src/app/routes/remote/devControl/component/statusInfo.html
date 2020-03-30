@@ -1,0 +1,268 @@
+<div class="info-container">
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">设备号：</div>
+        <div nz-col [nzSpan]="18">{{deviceInfo.no || ''}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">IP地址：</div>
+        <div nz-col [nzSpan]="18">{{deviceInfo.ip || ''}}</div>
+    </div>
+    <!--读卡器-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">读卡器模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.idcMap.idcDeviceStatus}}</p>
+                    <p>多媒体：{{statusInfo.idcMap.idcMedia}}</p>
+                    <p>回收匣状态：{{statusInfo.idcMap.idcRetainBin}}</p>
+                    <p>吞卡数量：{{statusInfo.idcMap.idcCards}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--身份验证模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">身份验证模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.ircMap.ircDeviceStatus}}</p>
+                    <p>媒体：{{statusInfo.ircMap.ircMedia}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--密码键盘模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">密码键盘模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.pinMap.pinDeviceStatus}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--凭条打印机模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">凭条打印机模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.rprMap.rprDeviceStatus}}</p>
+                    <p>媒体：{{statusInfo.rprMap.rprMedia}}</p>
+                    <p>纸张供应状况：{{statusInfo.rprMap.rprSupplyLevel}}</p>
+                    <p>回收匣状态：{{statusInfo.rprMap.rprRetractBin}}</p>
+                    <p>回收数量:{{statusInfo.rprMap.rprPtrRetBinCounts}}</p>
+                    <p>色带状态：{{statusInfo.rprMap.rprToner}}</p>
+                    <p>墨水状态：{{statusInfo.rprMap.rprInk}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--日志打印机模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">日志打印机模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.jprMap.jprDeviceStatus}}</p>
+                    <p>多媒体：{{statusInfo.jprMap.jprMedia}}</p>
+                    <p>纸张供应状况：{{statusInfo.jprMap.jprSupplyLevel}}</p>
+                    <p>回收匣状态：{{statusInfo.jprMap.jprRetractBin}}</p>
+                    <p>回收数量:{{statusInfo.jprMap.jprPtrRetBinCounts}}</p>
+                    <p>色带状态：{{statusInfo.jprMap.jprToner}}</p>
+                    <p>墨水状态：{{statusInfo.jprMap.jprInk}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--取款模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">取款模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.cdmMap.cdmDeviceStatus}}</p>
+                    <p>安全门状态：{{statusInfo.cdmMap.cdmSafeDoor}}</p>
+                    <p>钞箱单元状态：{{statusInfo.cdmMap.cdmCashUnits}}</p>
+                    <p>中间堆栈状态：{{statusInfo.cdmMap.cdmIntermediateStacker}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">位置信息：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li *ngFor="let data of statusInfo.cdmMap.cdmPosiList" style="margin-bototm: 5px;">
+                    <p>位置：{{data.cdmOutPosition}}</p>
+                    <p>位置状态：{{data.cdmOutPositionStatus}}</p>
+                    <p>取款挡板集合：{{data.cdmShutter}}</p>
+                    <p>取款通道集合：{{data.cdmTransportItems}}</p>
+                    <p>取款通道钞票集合：{{data.cdmTransport}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">钱箱信息：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li *ngFor="let data of statusInfo.cdmMap.cdmBinList" style="margin-bototm: 5px;">
+                    <p>取款物理钞箱ID：{{data.cdmPUID}}</p>
+                    <p>取款物理钞箱物理位置名：{{data.cdmPUPosName}}</p>
+                    <p>物理钞箱状态：{{data.cdmPUBinStatus}}</p>
+                    <p>物理钞箱当前张数：{{data.cdmPUCurrentCount}}</p>
+                    <p>物理钞箱初始张数：{{data.cdmCUInitialCount}}</p>
+                    <p>物理钞箱拒钞张数：{{data.cdmPURejectCount}}</p>
+                    <p>物理逻辑钞箱对应关系：{{data.cdmPCUID}}</p>
+                    <p>逻辑钞箱ID：{{data.cdmCUID}}</p>
+                    <p>逻辑钞箱类型：{{data.cdmCUType}}</p>
+                    <p>逻辑钞箱状态：{{data.cdmCUBinStatus}}</p>
+                    <p>逻辑钞箱币种：{{data.cdmCUCurrency}}</p>
+                    <p>逻辑钞箱当前张数：{{data.cdmCUCurrentCount}}</p>
+                    <p>逻辑钞箱当前张数：{{data.cdmCUInitialCount}}</p>
+                    <p>逻辑钞箱拒钞：{{data.cdmCURejectCount}}</p>
+                    <p>逻辑钞箱面值：{{data.cdmCUNoteValue}}</p>
+                    <p>逻辑钞箱索引号：{{data.cdmCUNumber}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--存款模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">存款模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.cimMap.cimDeviceStatus}}</p>
+                    <p>钞箱单元状态：{{statusInfo.cimMap.cimCashUnits}}</p>
+                    <p>安全门状态：{{statusInfo.cimMap.cimSafeDoor}}</p>
+                    <p>堆栈状态：{{statusInfo.cimMap.cimIntermediateStacker}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">位置信息：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li *ngFor="let data of statusInfo.cimMap.cimPosiList" style="margin-bototm: 5px;">
+                    <p>位置：{{data.cimInOutPosition}}</p>
+                    <p>位置状态：{{data.cimInOutPositionStatus}}</p>
+                    <p>存款挡板：{{data.cimShutter}}</p>
+                    <p>存款通道：{{data.cimTransport}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">钱箱信息：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li *ngFor="let data of statusInfo.cimMap.cimBinList" style="margin-bototm: 5px;">
+                    <p>存款物理钞箱ID：{{data.cimPUID}}</p>
+                    <p>存款物理钞箱物理位置名：{{data.cimPUPosName}}</p>
+                    <p>物理钞箱状态集合物：{{data.cimPUBinStatus}}</p>
+                    <p>物理钞箱当前张数：{{data.cimPUCount}}</p>
+                    <p>物理钞箱存入张数：{{data.cimPUCashInCount}}</p>
+                    <p>物理钞箱逻辑钞箱对应关系：{{data.cimPCUID}}</p>
+                    <p>逻辑钞箱ID：{{data.cimCUID}}</p>
+                    <p>逻辑钞箱类型集合：{{data.cimCUType}}</p>
+                    <p>逻辑钞箱状态集合：{{data.cimCUBinStatus}}</p>
+                    <p>逻辑钞箱币种：{{data.cimCUCurrency}}</p>
+                    <p>逻辑钞箱张数：{{data.cimCUCount}}</p>
+                    <p>逻辑钞箱存入张数：{{data.cimCUCashInCount}}</p>
+                    <p>逻辑钞箱面值：{{data.cimCUNoteValue}}</p>
+                    <p>逻辑钞箱索引号：{{data.cimCUNumber}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--信封模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">信封模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.depMap.depDeviceStatus}}</p>
+                    <p>警告产生时通道状态：{{statusInfo.depMap.depTransport}}</p>
+                    <p>警告产生时容器状态：{{statusInfo.depMap.depContainer}}</p>
+                    <p>信封供应状况：{{statusInfo.depMap.depEnvelopeSupply}}</p>
+                    <p>警告产生时信封分发器的状态：{{statusInfo.depMap.depEnvelopeDispenser}}</p>
+                    <p>警告产生时打印机状态：{{statusInfo.depMap.depPrinter}}</p>
+                    <p>警告产生时色带状：{{statusInfo.depMap.depToner}}</p>
+                    <p>警告产生时挡板状态：{{statusInfo.depMap.depShutter}}</p>
+                    <p>容器中信封总量：{{statusInfo.depMap.depNumOfDeposits}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--文本终端单元模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">文本终端模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.ttuMap.ttuDeviceStatus}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+<!--传感器模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">传感器模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.siuMap.siuDeviceStatus}}</p>
+                    <p>操作员按钮状态：{{statusInfo.siuMap.siuOperatorSwitch}}</p>
+                    <p>箱门状态：{{statusInfo.siuMap.siuCabinet}}</p>
+                    <p>安全门状态：{{statusInfo.siuMap.siuSafe}}</p>
+                    <p>指示灯状态聚合：{{statusInfo.siuMap.siuOpenClose}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--照相机模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">照相机模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.camMap.camDeviceStatus}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">各组件状态：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li *ngFor="let data of statusInfo.camMap.camList" style="margin-bototm: 5px;">
+                    <p>CAM状态区域：{{data.camStatusArea}}</p>
+                    <p>媒体状态：{{data.camStatusMedia}}</p>
+                    <p>相机状态：{{data.camStatusState}}</p>
+                    <p>相片数量：{{data.camStatusPictures}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--无纸化模块-->
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">无纸化模块：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li  style="margin-bototm: 5px;">
+                    <p>状态：{{statusInfo.pjcMap.pjcDeviceStatus}}</p>
+                    <p>最近一次成功上传时间：{{statusInfo.pjcMap.pjcSendtime}}</p>
+                    <p>已经上传至该天的流水文件：{{statusInfo.pjcMap.pjcEjdate}}</p>
+                    <p>无纸化服务状态：{{statusInfo.pjcMap.pjcServiceStatus}}</p>
+                    <p>剩余未发送缓存流水情况：{{statusInfo.pjcMap.pjcNsend}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

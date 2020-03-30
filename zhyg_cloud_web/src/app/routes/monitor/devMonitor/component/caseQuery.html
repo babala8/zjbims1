@@ -1,0 +1,61 @@
+<div class="search-result-list" style="margin-left:20px; margin-right:20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper] = "true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>所属机构</span></th>
+            <th nz-th><span>设备号</span></th>
+            <th nz-th><span>CASE类型</span></th>
+            <th nz-th><span>处理状态</span></th>
+            <th nz-th><span>创建时间</span></th>
+            <th nz-th><span>关闭时间</span></th>
+            <th nz-th><span>CASE级别</span></th>
+            <th nz-th><span>模块</span></th>
+            <th nz-th><span>故障描述</span></th>
+            <th nz-th><span>处理建议</span></th>
+            <th nz-th><span>通知</span></th>
+            <th nz-th><span>跟踪</span></th>
+            <th nz-th><span>详情</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+            <td nz-td>{{item.orgname}}({{item.orgno}})</td>
+            <td nz-td>{{item.devNo}}</td>
+            <td nz-td>{{item.catalogName}}</td>
+            <td nz-td>{{item.currentstatus}}</td>
+            <td nz-td>{{item.openTime}}</td>
+            <td nz-td>{{item.closeTime}}</td>
+            <td nz-td>{{item.grade}}</td>
+            <td nz-td>{{item.modcatalogname}}</td>
+            <td nz-td>{{item.description}}</td>
+            <td nz-td>{{item.solution}}</td>
+            <td nz-td>
+                <a (click)="showNotice(item)" [ngStyle]="{'color':'blue'}">通知</a>
+            </td>
+            <td nz-td>
+                <a (click)="showFollow(item)" [ngStyle]="{'color':'blue'}">跟踪</a>
+            </td>
+            <td nz-td>
+                <a (click)="showDetail(item)" [ngStyle]="{'color':'blue'}">详情</a>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>
+<div nz-row>
+    <div nz-col [nzSpan]="24" style="text-align:center; margin-top:10px;">
+        <button nz-button [nzType]="'default'" (click)="backModel()" [nzSize]="'large'"  ><i class="anticon anticon-enter"></i><span>返回</span></button>
+    </div>
+</div>

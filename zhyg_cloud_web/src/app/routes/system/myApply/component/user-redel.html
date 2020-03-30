@@ -1,0 +1,60 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row >
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'no'" nz-form-item-required>用户编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('no')">
+            <nz-input [nzSize]="'large'" formControlName="no" [nzId]="'no'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row *ngIf="checkAudit">
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'commitOrg'" nz-form-item-required>提交机构</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('commitOrg')">
+            <org-tree formControlName="commitOrg" [zjId]="'commitOrg'" [onlyParentNode]="checkAudit" (ngModelChange)="selectCommitRole($event)"></org-tree>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row *ngIf="checkAudit">
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'commitRole'" nz-form-item-required>提交角色</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" [nzValidateStatus]="getFormControl('commitRole')">
+            <nz-select formControlName="commitRole" [nzSize]="'large'" [nzPlaceHolder]="'--请选择角色--'"
+                       (ngModelChange)="getUserByRole($event)">
+                <nz-option *ngFor="let r of commitRoles" [nzLabel]="r.name" [nzValue]="r.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row *ngIf="checkAudit">
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'commitUser'">提交人员</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" [nzValidateStatus]="getFormControl('commitUser')">
+            <nz-select formControlName="commitUser" [nzSize]="'large'" [nzPlaceHolder]="'--请选择人员--'">
+                <nz-option *ngFor="let r of commitUsers" [nzLabel]="r.name" [nzValue]="r.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row *ngIf="checkAudit">
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'commitNote'">申请备注</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('commitNote')">
+            <nz-input [nzSize]="'large'" formControlName="commitNote" [nzId]="'commitNote'" nzType="textarea" ></nz-input>
+
+        </div>
+    </div>
+
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" >提交</button>
+            <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

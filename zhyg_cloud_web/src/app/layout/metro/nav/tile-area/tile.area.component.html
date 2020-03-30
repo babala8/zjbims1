@@ -1,0 +1,28 @@
+<ng-container *ngFor="let child of menu.children">
+    <ng-container *ngIf="!child._hidden">
+        <tile-group class="tile-group" *ngIf="child.group" title="{{child.text}}">
+            <ng-container *ngFor="let child1 of child.children">
+                <ng-container *ngIf="!child1._hidden">
+                    <!-- 这里设置方块大小 -->
+                    <tile *menuTarget="child1.id" [menuUrl]="child1.link" size="{{child1.tile_size || 'tile'}}" fg="fg-white" [ngStyle]="{'width': '100px','height': '100px','background-color':child.bg_color}">
+
+                        <div class="tile-content">
+                            <img [src]="'assets/images/tile/'+child1.tile_image" data-role="fitImage" data-format="fill" [alt]="child1.text">
+                        </div>
+                        <span *ngIf="child1.textShowFlag" class="tile-label">{{child1.text}}</span>
+                    </tile>
+                </ng-container>
+            </ng-container>
+        </tile-group>
+        <tile-group class="tile-group" *ngIf="!child.group" title="{{child.text}}">
+            <tile *menuTarget="child.id" [menuUrl]="child.link" size="{{child.tile_size || 'tile'}}"  fg="fg-white" style="width: 100px; height: 100px;">
+                <div class="tile-content">
+                    <img [src]="'assets/images/tile/'+child.tile_image" data-role="fitImage" data-format="fill">
+                </div>
+                <span *ngIf="child.textShowFlag" class="tile-label">{{child.text}}</span>
+            </tile>
+        </tile-group>
+    </ng-container>
+</ng-container>
+
+

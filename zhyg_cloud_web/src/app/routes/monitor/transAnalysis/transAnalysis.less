@@ -1,0 +1,100 @@
+// 统一用rem 布局了，可以自适应
+@blue-color : #67e2ff;
+@grey-color : #ccc;
+@border-radius-bs : 0.8rem;
+
+.border-radius {
+    border-radius: @border-radius-bs;
+}
+.box-shadow {
+    box-shadow: 0.2rem 0.2rem 0.6rem #aca8a8;
+}
+.base-info {
+    width: 80%;
+    margin: 0.8rem auto;
+    display: flex;
+    height: 4rem;
+    justify-content: space-around;
+    line-height: 4rem;
+    border: 0.05rem solid @grey-color;
+    .border-radius;
+    .box-shadow;
+}
+.info-item {
+    text-align: center;
+    width: 50%;
+    font-size: 1.6rem;
+    font-weight: 600;
+    & > span {
+        font-weight: 700;
+        color: @blue-color;
+        padding: 0 1rem;
+    }
+}
+
+.carousel-container {
+    width: 90%;
+    margin: 0 auto;
+    border: 0.05rem solid @grey-color;
+    position: relative;
+    .border-radius;
+    overflow: hidden;
+}
+.arrow-left,.arrow-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 4rem;
+    color: @blue-color;
+}
+.arrow-left {
+    left: 0.4rem;
+}
+.arrow-right {
+    right: 0.4rem;
+}
+.echarts-group {
+
+    height: 36rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .size1 {
+        height: 24rem;
+        width: 28%;
+    }
+    .size2 {
+        width: 35%;
+        height: 30rem;
+    }
+}
+.chart-item {
+    .border-radius;
+    border: 0.05rem solid @grey-color;
+    box-shadow: 0.25rem 0.25rem 0.25rem @grey-color;
+ .chart-title {
+    height: 3rem;
+     color: @blue-color;
+     font-size: 1.2rem;
+     line-height: 3rem;
+}
+}
+.chart-type-one {
+height: 21rem;
+}
+.chart-type-two {
+    height: 27rem;
+}
+.test {
+    height: 20rem;
+    border: 2rem solid #ccc;
+    background: rebeccapurple;
+}
+// antd 0.6这个版本轮播组件有问题，高度不能使用过高，否则会因此样式紊乱问题
+// 宽度给 50% 只适合两个区域轮播的方式  baxian
+:host ::ng-deep .ant-carousel .slick-slide {
+    //width: 50% !important;
+    box-sizing: border-box;
+    text-align: center;
+    overflow: hidden;
+}

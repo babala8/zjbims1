@@ -1,0 +1,94 @@
+<form nz-form #form="ngForm" class="search-form" (ngSubmit)="refreshData(true)">
+    <div nz-row style="margin-left:20px; margin-right:20px;">
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'resourceName'">资源名称</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="14">
+                    <nz-input [(ngModel)]="formModel['resourceName']" name="resourceName"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'resourceType'">资源类型</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="14">
+                    <nz-select [nzSize]="'large'" [(ngModel)]="formModel['resourceType']" name="resourceType" nzAllowClear
+                               (ngModelChange)="refreshData(true)" [nzPlaceHolder]="'--请选择资源类型--'">
+                        <nz-option *ngFor="let r of resourceTypes" [nzLabel]="r.name" [nzValue]="r.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <button nz-button [nzType]="'primary'" [nzSize]="'large'">
+                <i class="anticon anticon-search"></i><span>查询</span>
+            </button>
+            <button nz-button (click)="addResource()" [nzSize]="'large'" type="button">
+                <i class="anticon anticon-plus"></i><span>创建</span>
+            </button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="padding: 20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[10,20,50,100]"
+              [nzShowQuickJumper]="true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th [nzWidth]="'20%'" style="text-align: center;">名称</th>
+            <th nz-th [nzWidth]="'5%'"><span>类型</span></th>
+            <th nz-th [nzWidth]="'5%'"><span>像素</span></th>
+            <th nz-th [nzWidth]="'10%'"><span>最近修改</span></th>
+            <th nz-th [nzWidth]="'5%'"><span>上传用户</span></th>
+            <th nz-th [nzWidth]="'30%'"><span>描述</span></th>
+            <th nz-th [nzWidth]="'15%'"><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <ng-template ngFor let-item [ngForOf]="nzTable.data">
+            <tr nz-tbody-tr>
+                <td nz-td align="center"><a (click)="previewRes(item)" style="color: #1ba1e2;">{{item.name}}</a></td>
+                <td nz-td>{{item.typeName}}</td>
+                <td nz-td noWrap><p *ngIf="item.type != '3'">{{item.width}}*{{item.height}}</p></td>
+                <td nz-td>{{item.addtime}}</td>
+                <td nz-td>{{item.adduser}}</td>
+                <td nz-td>{{item.description}}</td>
+                <td nz-td style="text-align: center;">
+                    <a *ngIf="item.type == '1' || item.type == '2'" href="{{item.url}}" target="_blank">下载</a>
+                    <span *ngIf="item.type == '1' || item.type == '2'" nz-table-divider></span>
+                    <nz-popconfirm [nzTitle]="'确定要删除该资源吗？'" (nzOnConfirm)="delete(item)"
+                                   (nzOnCancel)="cancel()">
+                        <a nz-popconfirm style="color: red;">删除</a>
+                    </nz-popconfirm>
+                </td>
+            </tr>
+        </ng-template>
+        </tbody>
+    </nz-table>
+</div>
+<div *ngIf="previewVisible">
+    <nz-modal [nzVisible]="true" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+        <ng-template #modalContent>
+            <p *ngIf="this.selectedRes.type == '3'">{{selectedRes.text}}</p>
+            <img *ngIf="this.selectedRes.type == '1'" [src]="this.selectedRes.url" [ngStyle]="{ 'width': '100%' }" />
+            <video *ngIf="this.selectedRes.type == '2'" id="video1" [ngStyle]="{ 'width': '100%' }" [controls]="true">
+                <source [src]="this.selectedRes.url" type="video/mp4">
+            </video>
+        </ng-template>
+    </nz-modal>
+</div>
+

@@ -1,0 +1,416 @@
+<form id="orgAddForm" nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row >
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devNo'" nz-form-item-required>设备号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devNo')">
+                <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'" [nzDisabled]="true"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devNo'].dirty && validateForm.controls['devNo'].errors">
+                    <span>请输入数字或者字母，长度为4-8位</span>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'ip'" nz-form-item-required>设备ip地址</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('ip')">
+                <nz-input [nzSize]="'large'" formControlName="ip" [nzId]="'ip'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['ip'].dirty && validateForm.controls['ip'].errors">
+                    <span>请输入正确的ip地址</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devCatalog'" nz-form-item-required>设备类型</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="devCatalog" [nzPlaceHolder]="'--请选择设备类型--'">
+                    <nz-option *ngFor="let o of devCatalogList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devCatalog'].dirty && validateForm.controls['devCatalog'].errors">
+                    {{ validateForm.controls['devCatalog'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devVendor'" nz-form-item-required>设备品牌</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="devVendor"  [nzPlaceHolder]="'--请选择设备品牌--'" (ngModelChange)="selectDevType($event)">
+                    <nz-option *ngFor="let o of devVendorList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devVendor'].dirty && validateForm.controls['devVendor'].errors">
+                    {{ validateForm.controls['devVendor'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'upper'" nz-form-item-required>所属机构</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('upper')">
+                <org-tree formControlName="upper" [zjId]="'upper'" zjDisabled="true"></org-tree>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['upper'].dirty && validateForm.controls['upper'].errors">
+                    {{ validateForm.controls['upper'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSpan]="6">
+                <label [attr.for]="'devType'" nz-form-item-required>设备型号</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="devType" [nzPlaceHolder]="'--请选择设备型号--'">
+                    <nz-option *ngFor="let o of devTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devType'].dirty && validateForm.controls['devType'].errors">
+                    {{ validateForm.controls['devType'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="4" [nzXs]="24">
+            <label [attr.for]="'address'" nz-form-item-required>设备地址</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="17" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="address" [nzId]="'address'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['address'].dirty && validateForm.controls['address'].errors">
+                <span>设备地址不能为空，最大输入长度为80字符</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'awayFlag'" nz-form-item-required>离行在行标志</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="awayFlag" [nzPlaceHolder]="'----'">
+                    <nz-option *ngFor="let o of awayFlagList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['awayFlag'].dirty && validateForm.controls['awayFlag'].errors">
+                    {{ validateForm.controls['awayFlag'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'workType'" nz-form-item-required>经营方式</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="workType" [nzPlaceHolder]="'--请选择经营方式--'">
+                    <nz-option *ngFor="let o of workTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['workType'].dirty && validateForm.controls['workType'].errors">
+                    {{ validateForm.controls['workType'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devService'" nz-form-item-required>设备维护商</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="devService" [nzPlaceHolder]="'--请选择设备维护商--'">
+                    <nz-option *ngFor="let o of devServiceList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devService'].dirty && validateForm.controls['devService'].errors">
+                    {{ validateForm.controls['devService'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'atmpArea'" nz-form-item-required>银联标准地区</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="atmpArea"  [nzPlaceHolder]="'--请选择银联标准地区--'">
+                    <nz-option *ngFor="let o of cupAreaList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['atmpArea'].dirty && validateForm.controls['atmpArea'].errors">
+                    <span>请选择银联标准地区</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'virtualTellerNo'" nz-form-item-required>虚拟柜员号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('virtualTellerNo')">
+                <nz-input [nzSize]="'large'" formControlName="virtualTellerNo" [nzId]="'virtualTellerNo'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['virtualTellerNo'].dirty && validateForm.controls['virtualTellerNo'].errors">
+                    <span>请输入数字或者字母，最大长度为8字符</span>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'setupType'" nz-form-item-required>安装方式</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="setupType" [nzPlaceHolder]="'--请选择安装方式--'">
+                    <nz-option *ngFor="let o of setupTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['setupType'].dirty && validateForm.controls['setupType'].errors">
+                    {{ validateForm.controls['setupType'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'selfBank'">是否自助银行</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('selfBank')">
+                <nz-select [nzSize]="'large'" formControlName="selfBank" [nzPlaceHolder]="'--请选择投入主体--'">
+                    <nz-option *ngFor="let o of isSelfBank" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'investment'">投入主体</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="investment" [nzPlaceHolder]="'--请选择投入主体--'">
+                    <nz-option *ngFor="let o of investmentList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'quarterLeaseAmount'">每季度租赁费</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('quarterLeaseAmount')">
+                <nz-input [nzSize]="'large'" formControlName="quarterLeaseAmount" [nzId]="'quarterLeaseAmount'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['quarterLeaseAmount'].dirty && validateForm.controls['quarterLeaseAmount'].errors">
+                    <span>请输入数字</span>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'accountOrgNo'" nz-form-item-required>核心账务机构号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('accountOrgNo')">
+                <nz-input [nzSize]="'large'" formControlName="accountOrgNo" [nzId]="'accountOrgNo'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['accountOrgNo'].dirty && validateForm.controls['accountOrgNo'].errors">
+                    <span>请输入数字</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'cashboxLimit'">钱箱报警金额</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('cashboxLimit')">
+                <nz-input [nzSize]="'large'" formControlName="cashboxLimit" [nzId]="'cashboxLimit'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['cashboxLimit'].dirty && validateForm.controls['cashboxLimit'].errors">
+                    <span>只能输入非0数字，最大长度为7</span>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'netType'">有线无线标志</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="netType" [nzPlaceHolder]="'--请选择有线无线标志--'">
+                    <nz-option *ngFor="let o of netTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['netType'].dirty && validateForm.controls['netType'].errors">
+                    {{ validateForm.controls['netType'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'commPacket'">通讯每包传输大小</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('commPacket')">
+                <nz-input [nzSize]="'large'" formControlName="commPacket" [nzId]="'commPacket'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['commPacket'].dirty && validateForm.controls['commPacket'].errors">
+                    <span>只能输入非0数字，最大长度为5</span>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'serial'">设备序列号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('serial')">
+                <nz-input [nzSize]="'large'" formControlName="serial" [nzId]="'serial'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['serial'].dirty && validateForm.controls['serial'].errors">
+                    <span>只能输入数字或英文字母，最大长度为40</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'openTime'" nz-form-item-required>每日开机时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('openTime')">
+                <nz-timepicker formControlName="openTime" [nzSize]="'large'">
+                </nz-timepicker>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'closeTime'" nz-form-item-required>每日关机时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('closeTime')">
+                <nz-timepicker formControlName="closeTime" [nzSize]="'large'">
+                </nz-timepicker>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'syn_startDate'">设备启用日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('syn_startDate')">
+                <nz-datepicker [(ngModel)]="syn_startDate" style="margin-right: 100px;" [nzFormat]="'YYYY-MM-DD'" formControlName="syn_startDate">
+                </nz-datepicker>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['syn_startDate'].dirty && validateForm.controls['syn_startDate'].errors">
+                    {{ validateForm.controls['syn_startDate'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'syn_stopDate'">设备停用日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('syn_stopDate')">
+                <nz-datepicker [(ngModel)]="syn_stopDate" style="margin-right: 100px;" [nzFormat]="'YYYY-MM-DD'" formControlName="syn_stopDate">
+                </nz-datepicker>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['syn_stopDate'].dirty && validateForm.controls['syn_stopDate'].errors">
+                    {{ validateForm.controls['syn_stopDate'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'syn_expireDate'">保修到期日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('syn_expireDate')">
+                <nz-datepicker [(ngModel)]="syn_expireDate" style="margin-right: 100px;" [nzFormat]="'YYYY-MM-DD'" formControlName="syn_expireDate">
+                </nz-datepicker>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['syn_expireDate'].dirty && validateForm.controls['syn_expireDate'].errors">
+                    {{ validateForm.controls['syn_expireDate'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'syn_patrolPeriod'">设备巡检日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('syn_patrolPeriod')">
+                <nz-datepicker [(ngModel)]="syn_patrolPeriod" style="margin-right: 100px;" [nzFormat]="'YYYY-MM-DD'" formControlName="syn_patrolPeriod">
+                </nz-datepicker>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['syn_patrolPeriod'].dirty && validateForm.controls['syn_patrolPeriod'].errors">
+                    {{ validateForm.controls['syn_patrolPeriod'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row *ngIf="checkAudit">
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'commitOrg'" nz-form-item-required>提交机构</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('commitOrg')">
+                <org-tree formControlName="commitOrg" [zjId]="'commitOrg'" [onlyParentNode]="checkAudit" (ngModelChange)="selectCommitRole($event)"></org-tree>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'commitRole'" nz-form-item-required>提交角色</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14" [nzValidateStatus]="getFormControl('commitRole')">
+                <nz-select formControlName="commitRole" [nzSize]="'large'" [nzPlaceHolder]="'--请选择角色--'"
+                           (ngModelChange)="getUserByRole($event)">
+                    <nz-option *ngFor="let r of commitRoles" [nzLabel]="r.name" [nzValue]="r.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row *ngIf="checkAudit">
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'commitUser'">提交人员</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14" [nzValidateStatus]="getFormControl('commitUser')">
+                <nz-select formControlName="commitUser" [nzSize]="'large'" [nzPlaceHolder]="'--请选择人员--'">
+                    <nz-option *ngFor="let r of commitUsers" [nzLabel]="r.name" [nzValue]="r.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'commitNote'">申请备注</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('commitNote')">
+                <nz-input [nzSize]="'large'" formControlName="commitNote" [nzId]="'commitNote'" nzType="textarea" ></nz-input>
+
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="24">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading">提交</button>
+            <button nz-button  type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消</button>
+        </div>
+    </div>
+</form>

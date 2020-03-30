@@ -1,0 +1,112 @@
+<form nz-form #form="ngForm" [formGroup]="validateForm" class="search-form">
+    <div nz-row>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'bankName'">自助银行名称</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="bankName" name="bankName" [nzId]="'bankName'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'upper'">所属机构</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <org-tree formControlName="upper" [zjId]="'upper'" (ngModelChange)="selectOrg($event)"></org-tree>
+                </div>
+            </div>
+        </div>
+        <!--<div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'bankArea'">所属地址</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="bankArea" name="bankArea" [nzId]="'bankArea'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'areaNoProvince'">省级区域编码</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="areaNoProvince" name="areaNoProvince" [nzId]="'areaNoProvince'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'areaNoCity'">市级区域编码</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="areaNoCity" name="areaNoCity" [nzId]="'areaNoCity'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'areaNoCounty'">县级区域编码</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="areaNoCounty" name="areaNoCounty" [nzId]="'areaNoCounty'"></nz-input>
+                </div>
+            </div>
+        </div>-->
+        <div nz-col [nzSpan]="8" [nzOffset]="1" style="width: auto;">
+            <button nz-button [nzType]="'primary'" (click)="refreshData(true)" [nzSize]="'large'"><i class="anticon anticon-search"></i><span>查询</span></button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+            <button nz-button  (click)="addSelfHelpBank()" [nzType]="'primary'" [nzSize]="'large'"><i class="anticon anticon-plus"></i><span>添加</span>
+            </button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="padding: 20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper]="true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+           <!-- <th nz-th><span>编号</span></th>-->
+            <th nz-th><span>名称</span></th>
+            <th nz-th><span>地址</span></th>
+            <th nz-th><span>所属分行</span></th>
+            <th nz-th><span>所属区域</span></th>
+            <th nz-th><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+           <!-- <td nz-td>{{item.logicId}}</td>-->
+            <td nz-td>{{item.bankName}}</td>
+            <td nz-td>{{item.bankArea}}</td>
+            <td nz-td>{{item.orgName}}</td>
+            <td nz-td>{{item.areaName}}</td>
+            <td nz-td style="text-align: center;">
+                <a  (click)="modifySelfHelpBank(item)" style="color: #1ba1e2;">修改</a>
+                <span nz-table-divider></span>
+                <nz-popconfirm [nzTitle]="'确定要删除该自助银行吗？'" (nzOnConfirm)="confirmDel(item.logicId)" (nzOnCancel)="cancel()">
+                    <a  nz-popconfirm [ngStyle]="{'color':'red'}">删除</a>
+                </nz-popconfirm>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

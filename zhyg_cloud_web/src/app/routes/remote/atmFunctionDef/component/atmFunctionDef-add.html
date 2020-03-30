@@ -1,0 +1,71 @@
+<form id="devAddForm" nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row >
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'devCatalog'" nz-form-item-required>设备类型</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="devCatalog" [(ngModel)]="selectCatalog" >
+                <nz-option *ngFor="let o of devCatalogList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain *ngIf="validateForm.controls['devCatalog'].dirty && validateForm.controls['devCatalog'].errors">
+                <span>请选择设备类型</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'transNo'" nz-form-item-required>交易编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('transNo')">
+            <nz-input [nzSize]="'large'" formControlName="transNo" [nzId]="'transNo'"></nz-input>
+            <div nz-form-explain *ngIf="validateForm.controls['transNo'].dirty && validateForm.controls['transNo'].errors">
+                <span>交易编号不能为空，请输入小于128的数字</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'transType'" nz-form-item-required>交易类别</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="transType" [nzPlaceHolder]="'--请选择交易类别--'">
+                <nz-option *ngFor="let o of transTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain *ngIf="validateForm.controls['transType'].dirty && validateForm.controls['transType'].errors">
+                <span>请选择交易类别</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'transCode'" nz-form-item-required>交易英文名称</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('transCode')">
+            <nz-input [nzSize]="'large'" formControlName="transCode" [nzId]="'transCode'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['transCode'].dirty && validateForm.controls['transCode'].errors">
+                <span>交易英文名称不能为空，长度不能大于100字符</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'transName'" nz-form-item-required>交易中文名称</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('transName')">
+            <nz-input [nzSize]="'large'" formControlName="transName" [nzId]="'transName'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['transName'].dirty && validateForm.controls['transName'].errors">
+                <span>交易中文名称不能为空，长度不能大于20字符</span>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" >提交</button>
+            <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

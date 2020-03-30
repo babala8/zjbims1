@@ -1,0 +1,94 @@
+<form nz-form [formGroup]="validateForm" class="search-form" (ngSubmit)="refreshData(true)">
+    <div nz-row style="margin-left:20px; margin-right:20px;">
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'name'">广告名称</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="14">
+                    <nz-input formControlName="name"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'adsType'">广告类型</label>
+                </div>
+                <div nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="adsType" name="adsType" nzAllowClear
+                               [nzPlaceHolder]="'--请选择广告类型--'">
+                        <nz-option *ngFor="let r of adsTypeArr" [nzLabel]="r.name" [nzValue]="r.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'">
+                <i class="anticon anticon-search"></i><span>查询</span>
+            </button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="padding: 20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100]"
+              [nzShowQuickJumper]="true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>广告名称</span></th>
+            <th nz-th><span>广告位名称</span></th>
+            <th nz-th><span>资源名称</span></th>
+            <th nz-th><span>播放序号</span></th>
+            <th nz-th><span>适用机构</span></th>
+            <th nz-th><span>适用设备</span></th>
+            <th nz-th><span>投放状态</span></th>
+            <th nz-th><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data">
+            <td nz-td>
+                <a (click)="showDetail(item)">{{item.name}}</a>
+            </td>
+            <td nz-td>{{item.spaceName}}</td>
+            <td nz-td><a (click)="previewRes(item.resourceId)" style="color: #1ba1e2;">{{item.resourceName}}</a></td>
+            <td nz-td>{{item.playOrder}}</td>
+            <td nz-td>{{item.limitOrgName}}</td>
+            <td nz-td>{{item.limitCatalogName}}</td>
+            <td nz-td>{{item.validStatus}}</td>
+            <td nz-td style="text-align: center;">
+                <a *ngIf="item.remoteRange != '2'" (click)="issuePage(item)" style="color: #1ba1e2;">选择投放</a>
+                <span *ngIf="item.remoteRange != '2'" nz-table-divider></span>
+                <a *ngIf="item.remoteRange != '2'" (click)="valid(item)">正式投放</a>
+                <span *ngIf="item.remoteRange == '1' || item.remoteRange == '2'" nz-table-divider></span>
+                <nz-popconfirm [nzTitle]="'将从所有设备上撤销该广告，确定要继续吗？'" (nzOnConfirm)="invalid(item)"
+                               (nzOnCancel)="cancel()">
+                <a nz-popconfirm *ngIf="item.remoteRange == '1' || item.remoteRange == '2'" style="color: red;">取消投放</a>
+                </nz-popconfirm>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>
+<div *ngIf="previewVisible">
+    <nz-modal [nzVisible]="true" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+        <ng-template #modalContent>
+            <p *ngIf="this.selectedRes.type == '3'">{{selectedRes.text}}</p>
+            <img *ngIf="this.selectedRes.type == '1'" [src]="this.selectedRes.url" [ngStyle]="{ 'width': '100%' }" />
+            <video *ngIf="this.selectedRes.type == '2'" id="video1" [ngStyle]="{ 'width': '100%' }" [controls]="true">
+                <source [src]="this.selectedRes.url" type="video/mp4">
+            </video>
+        </ng-template>
+    </nz-modal>
+</div>

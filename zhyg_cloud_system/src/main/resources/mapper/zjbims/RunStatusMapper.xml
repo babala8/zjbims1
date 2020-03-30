@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.RunStatusDao" >
+    <insert id="add" parameterType="RunStatus">
+            insert into run_status_table(logic_id,dev_no,date_time,run_status,action_note) values
+        (#{logicId},#{devNo},#{dateTime},#{runStatus},#{actionNote,jdbcType=VARCHAR})
+    </insert>
+    <delete id="deleteByTime" parameterType="DevStop">
+      delete  from  run_status_table where dev_no=#{devNo} and date_time>= CONCAT(#{stopDevStartTime},':00' )and
+      date_time &lt;= CONCAT(#{stopDevEndTime},':00')
+    </delete>
+</mapper>
+
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevServiceCompanyDao">
+
+    <insert id="add" parameterType="DevServiceCompany">
+        insert into DEV_SERVICE_COMPANY (no,name,linkMan,address,phone,mobile,fax,email,infofilepath,infofilename)
+        values (#{no},#{name},#{linkMan,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{fax,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR}
+        ,#{infoFilePath,jdbcType=VARCHAR},#{infoFileName,jdbcType=VARCHAR})
+    </insert>
+    <select id="qry" parameterType="Map" resultType="DevServiceCompany">
+        select * from DEV_SERVICE_COMPANY order by no
+    </select>
+    <select id="qryByNo" parameterType="String" resultType="DevServiceCompany">
+        select * from DEV_SERVICE_COMPANY where no=#{no}
+    </select>
+    <select id="qryByName" parameterType="String" resultType="DevServiceCompany">
+        select * from DEV_SERVICE_COMPANY where name=#{name}
+    </select>
+    <select id="qryByNameNo" parameterType="String" resultType="DevServiceCompany">
+        select * from DEV_SERVICE_COMPANY where name=#{name} and no!=#{no}
+    </select>
+    <update id="mod" parameterType="DevServiceCompany">
+        update DEV_SERVICE_COMPANY set name=#{name},linkMan=#{linkMan,jdbcType=VARCHAR},address=#{address,jdbcType=VARCHAR},
+        phone=#{phone,jdbcType=VARCHAR},mobile=#{mobile,jdbcType=VARCHAR},fax=#{fax,jdbcType=VARCHAR},email=#{email,jdbcType=VARCHAR}
+        ,infoFilePath=#{infoFilePath,jdbcType=VARCHAR},infoFileName=#{infoFileName,jdbcType=VARCHAR}
+         where no=#{no}
+    </update>
+    <delete id="del" parameterType="String">
+        delete from DEV_SERVICE_COMPANY where no=#{no}
+    </delete>
+    <select id="qryDevService" parameterType="String" resultType="String">
+        select no from DEV_BASE_INFO where dev_service=#{no}
+    </select>
+    <select id="getPath" resultType="String">
+        select value from service_prop_system where key_id='devServiceCompany'
+    </select>
+    <select id="getOldPathByNo" resultType="String" parameterType="String">
+        select infofilepath from dev_service_company where no=#{no}
+    </select>
+    <update id="delFileByNo" parameterType="String">
+        update dev_service_company set infofilename=null ,infofilepath=null where no=#{no}
+    </update>
+</mapper>

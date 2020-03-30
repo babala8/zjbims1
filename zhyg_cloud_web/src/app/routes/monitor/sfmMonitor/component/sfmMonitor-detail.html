@@ -1,0 +1,367 @@
+<nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [nzSize]="'large'">
+    <nz-tab>
+        <ng-template #nzTabHeading>
+            <span style="font-size: large;">设备基本信息</span>
+        </ng-template>
+        <div style="height: 30px; background: #1ba1e2; text-align:center; line-height:30px;">
+            <span>设备基本信息</span>
+        </div>
+        <form nz-form >
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>设备编号</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{devNo}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>所属机构</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{orgName}}({{orgNo}})</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>ip地址</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{devip}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>设备型号编号</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{devType}}</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>在行标志</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{awayFlag}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>经营方式</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{workType}}</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>设备地址</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{address}}</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>管机员</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{devManager}}</span>
+                </div>
+            </div>
+        </form>
+    </nz-tab>
+    <nz-tab>
+        <ng-template #nzTabHeading>
+            <span style="font-size: large;">设备状态信息</span>
+        </ng-template>
+        <div style="height: 30px; background: #1ba1e2; text-align:center; line-height:30px;">
+            <span>设备状态信息</span>
+        </div>
+        <form nz-form >
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>运行状态</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{devRunStatus}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>模块状态</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{devModStatus}}</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>卡箱状态</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{devCardboxStatus}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>网络状态</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{devNetStatus}}</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>吞卡数量</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{idcCaptureBinCount}}</span>
+                </div>
+            </div>
+        </form>
+    </nz-tab>
+    <nz-tab>
+        <ng-template #nzTabHeading>
+            <span style="font-size: large;">模块状态信息</span>
+        </ng-template>
+        <div style="height: 30px; background: #1ba1e2; text-align:center; line-height:30px;">
+            <span>模块状态信息</span>
+        </div>
+        <form nz-form *ngFor="let item of statusList;">
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>{{item[0].name}}</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{item[0].status}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4" *ngIf="item[1]">
+                    <label>{{item[1].name}}</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8"  *ngIf="item[1]">
+                    <span>{{item[1].status}}</span>
+                </div>
+            </div>
+        </form>
+    </nz-tab>
+    <nz-tab>
+        <ng-template #nzTabHeading>
+            <span style="font-size: large;">设备软硬件信息</span>
+        </ng-template>
+        <div style="height: 30px; background: #1ba1e2; text-align:center; line-height:30px;">
+            <span>设备软硬件信息</span>
+        </div>
+        <form nz-form >
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>操作系统</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{system}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>操作系统版本</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{version}}</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>操作系统补丁版本</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{patchVersion}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>冠字号缓存开关状态</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{serialNoInfoStatus}}</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>现金缓存开关状态</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{txtInfoStatus}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>内存</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{memory}}</span>
+                </div>
+            </div>
+            <div nz-form-item nz-row >
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>硬盘</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{disk}}</span>
+                </div>
+                <div nz-form-label nz-col [nzSm]="4">
+                    <label>处理器</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="8">
+                    <span>{{cpu}}</span>
+                </div>
+            </div>
+        </form>
+    </nz-tab>
+<!--    <nz-tab>-->
+<!--        <ng-template #nzTabHeading>-->
+<!--            <span style="font-size: large;" (click)="qryCardBoxInfo()">设备卡箱信息</span>-->
+<!--        </ng-template>-->
+<!--        <div style="height: 30px; background: #1ba1e2; text-align:center; line-height:30px;">-->
+<!--            <span>设备卡箱信息</span>-->
+<!--        </div>-->
+<!--        <form nz-form >-->
+<!--            <div style="height: 30px; text-align:center; line-height:30px;" *ngIf="cBoxSize<=0">-->
+<!--                <span>未知</span>-->
+<!--            </div>-->
+<!--            <div class="search-result-list" style="margin-left:20px; margin-right:20px;" *ngIf="cBoxSize>0">-->
+<!--                <nz-table #nzTable-->
+<!--                          [nzLoading]="loading"-->
+<!--                          [nzDataSource]="cBoxList"-->
+<!--                          [nzShowSizeChanger]="true"-->
+<!--                          [nzSize]="'small'"-->
+<!--                          [nzIsPagination]="false">-->
+<!--                    <thead nz-thead>-->
+<!--                    <tr>-->
+<!--                        <th nz-th><span>卡箱标识</span></th>-->
+<!--                        <th nz-th><span>卡箱类型</span></th>-->
+<!--                        <th nz-th><span>卡箱名称</span></th>-->
+<!--                        <th nz-th><span>卡箱状态</span></th>-->
+<!--                        <th nz-th><span>当前卡箱张数</span></th>-->
+<!--                        <th nz-th><span>初始张数</span></th>-->
+<!--                        <th nz-th><span>回收匣卡张数</span></th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody nz-tbody>-->
+<!--                    <tr nz-tbody-tr *ngFor="let item of nzTable.data;">-->
+<!--                        <td nz-td>{{item[0]}}</td>-->
+<!--                        <td nz-td>{{item[1]}}</td>-->
+<!--                        <td nz-td>{{item[2]}}</td>-->
+<!--                        <td nz-td>{{item[3]}}</td>-->
+<!--                        <td nz-td>{{item[4]}}</td>-->
+<!--                        <td nz-td>{{item[5]}}</td>-->
+<!--                        <td nz-td>{{item[6]}}</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </nz-table>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </nz-tab>-->
+    <nz-tab>
+        <ng-template #nzTabHeading>
+            <span style="font-size: large;" (click)="qryFault()">设备故障信息</span>
+        </ng-template>
+        <div style="height: 30px; background: #1ba1e2; text-align:center; line-height:30px;">
+            <span>设备故障信息</span>
+        </div>
+        <form nz-form >
+            <div style="height: 30px; text-align:center; line-height:30px;" *ngIf="faultList.length == 0">
+                <span>未知</span>
+            </div>
+            <div class="search-result-list" style="margin-left:20px; margin-right:20px;" *ngFor="let fault of faultList;">
+                <nz-table #nzTable
+                          [nzDataSource]="fault"
+                          [nzShowSizeChanger]="true"
+                          [nzSize]="'small'"
+                          [nzIsPagination]="false">
+                    <thead nz-thead>
+                    <tr>
+                        <th nz-th >
+                            <span style="display:block; float:left; padding: 1px 30px 1px 1px;">设备号：{{fault.devNo}}</span>
+                        </th>
+                        <th nz-th >
+                            设备模块：{{fault.devModule}}
+                        </th>
+                        <th nz-th ></th>
+                    </tr>
+                    </thead>
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr >
+                        <td nz-td>故障级别：{{fault.faultLevel}}</td>
+                        <td nz-td>故障代码：{{fault.faultCode}}</td>
+                        <td nz-td>故障时间：{{fault.faultTime}}</td>
+                    </tr>
+                    <tr nz-tbody-tr >
+                        <td nz-td colspan="3">厂商码：{{fault.vendorCode}}</td>
+                    </tr>
+                    <tr nz-tbody-tr >
+                        <td nz-td colspan="3">故障描述：{{fault.description}}</td>
+                    </tr>
+                    <tr nz-tbody-tr >
+                        <td nz-td colspan="3">解决方法：{{fault.solution}}</td>
+                    </tr>
+                    </tbody>
+                </nz-table>
+                <br><br>
+            </div>
+        </form>
+    </nz-tab>
+    <nz-tab>
+        <ng-template #nzTabHeading>
+            <span style="font-size: large;" (click)="qryCase()">设备CASE信息</span>
+        </ng-template>
+        <div style="height: 30px; background: #1ba1e2; text-align:center; line-height:30px;">
+            <span>设备CASE信息</span>
+        </div>
+        <form nz-form >
+            <div class="search-result-list" style="margin-left:20px; margin-right:20px;">
+                <nz-table #nzTable
+                          [nzShowSizeChanger]="true"
+                          [nzSize]="'small'"
+                          [nzLoading]="loading"
+                          [nzAjaxData]="dataSet"
+                          [(nzPageIndex)]="page.curPage"
+                          [(nzPageSize)]="page.pageSize"
+                          [nzTotal]="page.totalRow"
+                          [nzPageSizeSelectorValues]="[20,50,100,200]"
+                          [nzShowQuickJumper] = "true"
+                          nzShowTotal
+                          (nzPageSizeChange)="qryCase(true)"
+                          (nzPageIndexChange)="qryCase()">
+                    <thead nz-thead>
+                    <tr>
+                        <th nz-th><span>所属机构</span></th>
+                        <th nz-th><span>设备号</span></th>
+                        <th nz-th><span>CASE类型</span></th>
+                        <th nz-th><span>处理状态</span></th>
+                        <th nz-th><span>创建时间</span></th>
+                        <th nz-th><span>关闭时间</span></th>
+                        <th nz-th><span>CASE级别</span></th>
+                        <th nz-th><span>模块</span></th>
+                        <th nz-th><span>故障描述</span></th>
+                        <th nz-th><span>处理建议</span></th>
+                        <th nz-th><span>通知</span></th>
+                        <th nz-th><span>跟踪</span></th>
+                        <th nz-th><span>详情</span></th>
+                    </tr>
+                    </thead>
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+                        <td nz-td>{{item.orgname}}({{item.orgno}})</td>
+                        <td nz-td>{{item.devNo}}</td>
+                        <td nz-td>{{item.catalogName}}</td>
+                        <td nz-td>{{item.currentstatus}}</td>
+                        <td nz-td>{{item.openTime}}</td>
+                        <td nz-td>{{item.closeTime}}</td>
+                        <td nz-td>{{item.grade}}</td>
+                        <td nz-td>{{item.modcatalogname}}</td>
+                        <td nz-td>{{item.description}}</td>
+                        <td nz-td>{{item.solution}}</td>
+                        <td nz-td>
+                            <a (click)="showNotice(item)" [ngStyle]="{'color':'blue'}">通知</a>
+                        </td>
+                        <td nz-td>
+                            <a (click)="showFollow(item)" [ngStyle]="{'color':'blue'}">跟踪</a>
+                        </td>
+                        <td nz-td>
+                            <a (click)="showDetail(item)" [ngStyle]="{'color':'blue'}">详情</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </form>
+    </nz-tab>
+</nz-tabset>
+
+

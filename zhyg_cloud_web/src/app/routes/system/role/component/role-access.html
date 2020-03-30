@@ -1,0 +1,48 @@
+<nz-table #nzTable
+          [nzAjaxData]="dataSet"
+          nzBordered
+          style="margin: 0;"
+          [nzIsPagination]="false">
+    <thead nz-thead>
+    <tr>
+        <th nz-th [nzWidth]="'100px'"><span>模块</span></th>
+        <th nz-th [nzWidth]="'150px'">
+               <span>
+                    功能
+                </span>
+        </th>
+        <th nz-th [nzWidth]="'300px'"><span>操作</span></th>
+    </tr>
+    </thead>
+    <tbody nz-tbody>
+    <ng-container *ngFor="let module of nzTable.data;">
+        <tr nz-tbody-tr *ngFor="let menu of module.menus; let i = index;">
+            <td nz-td *ngIf="i == 0" [attr.rowspan]="module.menus.length > 0 ? module.menus.length : 1">
+                <label
+                    nz-checkbox
+                    [(ngModel)]="module.checked"
+                    (ngModelChange)="updateAllChecked($event, module.menus,module.moduleNo)"                >
+                    {{module.moduleName}}
+                </label>
+            </td>
+            <td nz-td>
+                <label nz-checkbox [(ngModel)]="menu.checked"
+                       (ngModelChange)="selectMenu($event, menu.menuNo, menu.buttons, module.moduleNo)">
+                    <span>{{menu.menuName}}</span>
+                </label>
+            </td>
+            <td nz-td>
+                <label *ngFor="let button of menu.buttons" nz-checkbox [(ngModel)]="button.checked"
+                       (ngModelChange)="selectButton($event, button.btnNo, menu.menuNo, module.moduleNo)">
+                    <span>{{button.btnName}}</span>
+                </label>
+            </td>
+        </tr>
+    </ng-container>
+    </tbody>
+</nz-table>
+<div nz-form-item nz-row style="text-align:center; margin-top: 20px;">
+    <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" (click)="_submit()">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;
+    <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" (click)="cancel()">取消</button>
+</div>
+

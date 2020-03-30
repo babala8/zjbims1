@@ -1,0 +1,93 @@
+<form nz-form #form="ngForm" [formGroup]="validateForm" class="search-form">
+    <div nz-row>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'orgNo'">机构编号</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="orgNo" name="orgNo" [nzId]="'orgNo'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'upper'">所属机构</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <org-tree formControlName="upper" [zjId]="'upper'" (ngModelChange)="selectOrg($event)"></org-tree>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'orgType'">机构类型</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="orgType" name="orgType" nzAllowClear
+                               [nzPlaceHolder]="'--请选择机构类型--'">
+                        <nz-option *ngFor="let o of orgTypeList" [nzLabel]="o.type" [nzValue]="o.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6" style="width: auto;">
+            <button nz-button [nzType]="'primary'" (click)="refreshData(true)" [nzSize]="'large'">
+                <i class="anticon anticon-search"></i><span>查询</span>
+            </button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+            <button *ngIf="checkBtn('机构管理','增加')" nz-button  (click)="addOrg()" [nzType]="'primary'" [nzSize]="'large'"><i class="anticon anticon-plus"></i><span>添加</span>
+            </button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="padding:20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper]="true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>机构编号</span></th>
+            <th nz-th><span>机构名称</span></th>
+            <th nz-th><span>上级机构</span></th>
+            <th nz-th><span>机构类型</span></th>
+            <th nz-th><span>机构地址</span></th>
+            <th nz-th><span>联系人</span></th>
+            <th nz-th><span>联系电话</span></th>
+            <th nz-th style="width: 90px;"><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+            <td nz-td>{{item.no}}</td>
+            <td nz-td><a (click)="openDetail(item)" style="color: #1ba1e2;">{{item.name}}</a></td>
+            <td nz-td>{{item.parentOrgName}}</td>
+            <td nz-td>{{item.orgTypeName}}</td>
+            <td nz-td>{{item.address}}</td>
+            <td nz-td>{{item.linkman}}</td>
+            <td nz-td>{{item.telephone}}</td>
+            <td nz-td style="taxt-align:center;">
+                <!--<a (click)="setCost(item)" style="color: #1ba1e2;">成本录入</a>-->
+                <!--<span nz-table-divider></span>-->
+                <a *ngIf="checkBtn('机构管理','修改')" style="color: #1ba1e2;" (click)="modifyOrg(item)">修改</a>
+                <span *ngIf="checkBtn('机构管理','修改')" nz-table-divider></span>
+                <nz-popconfirm [nzTitle]="'确定要删除该机构吗？'" (nzOnConfirm)="confirmDel(item)" (nzOnCancel)="cancel()">
+                    <a *ngIf="checkBtn('机构管理','删除')" nz-popconfirm style="color:red;">删除</a>
+                </nz-popconfirm>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

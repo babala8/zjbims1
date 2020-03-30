@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevResponsorDao">
+    <select id="qryList" resultType="Map" parameterType="Map" >
+        select db.NO  dev_no ,db.org_no  org_no from DEV_BASE_INFO db where db.ORG_NO in (select no from SYS_ORG where LEFT_NO &gt;=( select s1.LEFT_NO from SYS_ORG s1 where s1.NO =#{orgNo})
+        and RIGHT_NO &lt;=( select s2.RIGHT_NO from SYS_ORG s2 where s2.NO =#{orgNo}))
+        <if test="userNo!=null&amp;&amp;userNo!=''">
+            and db.DEV_CATALOG in(select DEV_CATALOG from SYS_USER_DEVROLE where USER_NO=#{userNo})
+        </if>
+        <if test="devNo!=null&amp;&amp;devNo!=''">
+            and db.no=#{devNo}
+        </if>
+        order by db.no
+    </select>
+
+    <select id="qryOrgName" resultType="String" parameterType="String">
+        select so.name from dev_base_info db,Sys_org so where db.org_no = so.no and db.no=#{no}
+    </select>
+
+    <select id="qry" resultType="DevResponsor" parameterType="String">
+        select * from DEV_RESPONSOR_TABLE  where DEV_NO =#{no}
+    </select>
+    <select id="qryByUseNo" resultType="DevResponsor" parameterType="String">
+        select * from DEV_RESPONSOR_TABLE  where RESPONSER_NO =#{no}
+    </select>
+
+    <select id="qryManager" resultType="Map" parameterType="String">
+        select no,name from BANK_MANAGER_PERSION where NO=#{no} and IS_DEVMANAGER='1'
+    </select>
+
+    <select id="qryService" resultType="Map" parameterType="String">
+        select no,name from DEV_SERVICE_PERSON  where NO=#{no}
+    </select>
+
+    <select id="qryAllManager" resultType="String" parameterType="String">
+        select dm.NAME from BANK_MANAGER_PERSION dm where dm.IS_DEVMANAGER='1' and dm.ORG_NO =#{orgNo}
+    </select>
+
+    <select id="qryAllService" resultType="String">
+        select NAME from DEV_SERVICE_PERSON  where status=1
+    </select>
+
+    <select id="qryManagerByName" resultType="String">
+        select NO from BANK_MANAGER_PERSION where name=#{name} and IS_DEVMANAGER='1' and org_no=#{orgNo}
+    </select>
+
+    <select id="qryServiceByName" resultType="String">
+        select NO from DEV_SERVICE_PERSON where name=#{name}
+    </select>
+
+    <delete id="del" parameterType="String">
+        delete from DEV_RESPONSOR_TABLE  where dev_no=#{devNo}
+    </delete>
+
+    <insert id="add" parameterType="java.util.List" databaseId="db2">
+        insert into DEV_RESPONSOR_TABLE(logic_id,dev_no,catalog,grade,responser_no) values
+        <foreach collection='nodes' item='item' open='' close='' separator=','>
+            (#{item.logicId},#{item.devNo},#{item.catalog},
+            #{item.grade},#{item.responserNo})
+        </foreach>
+    </insert>
+    <insert id="add" parameterType="List" databaseId="oracle">
+        <foreach collection='nodes' item='item' open='begin' close=';end;' separator=';'>
+            insert into DEV_RESPONSOR_TABLE(logic_id,dev_no,catalog,grade,responser_no) values (#{item.logicId},#{item.devNo},#{item.catalog},
+            #{item.grade},#{item.responserNo})
+        </foreach>
+    </insert>
+
+    <insert id="add" parameterType="List" databaseId="mysql">
+        <foreach collection='nodes' item='item' open='' close='' separator=';'>
+            insert into DEV_RESPONSOR_TABLE(logic_id,dev_no,catalog,grade,responser_no) values (#{item.logicId},#{item.devNo},#{item.catalog},
+            #{item.grade},#{item.responserNo})
+        </foreach>
+    </insert>
+</mapper>

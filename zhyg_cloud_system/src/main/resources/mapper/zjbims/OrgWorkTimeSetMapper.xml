@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.OrgWorkTimeSetDao">
+
+    <select id="qryorgType"   resultType="com.zjft.zhyg.system.pojo.OrgType">
+        select * from sys_org_type
+    </select>
+
+    <select id="onceWorkTime"  parameterType="List"  resultType="OrgWorkTime">
+        select t.* from ORG_WORK_TIME_TABLE t
+        where dates_type !='Special'
+        <foreach collection="nos" item="no" open="and org_no in (" close=") " separator=",">
+            #{no}
+        </foreach>
+    </select>
+    <select id="specialDate"  parameterType="List"  resultType="OrgWorkTime">
+        select t.* from ORG_WORK_TIME_TABLE t
+        where dates_type ='Special'
+        <foreach collection="nos" item="no" open="and org_no in (" close=") " separator=",">
+            #{no}
+        </foreach>
+    </select>
+
+
+    <delete id="delOnceWorkTime" parameterType="List">
+        delete from  ORG_WORK_TIME_TABLE
+        where  1=1
+        <foreach collection="ids" item="id" open="and Logic_Id in (" close=") " separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+<!--    insert into ORG_WORK_TIME_TABLE(LOGIC_ID,Org_No,Dates_Type,Dates,Start_Time,End_Time)-->
+<!--    &lt;!&ndash;        <foreach collection="params" item="param" open=" values(" close=") " separator="),(">&ndash;&gt;-->
+<!--    values(    #{param.logicId},#{param.OrgNo},#{param.datesType},#{param.dates},#{param.startTime},#{param.endTime})-->
+<!--    insert into ORG_WORK_TIME_TABLE(logic_id,ORG_NO,DATES_TYPE,DATES_TYPE_STATEMENT,DATES,BUSINESSFLAG,START_TIME,END_TIME)-->
+<!--    values(',','10001','sp','sp','201906','1','2019','2019')-->
+<!--    &lt;!&ndash;        </foreach>&ndash;&gt;-->
+
+<!--    insert all-->
+
+<!--    <foreach collection="params" item="param" open="  into ORG_WORK_TIME_TABLE(logic_id,ORG_NO,DATES_TYPE,DATES_TYPE_STATEMENT,DATES,BUSINESSFLAG,START_TIME,END_TIME)  values("-->
+<!--             close=") "  separator=")  into ORG_WORK_TIME_TABLE(logic_id,ORG_NO,DATES_TYPE,DATES_TYPE_STATEMENT,DATES,BUSINESSFLAG,START_TIME,END_TIME)  values(">-->
+<!--        #{param.logicId},#{param.OrgNo},#{param.datesType},#{param.datesTypeStatement},#{param.dates},#{param.startTime},#{param.endTime},#{param.businessFlag}-->
+<!--    </foreach>-->
+<!--    select 1 from dual-->
+    <insert id="batchSpecialWorkTime" parameterType="OrgWorkTime">
+       insert into ORG_WORK_TIME_TABLE(logic_id,ORG_NO,DATES_TYPE,DATES_TYPE_STATEMENT,DATES,BUSINESSFLAG,START_TIME,END_TIME)
+         values(   #{param.logicId},#{param.OrgNo},#{param.datesType},#{param.datesTypeStatement},#{param.dates},#{param.businessFlag},#{param.startTime},#{param.endTime})
+
+    </insert>
+    <select id="qryOrgWorkTimes" parameterType="Map" resultType="Map">
+        select  so.no no,so.name name,so.address address,st.type org_type,
+        t.dateMode date_mode,w.dates dates,t.start_time start_time,t.end_time end_time
+        from sys_org so left join sys_org_type st  on so.org_type = st.no left join (select org_no,start_time,end_time,listAgg(dates_type_statement,',')within
+        group (order by org_no) as dateMode from
+        org_work_time_table where dates_type!='Special' group by org_no,start_time,end_time) t  on so.no=t.org_no left join (select org_no,listAgg(dates,',')within group (order by org_no) as dates from
+        org_work_time_table where dates_type='Special' group by org_no) w  on so.no=w.org_no where 1=1
+        <if test="orgNo!=null&amp;&amp;orgNo!=''">
+            and so.no in(select no from SYS_ORG where LEFT_NO &gt;=( select s1.LEFT_NO from SYS_ORG s1 where s1.NO =#{orgNo})
+            and RIGHT_NO &lt;=( select s2.RIGHT_NO from SYS_ORG s2 where s2.NO =#{orgNo}))
+        </if>
+        order  by so.no
+    </select>
+    <select id="qryOrgWorkTimes" parameterType="Map" resultType="Map" databaseId="db2">
+        select a.no,a.name,a.address,a.type as orgType,b.start_time,b.end_time,b.dateMode,c.dates from
+        (select a.no,a.name,a.address,b.type from sys_org a,sys_org_type b where a.org_type=b.no ) a left join
+        (select org_no,start_time,end_time,listAgg(dates_type_statement,',')within group(order by org_no) as dateMode from org_work_time_table where dates=''
+        group by org_no,start_time,end_time) b on a.no=b.org_no left join
+        (select org_no,listAgg(dates,',')within group(order by org_no) as dates from org_work_time_table where dates !=''group by org_no) c
+        on a.no=c.org_no
+        <if test="orgNo!=null&amp;&amp;orgNo!=''">
+            and a.no in(select no from SYS_ORG where LEFT_NO &gt;=( select s1.LEFT_NO from SYS_ORG s1 where s1.NO =#{orgNo})
+            and RIGHT_NO &lt;=( select s2.RIGHT_NO from SYS_ORG s2 where s2.NO =#{orgNo}))
+        </if>
+        order by a.no
+    </select>
+    <select id="qrySpecialDate" resultType="Map" parameterType="String">
+         select  ot.logic_id logic_id,ot.org_no org_no,so.name org_name,ot.dates dates,ot.businessflag business_flag,ot.start_time start_time,
+         ot.end_time end_time from  ORG_WORK_TIME_TABLE ot left join sys_org so on ot.org_no=so.no where org_no = #{orgNo} and DATES_TYPE = 'Special'
+    </select>
+
+</mapper>

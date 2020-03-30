@@ -1,0 +1,36 @@
+<div class="info-container">
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">设备号：</div>
+        <div nz-col [nzSpan]="18">{{deviceInfo.no || ''}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">IP地址：</div>
+        <div nz-col [nzSpan]="18">{{deviceInfo.ip || ''}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">CPU信息：</div>
+        <div nz-col [nzSpan]="18">{{hardwareInfo.HardwareCpu || ''}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">运行内存：</div>
+        <div nz-col [nzSpan]="18">{{hardwareInfo.HardwareMemory || ''}}</div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">磁盘：</div>
+        <div nz-col [nzSpan]="18">
+            <ul>
+                <li *ngFor="let data of hardwareInfo.HardwareHardisk.DiskList" style="margin-bototm: 5px;">
+                    <p>磁盘名称：{{data.DriveName}}</p>
+                    <p>磁盘类型：{{data.DiskType}}</p>
+                    <p>磁盘大小：{{data.TotalSize}}</p>
+                    <p>剩余可用：{{data.AvaliableSize}}</p>
+                    <p>文件系统：{{data.FileSystem}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div nz-row class="info-row">
+        <div nz-col [nzSpan]="6" class="text-right">总磁盘大小：</div>
+        <div nz-col [nzSpan]="18">{{hardwareInfo.HardwareHardisk.TotalDiskSize}}</div>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+@import (once)"variables.less";
+
+:host {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    app-header {
+        height: @header-height;
+        padding: 0 !important;
+        background-image: linear-gradient(90deg, #3e4b8a, #3b7fb0, #3683c4);
+        z-index: 999;
+        flex-shrink: 0;
+    }
+    .user-content-wrapper {
+        overflow: hidden;
+        flex: 1 1 100px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        .metro-menu-wrapper {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            transform: translateY(-100%);
+            z-index: 999;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            -webkit-perspective: 1000;
+            .menu-list {
+                //width: 2000px;
+                display: inline-flex;
+                height: 100%;
+                position: relative;
+            }
+            &.menu-activated {
+                animation: menu-slide-down .3s ease-in forwards;
+                //background: rebeccapurple;
+                background: #eff7ff;
+            }
+        }
+        .content-outer-wrapper {
+            flex: 1 1 100%;
+            transition: all 0.2s ease-in-out;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            reuse-tab.fixed {
+                position: static;
+                height: 42.8px;
+                padding: 4px;
+                flex-shrink: 0;
+            }
+            .content-inner-wrapper {
+                flex: 1 1 100px;
+                overflow-y: auto;
+            }
+        }
+    }
+}
+
+@keyframes menu-slide-down {
+    0% {
+        opacity: 0;
+        transform: translateY(-400px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
+    /*兼容IE11*/
+    .user-content-wrapper .metro-menu-wrapper .menu-list {
+        width: 3560px; /* IE11 改成合适的宽度 */
+    }
+}
+/*
+@keyframes menu-slide-down {
+    0% {
+        opacity: 0;
+        transform: translateY(-500px);
+    }
+    20% {
+        opacity: 0.4;
+        transform: translateY(-300px);
+    }
+    40% {
+        opacity: 0.8;
+        transform: translateY(-150px);
+    }
+    60% {
+        opacity: 0.9;
+        transform: translateY(-50px);
+    }
+    80% {
+        opacity: 0.95;
+        transform: translateY(-25px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+*/

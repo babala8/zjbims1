@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevCatalogDao">
+    <select id="qryDevCatalogByMonitorType" parameterType="String" resultType="java.util.HashMap">
+      select no no,name name,enname enname,monitor_type monitor_type from dev_catalog_table where monitor_type =#{monitorType}
+    </select>
+    <select id="qry" parameterType="Map" resultType="DevCatalog">
+        select * from dev_catalog_table  where 1=1
+        <if test="param.userNo!=null&amp;&amp;param.userNo!=''">
+            and NO in(select DEV_CATALOG from SYS_USER_DEVROLE where USER_NO=#{param.userNo})
+        </if>
+        <if test="param.no!=null&amp;&amp;param.no!=''">
+            and no=#{param.no}
+        </if>
+        <if test="param.enname!=null&amp;&amp;param.enname!=''">
+            and enname=#{param.enname}
+        </if>
+        order by no
+    </select>
+    <select id="qryByNo" resultType="DevCatalog" parameterType="String" >
+        select * from dev_catalog_table where no=#{no}
+    </select>
+    <insert id="add" parameterType="DevCatalog">
+        insert into dev_catalog_table (no,name,enname,monitor_type)
+        values (#{no},#{name},#{enname,jdbcType=VARCHAR},#{monitorType,jdbcType=VARCHAR})
+    </insert>
+    <select id="qryByName" parameterType="String" resultType="DevCatalog">
+        select * from dev_catalog_table where enname=#{name}
+    </select>
+
+    <select id="qryAllDevCatalogs" parameterType="String" resultType="java.util.HashMap">
+      select no no,name name,enname enname,monitor_type monitor_type from dev_catalog_table
+    </select>
+    <select id="qryByNameNo" parameterType="String" resultType="DevVendor">
+        select * from dev_catalog_table where enname=#{name} and no!=#{no}
+    </select>
+    <delete id="del" parameterType="String">
+        delete from dev_catalog_table where no=#{no}
+    </delete>
+    <update id="mod" parameterType="DevVendor">
+        update dev_catalog_table set enname=#{enname} where no=#{no}
+    </update>
+</mapper>
+

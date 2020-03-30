@@ -1,0 +1,52 @@
+
+<nz-layout class="layout">
+    <nz-layout>
+        <nz-sider [nzWidth]="250" style="background:#fff;" >
+            <ul nz-menu [nzMode]="'inline'" style="height:100%;">
+                <li nz-submenu nzOpen="nzOpen">
+                    <span title><i nz-icon type="mail"></i> 交易类报表</span>
+                    <ul>
+                        <li nz-menu-item (click)="switchTabs('doubtfulInfo')" >ATM可疑交易表</li>
+                        <li nz-menu-item (click)="switchTabs('transDetailInfo')" >交易明细表</li>
+                        <li nz-menu-item (click)="switchTabs('transInfo')" >交易统计报表</li>
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout >
+            <nz-content style="background:#fff;">
+                <div [ngSwitch]="showCase" style="float: left; width: 100%;" >
+                    <div *ngSwitchDefault >
+                        <branchTransInfo-factor></branchTransInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'doubtfulInfo'" >
+                        <doubtfulInfo-factor></doubtfulInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'atmpSuspiciousInfo'" >
+                        <atmpSuspiciousInfo-factor></atmpSuspiciousInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'transDetailInfo'" >
+                        <!--<devVersion-tab></devVersion-tab>-->
+                        <transDetailInfo-factor></transDetailInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'transInfo'" >
+                        <trans-factor></trans-factor>
+                    </div>
+                    <div *ngSwitchCase="'orgEarningInfo'" >
+                        <orgEarningInfo-factor></orgEarningInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'atmCashInfo'" >
+                        <atmCashInfo-factor></atmCashInfo-factor>
+                    </div>
+<!--                    <div *ngSwitchCase="'devAmount'" >-->
+<!--                        <branchTransInfo-factor></branchTransInfo-factor>-->
+<!--                    </div>-->
+
+                </div>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+</nz-layout>
+
+
+

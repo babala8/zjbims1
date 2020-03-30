@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevStatusDao">
+    <select id="qryDevStatusByNo" parameterType="String" resultType="java.util.HashMap">
+        select dev_cashbox_status dev_cash_box_status,dev_no ,combin_unit_type ,cim_cu_id ,cim_cu_type ,cim_cu_count,cim_cu_cash_in_count ,cim_cu_note_value,cim_cu_currency ,cim_cu_status,
+            cdm_cu_id ,cdm_cu_type ,cdm_cu_current_count cdm_cu_current,cdm_cu_initial_count ,cdm_cu_note_value ,cdm_cu_currency ,cdm_cu_status ,cdm_pu_id ,cim_pu_id ,cdm_pu_status ,cim_pu_status ,cdm_pu_current_count ,dev_net_status ,
+            cim_pu_count,cdm_pu_initial_count,cim_pu_cash_in_count,cim_pcu_id ,cdm_pcu_id ,cdm_pupos_name,cim_pupos_name
+            from Dev_Status_Table where dev_no=#{devNo}
+    </select>
+    <select id="qryByDevNo" parameterType="String" resultType="DevStatus">
+        select * from Dev_Status_Table where dev_no=#{devNo}
+    </select>
+
+    <insert id="add" parameterType="DevStatus">
+        insert into Dev_Status_Table(dev_no,dev_status,dev_tx_status,dev_run_status,dev_mod_status,dev_cashbox_status,dev_net_status,idc_device_status,
+        cam_device_status,cdm_device_status,ups_device_status,spr_device_status,dep_device_status,rpr_device_status,jpr_device_status,chk_device_status,
+        ttu_device_status,pbk_device_status,pin_device_status) values (#{devNo},#{devStatus},#{devTxStatus},#{devRunStatus},
+        #{devModStatus},#{devCashboxStatus},#{devNetStatus},#{idcDeviceStatus},#{camDeviceStatus},#{cdmDeviceStatus},#{upsDeviceStatus},#{sprDeviceStatus},
+        #{depDeviceStatus},#{rprDeviceStatus},#{jprDeviceStatus},#{chkDeviceStatus},#{ttuDeviceStatus},#{pbkDeviceStatus},#{pinDeviceStatus})
+    </insert>
+    <update id="mod" parameterType="DevStatus">
+        update Dev_Status_Table set dev_run_status=#{devRunStatus},dev_status=#{devStatus},dev_tx_status=#{devTxStatus},
+        dev_mod_status=#{devModStatus},dev_cashbox_status=#{devCashboxStatus},dev_net_status=#{devNetStatus},idc_device_status=#{idcDeviceStatus},
+        cam_device_status=#{camDeviceStatus},cdm_device_status=#{cdmDeviceStatus},ups_device_status=#{upsDeviceStatus},spr_device_status=#{sprDeviceStatus},
+        dep_device_status=#{depDeviceStatus},rpr_device_status=#{rprDeviceStatus},jpr_device_status=#{jprDeviceStatus},chk_device_status=#{chkDeviceStatus},
+        ttu_device_status=#{ttuDeviceStatus},pbk_device_status=#{pbkDeviceStatus},
+        pin_device_status=#{pinDeviceStatus} where dev_no=#{devNo}
+    </update>
+
+    <delete id="del" parameterType="String">
+        delete from Dev_Status_Table where dev_no=#{devNo}
+    </delete>
+</mapper>

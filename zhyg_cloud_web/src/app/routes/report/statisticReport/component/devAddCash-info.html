@@ -1,0 +1,61 @@
+<h3 style="width: 70%; text-align:center;">ATM加钞信息表</h3>
+<form nz-form #form="ngForm" [formGroup]="validateForm" class="search-form">
+
+    <div nz-form-item nz-row style=" width: 70%; ">
+        <div nz-form-label nz-col [nzSpan]="6">
+            <label [attr.for]="'org'">所属机构</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="12">
+            <org-tree formControlName="org" [zjId]="'org'"></org-tree>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row style=" width: 70%; ">
+
+        <div nz-form-label nz-col [nzSpan]="6">
+            <label [attr.for]="'devVendor'">设备品牌</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="12">
+            <nz-select [nzSize]="'large'" [nzMultiple]="true"  formControlName="devVendor" [nzPlaceHolder]="'--请选择设备品牌--'" >
+                <nz-option *ngFor="let o of devVendorList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+
+
+
+    <div nz-form-item  nz-row style=" width: 70%; ">
+            <div nz-form-label nz-col [nzSpan]="6">
+                <label [attr.for]="'devNo'" >设备号</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="12" [nzValidateStatus]="getFormControl('devNo')">
+                <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'"></nz-input>
+            </div>
+
+    </div>
+    <div nz-form-item nz-row style=" width: 70%; ">
+        <div nz-form-label nz-col [nzSpan]="6">
+            <label [attr.for]="'startTime'">开始时间</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="12">
+            <nz-datepicker  formControlName="startTime" [nzDisabledDate]="_disabledStartDate"  [nzSize]="'large'" style="width: 50%;"></nz-datepicker>
+        </div>
+    </div>
+    <div nz-form-item nz-row style=" width: 70%; ">
+        <div nz-form-label nz-col [nzSpan]="6">
+            <label [attr.for]="'endTime'">结束时间</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="12">
+            <nz-datepicker  formControlName="endTime" [nzDisabledDate]="_disabledEndDate" [nzSize]="'large'" style="width: 50%;"></nz-datepicker>
+        </div>
+    </div>
+
+    <div nz-row>
+        <div nz-col [nzSpan]="16" style="text-align:center;">
+            <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="getDevExcel()"><i class="anticon anticon-export"></i><span>导出Excel</span></button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+
+        </div>
+    </div>
+
+</form>

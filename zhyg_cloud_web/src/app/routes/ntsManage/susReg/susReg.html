@@ -1,0 +1,12 @@
+
+
+
+<!--<page-iframe #susRegIframe [srcUrl]="vuelink" [linkKey]="linkKey" [userSession]="userSession" (getdata)="getSonData($event)"></page-iframe>-->
+
+<page2-iframe #susRegIframe [srcUrl]="vuelink"
+              [linkKey]="linkKey"
+              [initData]="userSession"
+              (getdata)="getSonData($event)">
+
+</page2-iframe>
+

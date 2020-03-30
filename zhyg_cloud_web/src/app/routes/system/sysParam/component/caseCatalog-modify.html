@@ -1,0 +1,109 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row >
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label>分类名称</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <span>{{caseCatalog.catalogName}}</span>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'responsorCatalog'" nz-form-item-required>负责人类型</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-select formControlName="responsorCatalog" [nzSize]="'large'" [nzPlaceHolder]="'--请选择负责人类型--'">
+                <nz-option *ngFor="let r of caseCataloglist" [nzLabel]="r.name" [nzValue]="r.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'onsiteInterval'" nz-form-item-required>要求在行响应时间(分钟)</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="onsiteInterval" [nzId]="'onsiteInterval'"></nz-input>
+        </div>
+        <div nz-form-explain
+             *ngIf="validateForm.controls['onsiteInterval'].dirty && validateForm.controls['onsiteInterval'].errors">
+            <span>请输入数字0-1440的数字</span>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'onsiteInterval1'" nz-form-item-required>要求在行关闭时间(分钟)</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="onsiteInterval1" [nzId]="'onsiteInterval1'"></nz-input>
+        </div>
+        <div nz-form-explain
+             *ngIf="validateForm.controls['onsiteInterval1'].dirty && validateForm.controls['onsiteInterval1'].errors">
+            <span>请输入数字0-1440的数字</span>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'closeInterval'" nz-form-item-required>要求离行响应时间(分钟)</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="closeInterval" [nzId]="'closeInterval'"></nz-input>
+        </div>
+        <div nz-form-explain
+             *ngIf="validateForm.controls['closeInterval'].dirty && validateForm.controls['closeInterval'].errors">
+            <span>请输入数字0-1440的数字</span>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'closeInterval1'" nz-form-item-required>要求离行关闭时间(分钟)</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="closeInterval1" [nzId]="'closeInterval1'"></nz-input>
+        </div>
+        <div nz-form-explain
+             *ngIf="validateForm.controls['closeInterval1'].dirty && validateForm.controls['closeInterval1'].errors">
+            <span>请输入数字0-1440的数字</span>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'sendMsgMethod'" nz-form-item-required>升级通知方式</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-radio-group [(ngModel)]="sendMsgMethod" formControlName="sendMsgMethod">
+                <label nz-radio [nzValue]="0">
+                    <span>逐级发送</span>
+                </label>
+                <label nz-radio [nzValue]="1">
+                    <span>全部发送</span>
+                </label>
+            </nz-radio-group>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'maxGrade'" nz-form-item-required>通知次数</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-select formControlName="maxGrade" [nzSize]="'large'">
+                <nz-option *ngFor="let r of maxGradeList" [nzLabel]="r" [nzValue]="r"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'notifyWay'" nz-form-item-required>通知方式</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-select formControlName="notifyWay" [nzSize]="'large'">
+                <nz-option *ngFor="let r of notifyWayList" [nzLabel]="r.name" [nzValue]="r.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="24">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading">提交</button>
+            <button nz-button  type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消</button>
+        </div>
+    </div>
+</form>

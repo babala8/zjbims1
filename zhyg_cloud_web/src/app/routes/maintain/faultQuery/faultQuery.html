@@ -1,0 +1,233 @@
+<div [hidden]="!flag">
+<form nz-form #form="ngForm"  [formGroup]="validateForm" class="search-form">
+    <div nz-form-item nz-row style="margin-top:20px;">
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'caseNo'">CASE查询</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('caseNo')">
+                <nz-input [nzSize]="'large'" formControlName="caseNo" [nzId]="'caseNo'"
+                          [nzPlaceHolder]="'请输入CASE编号'" ></nz-input>
+            </div>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['caseNo'].dirty && validateForm.controls['caseNo'].errors">
+                {{ validateForm.controls['caseNo'].errors['explain'] }}
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devNo'">设备号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devNo')">
+                <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'"
+                          [nzPlaceHolder]="'请输入设备号'" [nzDisabled]="isDisabled"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devNo'].dirty && validateForm.controls['devNo'].errors">
+                    {{ validateForm.controls['devNo'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'org'" >所属机构</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <org-tree formControlName="org" [zjId]="'org'" (ngModelChange)="selectDevs($event)"></org-tree>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['org'].dirty && validateForm.controls['org'].errors">
+                    {{ validateForm.controls['org'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'status'" >CASE状态</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="status"
+                           [nzPlaceHolder]="'--请选择CASE状态--'">
+                    <nz-option *ngFor="let w of caseStatusList" [nzLabel]="w.name" [nzValue]="w.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['status'].dirty && validateForm.controls['status'].errors">
+                    {{ validateForm.controls['status'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devVendor'">设备品牌</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="devVendor"
+                           [nzPlaceHolder]="'--请选择设备品牌--'" (ngModelChange)="selectDevType($event)">
+                    <nz-option *ngFor="let o of devVendorList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devVendor'].dirty && validateForm.controls['devVendor'].errors">
+                    {{ validateForm.controls['devVendor'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devType'" >设备机型</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="devType"
+                           [nzPlaceHolder]="'--请选择设备机型--'" (ngModelChange)="selectDevs($event)">
+                    <nz-option *ngFor="let o of devTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devType'].dirty && validateForm.controls['devType'].errors">
+                    {{ validateForm.controls['devType'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="4" [nzXs]="24">
+            <label [attr.for]="'devInfo'" >设备信息</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="17" [nzXs]="24" [nzValidateStatus]="getFormControl('address')">
+            <nz-select [nzSize]="'large'" formControlName="devInfo" name="devInfo" nzAllowClear
+                       [nzPlaceHolder]="'--请选择设备信息--'" (ngModelChange)="devInfoChange($event)">
+                <nz-option *ngFor="let c of devList"  [nzLabel]="c.name"
+                           [nzValue]="c.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['devInfo'].dirty && validateForm.controls['devInfo'].errors">
+                {{ validateForm.controls['devInfo'].errors['explain'] }}
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devModule'" >设备模块</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="devModule"
+                           [nzPlaceHolder]="'--请选择设备模块--'">
+                    <nz-option *ngFor="let o of devModuleList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devModule'].dirty && validateForm.controls['devModule'].errors">
+                    {{ validateForm.controls['devModule'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'catalogNo'" >故障类型</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="catalogNo"
+                           [nzPlaceHolder]="'--请选择故障类型--'">
+                    <nz-option *ngFor="let o of caseCatalogList" [nzLabel]="o.catalogName" [nzValue]="o.catalogNo"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['catalogNo'].dirty && validateForm.controls['catalogNo'].errors">
+                    {{ validateForm.controls['catalogNo'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'startTime'" >创建日期(开始)</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('startTime')">
+                <nz-datepicker [(ngModel)]="startTime"   [nzPlaceHolder]="'请输入开始日期'"  formControlName="startTime"
+                               [nzDisabledDate]="_disabledStartDate" style="width: 100%;">
+                </nz-datepicker>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'endTime'">创建日期(截止)</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('endTime')">
+                <nz-datepicker [(ngModel)]="endTime" [nzPlaceHolder]="'请输入截止日期'"  formControlName="endTime"
+                               [nzDisabledDate]="_disabledEndDate" style="width: 100%;">
+                </nz-datepicker>
+            </div>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align:center;">
+            <button nz-button [nzType]="'primary'" (click)="search()" [nzSize]="'large'"><i class="anticon anticon-search"></i><span>确定</span></button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+        </div>
+    </div>
+</form>
+</div>
+
+<div [hidden]="flag">
+<div class="search-result-list" style="margin-left:20px; margin-right:20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper] = "true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>所属机构</span></th>
+            <th nz-th><span>设备号</span></th>
+            <th nz-th><span>CASE类型</span></th>
+            <th nz-th><span>处理状态</span></th>
+            <th nz-th><span>创建时间</span></th>
+            <th nz-th><span>关闭时间</span></th>
+            <th nz-th><span>CASE级别</span></th>
+            <th nz-th><span>模块</span></th>
+            <th nz-th><span>故障描述</span></th>
+            <th nz-th><span>处理建议</span></th>
+            <th nz-th><span>通知</span></th>
+            <th nz-th><span>跟踪</span></th>
+            <th nz-th><span>详情</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+            <td nz-td>{{item.orgname}}({{item.orgno}})</td>
+            <td nz-td>{{item.devNo}}</td>
+            <td nz-td>{{item.catalogName}}</td>
+            <td nz-td>{{item.currentstatus}}</td>
+            <td nz-td>{{item.openTime}}</td>
+            <td nz-td>{{item.closeTime}}</td>
+            <td nz-td>{{item.grade}}</td>
+            <td nz-td>{{item.modcatalogname}}</td>
+            <td nz-td>{{item.description}}</td>
+            <td nz-td>{{item.solution}}</td>
+            <td nz-td>
+                <a (click)="showNotice(item)" [ngStyle]="{'color':'blue'}">通知</a>
+            </td>
+            <td nz-td>
+                <a (click)="showFollow(item)" [ngStyle]="{'color':'blue'}">跟踪</a>
+            </td>
+            <td nz-td>
+                <a (click)="showDetail(item)" [ngStyle]="{'color':'blue'}">详情</a>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align:center; margin-top:10px;">
+            <button nz-button [nzType]="'default'" (click)="backModel()" [nzSize]="'large'"  ><i class="anticon anticon-enter"></i><span>返回</span></button>
+        </div>
+    </div>
+</div>

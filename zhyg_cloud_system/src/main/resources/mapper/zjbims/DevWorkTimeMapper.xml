@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevWorkTimeDao">
+    <select id="qry" resultType="DevWorkTime" parameterType="String">
+        select * from DEV_WORK_TIME_TABLE  where DEV_NO =#{no}
+    </select>
+    <insert id="add" parameterType="DevWorkTime">
+        insert into DEV_WORK_TIME_TABLE(logic_id,dev_no,dates_type,dates_type_statement,dates,start_time,end_time) values (#{logicId},#{devNo},#{datesType},
+            #{datesTypeStatement,jdbcType=VARCHAR},#{dates,jdbcType=VARCHAR},#{startTime,jdbcType=VARCHAR},#{endTime,jdbcType=VARCHAR})
+    </insert>
+    <delete id="del" parameterType="String">
+        delete from DEV_WORK_TIME_TABLE  where dev_no=#{devNo}
+    </delete>
+    <select id="qryById" resultType="DevWorkTime" parameterType="String">
+        select * from DEV_WORK_TIME_TABLE  where DEV_NO =#{devNo}
+    </select>
+
+    <delete id="delStandWorkTime" parameterType="String">
+        delete from DEV_WORK_TIME_TABLE where dev_no=#{devNo} and dates_type=#{datesType}
+    </delete>
+    <delete id="delSpecialWorkTime" parameterType="String">
+        delete from DEV_WORK_TIME_TABLE where dev_no=#{devNo} and dates=#{dates}
+    </delete>
+</mapper>

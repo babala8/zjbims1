@@ -1,0 +1,752 @@
+<!-- 设备筛选条件 -->
+<form nz-form #form="ngForm" [formGroup]="validateForm" class="search-form">
+
+    <div nz-row >
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'upper'">所属机构</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <org-tree formControlName="upper" [zjId]="'upper'"></org-tree>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'devVendor'">设备品牌</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="devVendor" nzAllowClear
+                               [nzPlaceHolder]="'--请选择设备品牌--'" (ngModelChange)="refreshDevType($event)">
+                        <nz-option *ngFor="let o of devVendorList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'devType'">设备型号</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="devType" nzAllowClear [nzPlaceHolder]="'--请选择设备型号--'">
+                        <nz-option *ngFor="let o of selectableDevTypeList" [nzLabel]="o.name"
+                                   [nzValue]="o.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'devCatalog'">设备类型</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="devCatalog" nzAllowClear [nzPlaceHolder]="'--请选择设备类型--'">
+                        <nz-option *ngFor="let o of devCatalogList" [nzLabel]="o.enname"
+                                   [nzValue]="o.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-row style="margin-top:10px;" nz-form-item>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="padding-left: 14px; width: auto;">
+                    <label [attr.for]="'devNo'">设备号</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'"></nz-input>
+                    <div nz-form-explain
+                         *ngIf="validateForm.controls['devNo'].dirty && validateForm.controls['devNo'].errors">
+                        <span>请输入数字或者字母，长度为4-8位</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="18">
+            <button nz-button [nzType]="'primary'" (click)="refreshData(true)" [nzSize]="'large'">
+                <i class="anticon anticon-search"></i><span>查询</span>
+            </button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span>
+            </button>
+        </div>
+
+    </div>
+</form>
+
+<!-- 控制按钮 -->
+<div style="margin: 20px;" [style.display]="allChecked || indeterminate ? 'block': 'none'">
+    <div nz-row>
+        <div nz-col [nzSpan]="3">
+            <a (click)="toggleScreenSelect()">
+                <img width="30" height="30" src="assets/images/remote/200007.png">
+                <span style="color: #616162;">远程抓屏</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="remoteView()">
+                <img width="30" height="30" src="assets/images/remote/browser.png">
+                <span style="color: #616162;">远程浏览</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <nz-popconfirm [nzTitle]="'确定要重启设备吗？'" (nzOnConfirm)="control('200014')" (nzOnCancel)="cancel()">
+                <a nz-popconfirm>
+                    <img width="30" height="30" src="assets/images/remote/200014.png">
+                    <span style="color: #616162;">设备重启</span>
+                </a>
+            </nz-popconfirm>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <nz-popconfirm [nzTitle]="'确定要关闭设备吗？'" (nzOnConfirm)="control('200015')" (nzOnCancel)="cancel()">
+                <a nz-popconfirm>
+                    <img width="30" height="30" src="assets/images/remote/200015.png">
+                    <span style="color: #616162;">关机</span>
+                </a>
+            </nz-popconfirm>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200026')">
+                <img width="30" height="30" src="assets/images/remote/200026.png">
+                <span style="color: #616162;">开启服务</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200027')">
+                <img width="30" height="30" src="assets/images/remote/200027.png">
+                <span style="color: #616162;">暂停服务</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="toggleLogRangeSelect()">
+                <img width="30" height="30" src="assets/images/remote/200003.png">
+                <span style="color: #616162;">提取日志</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200016')">
+                <img width="30" height="30" src="assets/images/remote/200016.png">
+                <span style="color: #616162;">软件信息</span>
+            </a>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200021')">
+                <img width="30" height="30" src="assets/images/remote/200021.png">
+                <span style="color: #616162;">硬件信息</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200022')">
+                <img width="30" height="30" src="assets/images/remote/200022.png">
+                <span style="color: #616162;">系统信息</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200008')">
+                <img width="30" height="30" src="assets/images/remote/200008.png">
+                <span style="color: #616162;">进程信息</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200024')">
+                <img width="30" height="30" src="assets/images/remote/200024.png">
+                <span style="color: #616162;">强制复位</span>
+            </a>
+        </div>
+
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200028')">
+                <img width="30" height="30" src="assets/images/remote/200028.png">
+                <span style="color: #616162;">状态检测</span>
+            </a>
+        </div>
+        <div nz-col [nzSpan]="3">
+            <a (click)="control('200011')">
+                <img width="30" height="30" src="assets/images/remote/200011.png">
+                <span style="color: #616162;">网络检测</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 文件下载列表 -->
+<div id="downloadList" [@openClose]="listOpen ? 'open' : 'closed'"
+     style="position: fixed; right: -585px; top: 172px; z-index: 50; width: 625px;">
+    <div style="width:25px;
+         float:left;
+         background-color: #fbfffd;
+         border-left:1px solid #2046ff;
+         border-top:1px solid  #2046ff;
+         border-bottom:1px solid  #2046ff;
+         border-radius: 5px;
+         cursor: hand;"
+         (click)="toggleDownloadList()">
+        <a>
+            <i *ngIf="!listOpen" style="margin-left: 4px;" class="anticon anticon-left"></i>
+            <i *ngIf="listOpen" style="margin-left: 4px;" class="anticon anticon-right"></i>
+            <br>
+            <p style="margin-left: 4px; color: #616162;">下</p>
+            <p style="margin-left: 4px; color: #616162;">载</p>
+            <p style="margin-left: 4px; color: #616162;">列</p>
+            <p style="margin-left: 4px; color: #616162;">表</p>
+        </a>
+    </div>
+    <div style="padding: 0;">
+        <nz-card style="width:600px; height:450px; float:left;">
+            <ng-template #body>
+                <nz-table #nzTable
+                          [nzAjaxData]="downloadFileList"
+                          [nzSize]="'small'"
+                          [nzPageSize]="page2.pageSize"
+                          [nzTotal]="page2.totalRow"
+                          [(nzPageIndex)]="page2.curPage"
+                          nzShowTotal
+                          (nzPageIndexChange)="getDownloadFileList()"
+                          [nzScroll]="{y: 370 }">
+                    <thead nz-thead>
+                    <tr>
+                        <th nz-th><span>时间</span></th>
+                        <th nz-th><span>结果</span></th>
+                        <th nz-th><span>文件</span></th>
+                    </tr>
+                    </thead>
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                        <td nz-td>{{data.time}}</td>
+                        <td nz-td>{{data.result}}</td>
+                        <td nz-td>
+                            <a *ngIf="data.result == download_success" href="{{data.filePath}}">{{data.fileName}}</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </nz-table>
+            </ng-template>
+        </nz-card>
+    </div>
+</div>
+
+<!-- 禁止操作 -->
+<div *ngIf="coverControlBtn"
+     style="z-index: 99; width: 100%; height: 90px; position: absolute; top: 160px; left: 0; opacity: 0.6; background-color: #f6f5fa;"></div>
+
+<!-- 设备列表 -->
+<div class="search-result-list" style="margin:20px;" *ngIf="showDevs">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="devList"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              (nzDataChange)="refreshStatus()"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th nzCheckbox>
+                <label nz-checkbox [(ngModel)]="allChecked" [nzIndeterminate]="indeterminate"
+                       (ngModelChange)="checkAll($event)">
+                </label>
+            </th>
+            <th nz-th><span>设备号</span></th>
+            <th nz-th><span>ip地址</span></th>
+            <th nz-th><span>设备品牌</span></th>
+            <th nz-th><span>设备型号</span></th>
+            <th nz-th><span>所属机构</span></th>
+            <th nz-th><span>设备地址</span></th>
+            <!--<th nz-th><span>冠字号缓存状态</span></th>-->
+            <!--<th nz-th><span>现金缓存状态</span></th>-->
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data">
+            <td nz-td nzCheckbox>
+                <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="refreshStatus($event)">
+                </label>
+            </td>
+            <td nz-td>{{item.devNo}}</td>
+            <td nz-td>{{item.ip}}</td>
+            <td nz-td>{{item.vendorName}}</td>
+            <td nz-td>{{item.typeName}}</td>
+            <td nz-td>{{item.orgName}}</td>
+            <td nz-td>{{item.address}}</td>
+            <!--<td nz-td>{{item.serialNoInfoStatus == 1 ? '开启': '关闭'}}</td>-->
+            <!--<td nz-td>{{item.txtInfoStatus == 1 ? '开启': '关闭'}}</td>-->
+        </tr>
+        </tbody>
+    </nz-table>
+</div>
+
+<!-- 选择屏幕 -->
+<nz-modal [nzVisible]="showScreen" [nzTitle]="'请选择屏幕'" [nzContent]="modalContent1" (nzOnCancel)="toggleScreenSelect()"
+          (nzOnOk)="control('200007')" [nzStyle]="{'margin-top': '100px'}" [nzWidth]="300">
+    <ng-template #modalContent1>
+        <nz-radio-group [(ngModel)]="screenFlag" style="margin: 10px;">
+            <label nz-radio [nzValue]="'0'">
+                <span>主屏幕</span>
+            </label>
+            <label nz-radio [nzValue]="'1'">
+                <span>副屏幕</span>
+            </label>
+        </nz-radio-group>
+    </ng-template>
+</nz-modal>
+<!-- 选择日志范围 -->
+<nz-modal [nzVisible]="showLog" [nzTitle]="'请选择日期范围（最多七天）'" [nzContent]="modalContent2"
+          (nzOnCancel)="toggleLogRangeSelect()"
+          (nzOnOk)="control('200003')" [nzStyle]="{'margin-top': '100px'}" [nzWidth]="300">
+    <ng-template #modalContent2>
+        <div style="margin: 10px;">
+            <nz-datepicker [(ngModel)]="logStartDate" (ngModelChange)="startDateChange()"
+                           [nzPlaceHolder]="'开始日期'"></nz-datepicker>
+            <br><br>
+            <nz-datepicker [(ngModel)]="logEndDate" (ngModelChange)="endDateChange()"
+                           [nzPlaceHolder]="'结束日期'"></nz-datepicker>
+        </div>
+    </ng-template>
+</nz-modal>
+
+<!--远程控制返回结果-->
+<div id="resultDiv" style="margin-left: 20px; display: none;">
+    <nz-spin style="position: absolute; left: 45%; top: 55%; z-index: 2;" [nzTip]="'正在获取结果...'" [nzSpinning]="loadResult"></nz-spin>
+    <nz-table #nzTable
+              [nzSize]="'small'"
+              [nzAjaxData]="controlResult"
+              [nzCustomNoResult]="true"
+              [nzIsPagination]="false">
+        <thead nz-thead>
+        <tr>
+            <th nz-th [nzWidth]="'100px'"><span>序号</span></th>
+            <th nz-th [nzWidth]="'100px'"><span>设备号</span></th>
+            <th nz-th [nzWidth]="'100px'"><span>IP地址</span></th>
+            <th nz-th [nzWidth]="'200px'"><span>结果</span></th>
+            <th nz-th [nzWidth]="'300px'"><span>原因</span></th>
+            <th nz-th [nzWidth]="'300px'"><span>详细信息</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let data of controlResult ">
+            <td nz-td>{{data.serial}}</td>
+            <td nz-td>{{data.no}}</td>
+            <td nz-td>{{data.ip}}</td>
+            <td nz-td>{{data.result}}</td>
+            <td nz-td>{{data.resultContent}}</td>
+            <td nz-td>
+                <span *ngIf="data.hasFile">
+                    <a *ngIf="data.result == '成功' && (currentCmdId ==='200008' || currentCmdId ==='200016' || currentCmdId ==='200021' || currentCmdId ==='200022' || currentCmdId ==='200028')" (click)="clickOpenModel(data)" style="color:#1ba1e2;">详细信息</a>
+                    <a *ngIf="currentCmdId !=='200003' && currentCmdId !=='200008' && currentCmdId !=='200007' && currentCmdId !=='200016' && currentCmdId !=='200021' && currentCmdId !=='200022' && currentCmdId !=='200028'" href="{{data.downloadPath}}">{{data.fileName}}</a>
+                    <!--电子日志-->
+                    <a *ngIf="data.result == '成功' && currentCmdId ==='200003' " (click)="clickOpenModel(data)" style="color:#1ba1e2;">{{data.fileName}}</a>
+                    <!--抓屏-->
+                    <span *ngIf="data.result == '成功' && currentCmdId ==='200007'" (click)="previewRes(data)" style="color:#1ba1e2;">
+                       <a>{{data.fileName}}
+                       </a>
+                    </span>
+                </span>
+                <span *ngIf="!data.hasFile">{{data.result}}</span>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+    <div *ngIf="!loadResult" style="width: 100%; text-align:center; margin-top: 20px;">
+        <button nz-button (click)="reset()"><i class="anticon anticon-rollback"></i><span>返回</span></button>
+    </div>
+</div>
+
+<!-- 远程文件浏览界面 -->
+<div id="documentDiv" style="display: none; margin-left: 20px; margin-right: 20px;">
+    <div>
+        <div id="filePath">远程浏览器&nbsp;&nbsp;设备：{{devNo}}&nbsp;&nbsp;当前路径：
+            <span id="currentPath" style="width: 500px; overflow: hidden;"></span>
+        </div>
+    </div>
+    <br>
+    <div>
+        <!---最上面的操作按钮--->
+        <div style="margin: 0; padding: 2px; height: 23px;">
+            <a title="返回上级目录" (click)="upIndex()">
+                <i class="anticon anticon-rollback"></i>
+                <span style="color: #616162;">返回上级目录</span>
+            </a>&nbsp;&nbsp;&nbsp;
+            <a title="刷新此目录" (click)="reloadFiles()">
+                <i class="anticon anticon-retweet"></i>
+                <span style="color: #616162;">刷新</span>
+            </a>
+        </div>
+        <!-- 文件目录内容 -->
+        <div style="margin: 0; padding: 0;">
+            <nz-spin style="left: 400px; top: 150px;" [nzTip]="'Loading...'"
+                     [nzSpinning]="loadResult"></nz-spin>
+            <div id="viewTable" style="display: none;">
+                <ng-container *ngIf="viewMode!='1'">
+                    <!-- 文件目录其实就是一个表格 -->
+                    <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                        <!-- 表头 -->
+                        <tr align="center">
+                            <td colspan="2" width="25%" height="30"><b>名称</b></td>
+                            <!-- viewPath存在则为磁盘内文件视图 -->
+                            <ng-container *ngIf="viewPath != ''">
+                                <td style="text-align:right;" width="15%"><b>大小</b></td>
+                                <td width="10%"><b>类型</b></td>
+                                <td width="20%"><b>修改时间</b></td>
+                                <ng-container *ngIf="chkExe">
+                                    <td width="10%"><b>执行</b></td>
+                                </ng-container>
+                                <ng-container *ngIf="chkDel">
+                                    <td width="10%"><b>删除</b></td>
+                                </ng-container>
+                                <td width="10%"><b>下载</b></td>
+                            </ng-container>
+                            <!-- 所有磁盘视图 -->
+                            <ng-container *ngIf="viewPath == ''">
+                                <td width="20%"><b>类型</b></td>
+                                <td width="20%"><b>总大小</b></td>
+                                <td width="20%"><b>可用空间</b></td>
+                                <td width="10%"><b>备注</b></td>
+                            </ng-container>
+                        </tr>
+                        <!-- 文件列表 -->
+                        <ng-container *ngFor="let documentFile of documentFileList">
+                            <tr style="height: 20px;">
+                                <!-- 第一列：文件图标 -->
+                                <td width="5%" align="center">
+                                    <!-- 磁盘 -->
+                                    <ng-container
+                                        *ngIf="documentFile.documentType == '2'">
+                                        <span (dblclick)="openDir(viewPath,documentFile.diskPath)">
+                                            <img src="assets/images/remote/fileIcons/disk.png">
+                                        </span>
+                                    </ng-container>
+                                    <!-- 文件夹 -->
+                                    <ng-container
+                                        *ngIf="documentFile.documentType == '1'">
+                                        <span (dblclick)="openDir(viewPath,documentFile.fileName)">
+                                            <i class="anticon anticon-folder" style="background-color: yellow;"></i>
+                                        </span>
+                                    </ng-container>
+                                    <!-- 文件 -->
+                                    <ng-container
+                                        *ngIf="documentFile.documentType == '0'">
+                                        <ng-container
+                                            *ngIf="documentFile.fileType == 'exe' || documentFile.fileType == 'bat'">
+                                            <span>
+                                                <img src="assets/images/remote/fileIcons/exe.png">
+                                            </span>
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.fileType == 'txt'">
+                                            <span>
+                                                <i class="anticon anticon-file-text"></i>
+                                            </span>
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.fileType == 'jpg' || documentFile.fileType == 'gif'
+                                                                        || documentFile.fileType == 'png'">
+                                            <span>
+                                                <img src="assets/images/remote/fileIcons/image.png">
+                                            </span>
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.fileType == 'zip'">
+                                            <span>
+                                                <img src="assets/images/remote/fileIcons/zip.png">
+                                            </span>
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.fileType != 'zip' &&
+                                            documentFile.fileType != 'gif' && documentFile.fileType != 'txt' &&
+                                            documentFile.fileType != 'exe' && documentFile.fileType != 'bat' &&
+                                            documentFile.fileType != 'png' && documentFile.fileType != 'jpg'">
+                                            <span>
+                                                <i class="anticon anticon-file-unknown"></i>
+                                            </span>
+                                        </ng-container>
+                                    </ng-container>
+                                </td>
+                                <!-- 第二列：文件名称 -->
+                                <td width="25%" align="left">
+                                    <ng-container
+                                        *ngIf="documentFile.documentType == '2'">
+                                        <a (click)="openDir(viewPath, documentFile.diskPath)"
+                                           title="单击进入该磁盘">
+                                            <span style="color: #616162;">{{documentFile.diskName}}</span>
+                                        </a>
+                                    </ng-container>
+                                    <ng-container
+                                        *ngIf="documentFile.documentType == '0'">
+                                        <a (click)="viewDownloadFile(viewPath, documentFile.fileName, documentFile.fileType, documentFile.fileSize)"
+                                           title="点击下载{{documentFile.fileName}}文件">
+                                            <span style="color: #616162;">{{documentFile.fileName}}</span>
+                                        </a>
+                                    </ng-container>
+                                    <ng-container
+                                        *ngIf="documentFile.documentType == '1'">
+                                        <a (click)="openDir(viewPath, documentFile.fileName)"
+                                           title="单击进入{{documentFile.fileName}}文件夹">
+                                            <span style="color: #616162;">{{documentFile.fileName}}</span>
+                                        </a>
+                                    </ng-container>
+                                </td>
+                                <!-- 若为文件视图则显示 -->
+                                <ng-container *ngIf="viewPath != ''">
+                                    <!-- 第三列：文件大小 -->
+                                    <td style="width:200px; text-align:right;">
+                                        {{documentFile.fileSize}}&nbsp;&nbsp;
+                                    </td>
+                                    <!-- 第四列：文件类型 -->
+                                    <td align="center">
+                                        <ng-container
+                                            *ngIf="documentFile.documentType == '2'">
+                                            本地磁盘
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.documentType == '1'">
+                                            文件夹
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.documentType == '0' && (documentFile.fileType == 'exe'
+                                            || documentFile.fileType == 'msi' || documentFile.fileType == 'com'
+                                            || documentFile.fileType == 'bat')">
+                                            应用程序
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.documentType == '0' && (documentFile.fileType == 'jpg'
+                                            || documentFile.fileType == 'gif' || documentFile.fileType == 'jpeg'
+                                            || documentFile.fileType == 'png' || documentFile.fileType == 'bmp')">
+                                            图片文件
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.documentType == '0' && (documentFile.fileType == 'txt'
+                                            || documentFile.fileType == 'rar' || documentFile.fileType == 'zip'
+                                            || documentFile.fileType == 'doc')">
+                                            档案文件
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="documentFile.documentType == '0' && documentFile.fileType != 'exe'
+                                            && documentFile.fileType != 'msi' && documentFile.fileType != 'com'
+                                            && documentFile.fileType != 'bat' && documentFile.fileType != 'jpg'
+                                            && documentFile.fileType != 'gif' && documentFile.fileType != 'jpeg'
+                                            && documentFile.fileType != 'png' && documentFile.fileType != 'bmp'
+                                            && documentFile.fileType != 'txt' && documentFile.fileType != 'rar'
+                                            && documentFile.fileType != 'zip' && documentFile.fileType != 'doc'">
+                                            {{documentFile.fileType}}文件
+                                        </ng-container>
+                                    </td>
+                                    <!-- 第五列：修改时间 -->
+                                    <td align="center">
+                                        <ng-container
+                                            *ngIf="documentFile.documentType != '2'">
+                                            {{documentFile.lastUpdateTime}}
+                                        </ng-container>
+                                    </td>
+                                    <!-- 第六列：执行文件 -->
+                                    <ng-container *ngIf="chkExe">
+                                        <td align="center">
+                                            <ng-container
+                                                *ngIf="documentFile.fileType == 'exe' || documentFile.fileType == 'msi'
+                                                || documentFile.fileType == 'com' || documentFile.fileType == 'bat'">
+                                                <nz-popconfirm [nzTitle]="'确定执行该文件？'"
+                                                               (nzOnConfirm)="executeFile(viewPath,documentFile.fileName)"
+                                                               (nzOnCancel)="cancel()">
+                                                    <a nz-popconfirm>
+                                                        <img src="assets/images/remote/fileIcons/execute.png">
+                                                    </a>
+                                                </nz-popconfirm>
+                                            </ng-container>
+                                        </td>
+                                    </ng-container>
+                                    <!-- 第七列：删除文件 -->
+                                    <ng-container *ngIf="chkDel">
+                                        <td align="center">
+                                            <ng-container
+                                                *ngIf="documentFile.documentType == '0'">
+                                                <nz-popconfirm [nzTitle]="'确定删除该文件？'"
+                                                               (nzOnConfirm)="deleteFile(viewPath,documentFile.fileName)"
+                                                               (nzOnCancel)="cancel()">
+                                                    <a style="color: #616162;" nz-popconfirm>
+                                                        <i class="anticon anticon-delete"></i>
+                                                    </a>
+                                                </nz-popconfirm>
+                                            </ng-container>
+                                        </td>
+                                    </ng-container>
+                                    <!-- 第七列：下载文件 -->
+                                    <td align="center">
+                                        <ng-container
+                                            *ngIf="documentFile.documentType == '0'">
+                                            <nz-popconfirm [nzTitle]="'确定下载该文件？'"
+                                                           (nzOnConfirm)="viewDownloadFile(viewPath,documentFile.fileName,documentFile.fileType,documentFile.fileSize)"
+                                                           (nzOnCancel)="cancel()">
+                                                <a style="color: #616162;" nz-popconfirm><i
+                                                    class="anticon anticon-download"></i></a>
+                                            </nz-popconfirm>
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+                                <!-- 磁盘视图（前两列相同） -->
+                                <ng-container *ngIf="viewPath == ''">
+                                    <td align="center">
+                                        {{documentFile.fileName}}
+                                    </td>
+                                    <td align="center">{{documentFile.fileSize}}</td>
+                                    <td align="center">{{documentFile.diskFreeSpace}}</td>
+                                    <td align="center">{{documentFile.filePro}}</td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </table>
+                </ng-container>
+                <!-- 列表视图 -->
+                <!--<ng-container *ngIf="viewMode == '1'">-->
+                <!--<ul>-->
+                <!--<ng-container *ngFor="let documentFile of documentFileList">-->
+                <!--&lt;!&ndash;<li (mouseover)="mover(this,'#e9e9e9')"&ndash;&gt;-->
+                <!--&lt;!&ndash;(mouseout)="mout(this,'#ffffff')">&ndash;&gt;-->
+                <!--<li (mouseover)="this.className='onmouseover'"-->
+                <!--(mouseout)="this.className='onmouseout'">-->
+                <!--<table>-->
+                <!--<tr>-->
+                <!--<td>-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.documentType == '2'">-->
+                <!--<span style="width: 30px; height: 30px;"-->
+                <!--(dblclick)="openDir(viewPath, documentFile.diskPath)">-->
+                <!--<i class="anticon anticon-folder"></i>-->
+                <!--</span>-->
+                <!--</ng-container>-->
+
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.documentType != '1'">-->
+                <!--<span style="width: 30px; height: 30px;"-->
+                <!--(dblclick)="openDir(viewPath, documentFile.fileName)">-->
+                <!--<i class="anticon anticon-folder"></i>-->
+                <!--</span>-->
+                <!--</ng-container>-->
+
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.documentType != '0'">-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.fileType == 'exe' || documentFile.fileType == 'msi'-->
+                <!--|| documentFile.fileType == 'com' || documentFile.fileType == 'bat'">-->
+                <!--<span-->
+                <!--style="width: 30px; height: 30px;">-->
+                <!--<i class="anticon anticon-file-jpg"></i>-->
+                <!--</span>-->
+                <!--</ng-container>-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.fileType == 'txt'">-->
+                <!--<span-->
+                <!--style="width: 30px; height: 30px;">-->
+                <!--<i class="anticon anticon-file-text"></i>-->
+                <!--</span>-->
+                <!--</ng-container>-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.fileType == 'gif'">-->
+                <!--<span-->
+                <!--style="width: 30px; height: 30px;">-->
+                <!--<i class="anticon anticon-file-jpg"></i>-->
+                <!--</span>-->
+                <!--</ng-container>-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.fileType == 'zip'">-->
+                <!--<span-->
+                <!--style="width: 30px; height: 30px;">-->
+                <!--<i class="anticon anticon-file-jpg"></i>-->
+                <!--</span>-->
+                <!--</ng-container>-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.fileType != 'zip' && documentFile.fileType != 'gif'-->
+                <!--&& documentFile.fileType != 'txt' && documentFile.fileType != 'exe'">-->
+                <!--<span-->
+                <!--style="width: 30px; height: 30px;">-->
+                <!--<i class="anticon anticon-file-unknown"></i>-->
+                <!--</span>-->
+                <!--</ng-container>-->
+                <!--</ng-container>-->
+                <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                <!--<td style="text-align:center;">-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.documentType == '2'">-->
+                <!--<a href="openDir(viewPath, documentFile.diskPath)">{{documentFile.diskPath}}</a>-->
+                <!--</ng-container>-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.documentType == '1'">-->
+                <!--<a href="openDir(viewPath, documentFile.fileName)">{{documentFile.fileName}}</a>-->
+                <!--</ng-container>-->
+                <!--<ng-container-->
+                <!--*ngIf="documentFile.documentType != '1' && documentFile.documentType != '2'">-->
+                <!--<a href="">{{documentFile.fileName}}</a>-->
+                <!--</ng-container>-->
+                <!--</td>-->
+                <!--<td></td>-->
+                <!--</tr>-->
+                <!--</table>-->
+                <!--</li>-->
+                <!--</ng-container>-->
+                <!--</ul>-->
+                <!--</ng-container>-->
+            </div>
+        </div>
+        <br>
+        <div style="padding: 2px; margin: 0; height: 23px;">
+            <a title="返回上级目录" (click)="upIndex()">
+                <i class="anticon anticon-rollback"></i>
+                <span style="color: #616162;">返回上级目录</span>
+            </a>&nbsp;&nbsp;&nbsp;
+            <!-- 根目录不能上传文件 -->
+            <a *ngIf="viewPath != '' && viewPath != 'DISK'" title="打开上传文件模块,上传文件到当前目录" (click)="toggleUpload()">
+                <i class="anticon anticon-upload"></i>
+                <span style="color: #616162;">上传文件</span>
+            </a>
+        </div>
+
+        <!---本地上传模块-->
+        <nz-modal [nzVisible]="uploadVisible" nzTitle="版本文件上传" [nzWidth]="400"
+                  [nzContent]="modalContent"
+                  [nzFooter]="modalFooter" [nzClosable]="false"
+                  [nzStyle]="{'margin-top':'50px'}">
+            <ng-template #modalContent>
+                <input id="fileUploadInput" #fileUpload type="file" ng2FileSelect [uploader]="uploader"/><br>
+            </ng-template>
+            <ng-template #modalFooter>
+                <button nz-button nzType="default" (click)="toggleUpload()">取消</button>
+                <button nz-button nzType="primary" (click)="uploadFile()" [nzLoading]="loading">上传</button>
+            </ng-template>
+        </nz-modal>
+        <br>
+    </div>
+    <div style="width: 100%; text-align:center; margin-top: 20px;">
+        <button nz-button (click)="reset()"><i class="anticon anticon-rollback"></i><span>返回设备列表</span></button>
+    </div>
+</div>
+<!--抓屏弹出框-->
+<div *ngIf="previewVisible">
+    <nz-modal [nzVisible]="true" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false"  [nzWidth]="800">
+        <ng-template #modalContent >
+            <div >
+                <div style="margin-bottom: 1%;">
+                    <img  src="{{selectedPic}}" />
+                </div>
+                <div style="text-align: center;">
+                    <span >
+                        <button nz-button  (click)="previewVisible=false"><span>取消</span></button>
+                    </span>
+                    <span style="margin-left: 2%;">
+                        <button nz-button [nzType]="'primary'" ><a [href]="downloadPic">下载</a></button>
+                    </span>
+                </div>
+            </div>
+        </ng-template>
+    </nz-modal>
+</div>

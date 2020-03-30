@@ -1,0 +1,58 @@
+<form nz-form [formGroup]="validateForm" >
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'no'" nz-form-item-required>编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" >
+            <nz-input [nzSize]="'large'" formControlName="no" [nzId]="'no'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'name'" nz-form-item-required>设备型号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" >
+            <nz-input [nzSize]="'large'" formControlName="name" [nzId]="'name'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'devVendor'" nz-form-item-required>设备品牌</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="devVendor" [nzDisabled]="true">
+                <nz-option *ngFor="let o of devVendorList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'devCatalog'" nz-form-item-required>设备类型</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="devCatalog" [nzDisabled]="true" >
+                <nz-option *ngFor="let o of devCatalogList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'cashType'" >现金类型</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="cashType"  [nzDisabled]="true">
+                <nz-option *ngFor="let o of cashTypeList"  [nzLabel]="o.name" [nzValue]="o.no"  ></nz-option>
+            </nz-select>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

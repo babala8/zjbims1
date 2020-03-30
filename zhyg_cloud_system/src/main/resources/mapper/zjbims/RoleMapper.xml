@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.RoleDao">
+    <resultMap id="roleButtonMap" type="RoleButton">
+        <association property="button" column="button_no" select="com.zjft.zhyg.system.dao.ButtonDao.qryByNo"/>
+    </resultMap>
+    <resultMap id="roleMap" type="Role">
+        <association property="orgType" column="org_type" select="com.zjft.zhyg.system.dao.OrgDao.qryOrgTypeByNo"/>
+    </resultMap>
+    <select id="qryByNo" resultType="Role" parameterType="String">
+        select * from sys_role where no=#{no}
+    </select>
+
+    <select id="qryRoleMenu" parameterType="String" resultType="String">
+        select menu_no from sys_role_menu where role_no=#{roleNo}
+    </select>
+
+    <select id="qryRoleButton" parameterType="String" resultMap="roleButtonMap">
+        select * from sys_role_button where role_no=#{roleNo}
+    </select>
+
+    <select id="qry" parameterType="Map" resultMap="roleMap">
+        select r.no,r.name,r.org_type,r.note,ot.type from SYS_ROLE r,SYS_ORG_TYPE ot where r.org_type = ot.no
+        AND r.org_type IN ( SELECT NO FROM sys_org_type WHERE grade>= (
+        SELECT sot.grade FROM sys_org so JOIN sys_org_type sot ON so.org_type=sot.no WHERE so.no=#{userOrgNo})
+        )
+        <if test="roleName!=null&amp;&amp;roleName!=''">
+            and r.name=#{roleName}
+        </if>
+        <if test="orgTypeNo!=null&amp;&amp;orgTypeNo!=''">
+            and r.org_type=#{orgTypeNo}
+        </if>
+        order by r.NO
+    </select>
+
+    <insert id="add" parameterType="Map">
+        insert into sys_role (no,name,org_type,note) values (#{no},#{roleName},#{orgType,jdbcType=VARCHAR},#{note})
+    </insert>
+
+    <select id="qryMenusByRoleNo" parameterType="String" resultType="Menu">
+        select m.* from sys_role_menu rm,sys_menu m  where rm.menu_no=m.no AND rm.role_no=#{roleNo}
+    </select>
+
+    <select id="qryButtonsByRoleNo" parameterType="String" resultType="Button">
+        select b.* from sys_role_button rb,sys_button b  where rb.button_no=b.no AND rb.role_no=#{roleNo}
+    </select>
+
+    <update id="mod" parameterType="Map">
+        update sys_role set name=#{name},org_type=#{orgType},note=#{note} where no=#{no}
+    </update>
+    <update id="modRole" parameterType="Role">
+        update sys_role set name=#{name} where no=#{no}
+    </update>
+
+    <delete id="del" parameterType="String">
+        DELETE from sys_role where no=#{roleNo}
+    </delete>
+    <select id="qryAvailableRoleByOrgNo" resultType="Role" parameterType="Map">
+        select * from sys_role where org_type =(select ott.no from sys_org_type ott where ott.grade =(
+          select ot.grade from sys_org o,sys_org_type ot where o.no=#{orgNo} and o.org_type=ot.no
+          )
+        )
+    </select>
+    <insert id="addRoleButton" parameterType="Map" databaseId="db2">
+        insert into sys_role_button (role_no,button_no) values
+        <foreach collection='buttons' item='btnNo' separator=",">
+            (#{roleNo},#{btnNo})
+        </foreach>
+    </insert>
+
+    <insert id="addRoleButton" parameterType="Map" databaseId="mysql">
+        insert into sys_role_button (role_no,button_no) values
+        <foreach collection='buttons' item='btnNo' separator=",">
+            (#{roleNo},#{btnNo})
+        </foreach>
+    </insert>
+
+    <insert id="addRoleButton" parameterType="Map" databaseId="oracle">
+        insert all
+        <foreach collection='buttons' item='btnNo'>
+            into sys_role_button (role_no,button_no) values (#{roleNo},#{btnNo})
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+    <insert id="addRoleMenu" parameterType="Map" databaseId="db2">
+        insert into sys_role_menu (role_no,menu_no) values
+        <foreach collection='menus' item='menuNo' index="index" separator=",">
+            (#{roleNo},#{menuNo})
+        </foreach>
+    </insert>
+    <insert id="addRoleMenu" parameterType="Map" databaseId="mysql">
+        insert into sys_role_menu (role_no,menu_no) values
+        <foreach collection='menus' item='menuNo' index="index" separator=",">
+            (#{roleNo},#{menuNo})
+        </foreach>
+    </insert>
+    <insert id="addRoleMenu" parameterType="Map" databaseId="oracle">
+        insert all
+        <foreach collection='menus' item='menuNo'>
+            into sys_role_menu (role_no,menu_no) values (#{roleNo},#{menuNo})
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+    <select id="qryByNameAndType" resultType="Role" parameterType="String">
+        select * from sys_role where name=#{roleName} and org_type=#{orgType}
+    </select>
+    <select id="qryByName" resultType="Role" parameterType="String">
+        select * from sys_role where name=#{roleName}
+    </select>
+    <select id="qryAll" resultType="Role" >
+        select * from sys_role
+    </select>
+</mapper>

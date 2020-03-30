@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.AuditDao">
+
+    <resultMap type="Audit" id="AuditMap">
+        <association column="user_no" select="com.zjft.zhyg.system.dao.UserDao.findByNo" property="applyUser"
+                     javaType="User"/>
+        <association column="commit_user" select="com.zjft.zhyg.system.dao.UserDao.findByNo" property="commitUser"
+                     javaType="User"/>
+        <association column="audit_user" select="com.zjft.zhyg.system.dao.UserDao.findByNo" property="auditUser"
+                     javaType="User"/>
+        <association column="commit_org" select="com.zjft.zhyg.system.dao.OrgDao.qryByNo" property="commitOrg"
+                     javaType="Org"/>
+        <association column="commit_role" select="com.zjft.zhyg.system.dao.RoleDao.qryByNo" property="commitRole"
+                     javaType="Role"/>
+    </resultMap>
+
+    <select id="qryMyApply" resultMap="AuditMap" parameterType="java.util.Map">
+        SELECT a.*, operate.MENU_NAME, operate.BTN_NAME
+        FROM SYS_AUDIT a, SYS_OPERATE operate
+        WHERE a.user_no=#{userNo} and a.MENU_NO=operate.MENU_NO AND a.BTN_NO=operate.BTN_NO
+        <if test="auditResult!=null&amp;&amp;auditResult!=''">
+            and a.audit_result =#{auditResult}
+        </if>
+        <if test="menuNo!=null&amp;&amp;menuNo!=''">
+            and a.menu_no=#{menuNo}
+        </if>
+        <if test="btnNo!=null&amp;&amp;btnNo!=''">
+            and a.btn_no=#{btnNo}
+        </if>
+        <if test="startTime!=null&amp;&amp;startTime!=''">
+            and to_date(substr(a.operate_time,1,11),'yyyy-MM-dd')>= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime!=null&amp;&amp;endTime!=''">
+            and to_date(#{endTime},'yyyy-MM-dd')>=to_date(substr(a.operate_time,1,11),'yyyy-MM-dd')
+        </if>
+        <if test="commitStatus == 1">
+            and a.audit_result is null
+        </if>
+        <if test="commitStatus == 2">
+            and a.audit_result is not null
+        </if>
+        order by a.operate_time desc
+    </select>
+    <select id="qryMyAudit" resultMap="AuditMap" parameterType="java.util.Map">
+        SELECT a.*, operate.MENU_NAME, operate.BTN_NAME
+        FROM SYS_AUDIT a, SYS_OPERATE operate
+        WHERE a.commit_org = #{orgNo} and (a.commit_user=#{userNo} or a.commit_user is null) and
+        a.MENU_NO=operate.MENU_NO AND a.BTN_NO=operate.BTN_NO
+        <foreach collection="userRoles" item="userRole" open=" and  a.COMMIT_ROLE in (" close=")" separator=",">
+            #{userRole}
+        </foreach>
+        <if test="auditResult!=null&amp;&amp;auditResult!=''">
+            and a.audit_result =#{auditResult}
+        </if>
+        <if test="menuNo!=null&amp;&amp;menuNo!=''">
+            and a.menu_no=#{menuNo}
+        </if>
+        <if test="btnNo!=null&amp;&amp;btnNo!=''">
+            and a.btn_no=#{btnNo}
+        </if>
+        <if test="startTime!=null&amp;&amp;startTime!=''">
+            and to_date(substr(a.operate_time,1,11),'yyyy-MM-dd')>= to_date(#{startTime},'yyyy-MM-dd')
+        </if>
+        <if test="endTime!=null&amp;&amp;endTime!=''">
+            and to_date(#{endTime},'yyyy-MM-dd')>=to_date(substr(a.operate_time,1,11),'yyyy-MM-dd')
+        </if>
+        <if test="commitStatus == 1">
+            and a.audit_result is null
+        </if>
+        <if test="commitStatus == 2">
+            and a.audit_result is not null
+        </if>
+        order by a.operate_time desc
+    </select>
+    <insert parameterType="Map" id="addAudit">
+      insert into sys_audit (NO, USER_NO, OPERATE_TIME, MENU_NO, BTN_NO, CURRENT_DETAIL,BEFORE_DETAIL,
+      COMMIT_NOTE, COMMIT_ORG, COMMIT_ROLE, COMMIT_USER, COMMIT_STATUS) values
+      (#{no},#{userNo},#{operateTime},#{menuNo},#{btnNo},#{currentDetail,jdbcType=BLOB},#{beforeDetail,jdbcType=BLOB}, #{commitNote,jdbcType=VARCHAR}, #{commitOrg}, #{commitRole}, #{commitUser}, #{commitStatus})
+     </insert>
+    <!--审核通过-->
+    <update id="changeAuditStatus" parameterType="Map">
+      update SYS_AUDIT SET AUDIT_RESULT=#{flag},AUDIT_USER=#{userNo},AUDIT_TIME=#{auditTime}  WHERE NO=#{no}
+    </update>
+    <!--审核不通过-->
+    <update id="changeCommitStatus" parameterType="String">
+        update SYS_AUDIT SET commit_status='9'  WHERE NO=#{no}
+    </update>
+</mapper>

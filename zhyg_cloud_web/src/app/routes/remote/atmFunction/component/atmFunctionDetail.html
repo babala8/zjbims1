@@ -1,0 +1,94 @@
+<div class="search-result-list" style="margin-top:10px; margin-left:10px; margin-right:10px;" *ngIf="showDevs">
+    <nz-spin style="position: absolute; left: 45%; " [nzTip]="'正在获取结果...'" [nzSpinning]="loadResult"></nz-spin>
+    <label style="margin-left:20px; margin-right:20px; width: 100%;" >
+        <span style="display:block; float:left; padding: 1px 30px 1px 1px;">设备功能列表：</span>
+        <span style="display:block; float:left; padding: 1px 10px 1px 1px; color: blue;"><a (click)="selectAll()">全 选</a></span>
+        <span style="display:block; float:left; padding: 1px 10px 1px 1px; color: blue;"><a (click)="selectNull()">全 不 选</a></span>
+        <span style="display:block; float:left; padding: 1px 10px 1px 1px; color: blue;"><a (click)="reverse()">反 选</a></span>
+    </label>
+    <div class="search-result-list" style="margin-left:20px; margin-right:20px;" *ngFor="let item of transTypeList;">
+        <nz-table #nzTable
+                  [nzDataSource]="item"
+                  [nzShowSizeChanger]="true"
+                  [nzSize]="'small'"
+                  [nzIsPagination]="false">
+            <thead nz-thead>
+            <tr>
+                <th nz-th colspan="5" style="height: 10px; background: #1ba1e2; text-align:center; line-height:10px;">
+                    <span>{{item.name}}</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let func of item.atmFunList;let i = index;">
+                <td nz-td nzCheckbox>
+                    <label nz-checkbox [(ngModel)]="func[0].checked" >
+                        <span>{{func[0].transNo}}.{{func[0].transName}}.{{func[0].transCode}}</span>
+                    </label>
+                </td>
+                <td nz-td nzCheckbox *ngIf="func[1]">
+                    <label nz-checkbox [(ngModel)]="func[1].checked" >
+                        <span>{{func[1].transNo}}.{{func[1].transName}}.{{func[1].transCode}}</span>
+                    </label>
+                </td>
+                <td nz-td nzCheckbox *ngIf="func[2]">
+                    <label nz-checkbox [(ngModel)]="func[2].checked" >
+                        <span>{{func[2].transNo}}.{{func[2].transName}}.{{func[2].transCode}}</span>
+                    </label>
+                </td>
+                <td nz-td nzCheckbox *ngIf="func[3]">
+                    <label nz-checkbox [(ngModel)]="func[3].checked" >
+                        <span>{{func[3].transNo}}.{{func[3].transName}}.{{func[3].transCode}}</span>
+                    </label>
+                </td>
+                <td nz-td nzCheckbox *ngIf="func[4]">
+                    <label nz-checkbox [(ngModel)]="func[4].checked" >
+                        <span>{{func[4].transNo}}.{{func[4].transName}}.{{func[4].transCode}}</span>
+                    </label>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <br/>
+    <div nz-form-item nz-row style="text-align:center; margin-top: 20px;">
+        <button nz-button [nzSize]="'large'" [nzType]="'primary'" (click)="submit()" *ngIf="transTypeList.length !=0">提交</button>
+        <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" (click)="cancel()">返回</button>
+    </div>
+</div>
+
+
+<!--展示功能定义结果 -->
+<div id="resultDiv" style="margin-left: 20px; display: none;">
+    <nz-spin style="position: absolute; left: 45%; top: 55%;" [nzTip]="'正在获取结果...'" [nzSpinning]="loadResult"></nz-spin>
+    <label style="margin-left:20px; margin-right:20px; width: 100%;" >
+        <span style="display:block; float:left; padding: 1px 30px 1px 1px;">功能定义结果：</span>
+    </label>
+    <nz-table #nzTable
+              [nzAjaxData]="controlResult"
+              [nzCustomNoResult]="true"
+              [nzIsPagination]="false">
+        <thead nz-thead>
+        <tr>
+            <th nz-th [nzWidth]="'100px'"><span>序号</span></th>
+            <th nz-th [nzWidth]="'100px'"><span>设备号</span></th>
+            <th nz-th [nzWidth]="'100px'"><span>IP地址</span></th>
+            <th nz-th [nzWidth]="'200px'"><span>结果</span></th>
+            <th nz-th [nzWidth]="'300px'"><span>原因</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let data of controlResult ">
+            <td nz-td>{{data.serial}}</td>
+            <td nz-td>{{data.no}}</td>
+            <td nz-td>{{data.ip}}</td>
+            <td nz-td>{{data.result}}</td>
+            <td nz-td>{{data.resultContent}}</td>
+        </tr>
+        </tbody>
+    </nz-table>
+    <br/>
+    <div *ngIf="!showDevs" style="width: 100%; text-align:center; margin-top: 20px;">
+        <button nz-button (click)="cancel()"><i class="anticon anticon-rollback"></i><span>返回</span></button>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+:host {
+    position: relative;
+    .scroll-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        ul {
+            height: 100%;
+            display: inline-flex;
+            position: relative;
+            li {
+                flex-shrink: 0;
+                width: 120px;
+                z-index: 2;
+                cursor: pointer;
+                padding: 8px 0 4px;
+                font-family: sans-serif;
+                transition: all .1s ease-in;
+                color: rgba(255, 255, 255, 0.98);
+                &:hover {
+                    color: rgba(160, 225, 172, 0.9);
+                    span.item-icon {
+                        animation: ani-wrench 3.7s ease infinite;
+                    }
+                }
+                span {
+                    display: block;
+                    margin: auto;
+                    text-align: center;
+                    opacity: 0.9;
+                    &.item-icon {
+                        height: 32px;
+                        font-size: 26px;
+                        line-height: 32px;
+                    }
+                    &.item-label {
+                        height: 28px;
+                        font-size: 13px;
+                        line-height: 28px;
+                        vertical-align: bottom;
+                        letter-spacing: 0.1em;
+                        font-weight: 500;
+                    }
+                }
+                &.active {
+                    color: #16181c;
+                    &:hover {
+                        color: #18191d;
+                    }
+                }
+                &.slide-block {
+                    z-index: 1;
+                    //background-color: #d0d0d0;
+                    background-color: #b1cee6;
+                    position: absolute;
+                    height: 100%;
+                    left: 0;
+                    top: 0;
+                    transition: transform .1s ease-in;
+                }
+            }
+        }
+    }
+}
+
+.arrow-wrapper {
+    position: absolute;
+    height: 100%;
+    width: 20px;
+    background-color: rgba(255, 255, 255, 0.61);
+    z-index: 10;
+    text-align: center;
+    line-height: 72px;
+    vertical-align: middle;
+    font-size: 24px;
+}
+
+.left-arrow-wrapper {
+    top: 0;
+    left: 0;
+}
+
+.right-arrow-wrapper {
+    top: 0;
+    right: 0;
+}

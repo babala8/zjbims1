@@ -1,0 +1,90 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()" >
+    <div nz-form-item nz-row>
+        <div nz-col [nzSm]="12">
+            <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+                <label [attr.for]="'no'" nz-form-item-required>机构编号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('no')">
+                <nz-input [nzSize]="'large'" formControlName="no" [nzId]="'no'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['no'].dirty && validateForm.controls['no'].errors">
+                    <span>机构编号无效,请输入4-20位字母或者数字</span>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSm]="12">
+            <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+                <label [attr.for]="'name'" nz-form-item-required>机构名称</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('name')">
+                <nz-input [nzSize]="'large'" formControlName="name" [nzId]="'name'" (ngModelChange)="updateConfirmValidator()"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['name'].dirty && validateForm.controls['name'].errors">
+                    <span>请输入1-80位数字、字母或汉字</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSm]="12">
+            <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+                <label [attr.for]="'upper'" nz-form-item-required>上级机构</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('upper')">
+                <org-tree formControlName="upper" [zjId]="'upper'" (ngModelChange)="selectOrg($event)"></org-tree>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['upper'].dirty && validateForm.controls['upper'].errors">
+                    <span>请选择上级机构</span>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSm]="12">
+            <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+                <label [attr.for]="'orgType'" nz-form-item-required>机构类型</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" formControlName="orgType" [nzPlaceHolder]="'--请选择机构类型--'">
+                    <nz-option *ngFor="let o of orgTypeList" [nzLabel]="o.type" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['orgType'].dirty && validateForm.controls['orgType'].errors">
+                    <span>请选择机构类型</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="4" [nzXs]="24">
+            <label [attr.for]="'isSelfhelp'" nz-form-item-required>是否村镇</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="7">
+            <nz-select [nzSize]="'large'" formControlName="isSelfhelp" [nzPlaceHolder]="'--请选择是否村镇--'">
+                <nz-option [nzLabel]="'是'" [nzValue]="'0'"></nz-option>
+                <nz-option [nzLabel]="'否'" [nzValue]="'1'"></nz-option>
+            </nz-select>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['isSelfhelp'].dirty && validateForm.controls['isSelfhelp'].errors">
+                <span>请选择是否村镇</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="4" [nzXs]="24">
+            <label [attr.for]="'address'" nz-form-item-required>机构地址</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="17" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="address" [nzId]="'address'"  [ngModel]="e.address"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['address'].dirty && validateForm.controls['address'].errors">
+                <span>请输入1-200位数字、字母、-、_、.或汉字</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="24">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" >提交</button>
+            <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

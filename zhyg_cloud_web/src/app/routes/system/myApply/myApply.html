@@ -1,0 +1,141 @@
+<form nz-form #form="ngForm"  [formGroup]="validateForm" class="search-form">
+    <div nz-row>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'commitStatus'">审核状态</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="commitStatus" name="commitStatus" nzAllowClear
+                               [nzPlaceHolder]="'--请选择申请状态--'">
+                        <nz-option *ngFor="let c of commitStatusList"  [nzLabel]="c?.name"
+                                   [nzValue]="c?.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'menuNo'">功能模块</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="menuNo" [nzPlaceHolder]="'--请选择功能模块--'">
+                        <nz-option *ngFor="let o of menuList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6" >
+            <div nz-row [ngStyle]="{'margin-left':'28px'}">
+                <div nz-form-label nz-col [nzSpan]="5" style="width: auto;">
+                    <label [attr.for]="'btnNo'">操作</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="17">
+                    <nz-select [nzSize]="'large'" formControlName="btnNo" [nzPlaceHolder]="'--请选择操作类型--'">
+                        <nz-option *ngFor="let o of btnList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'auditResult'">审核结果</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="auditResult" [nzPlaceHolder]="'--请选择审核状态--'">
+                        <nz-option *ngFor="let o of auditResultList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-row style="margin-top: 10px;">
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'startTime'">开始时间</label>
+                </div>
+                <div nz-form-control nz-col  [nzSpan]="16" >
+                    <nz-datepicker   [nzPlaceHolder]="'请输入开始时间'"  formControlName="startTime"  [nzSize]="'large'" style="width: 100%;">
+                    </nz-datepicker>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'endTime'">结束时间</label>
+                </div>
+                <div nz-form-control nz-col  [nzSpan]="16" >
+                    <nz-datepicker [nzPlaceHolder]="'请输入结束时间'"  formControlName="endTime"  [nzSize]="'large'" style="width: 100%;">
+                    </nz-datepicker>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="search()" [nzSize]="'large'"><i class="anticon anticon-search"></i><span>查询</span></button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="padding: 20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper] = "true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>申请用户</span></th>
+            <th nz-th><span>功能模块</span></th>
+            <th nz-th><span>操作类型</span></th>
+            <!--<th nz-th><span>申请状态</span></th>-->
+            <th nz-th><span>提交时间</span></th>
+            <th nz-th><span>备注</span></th>
+            <!--<th nz-th><span>审核备注</span></th>-->
+            <th nz-th><span>审核结果</span></th>
+            <th nz-th><span>审核人</span></th>
+            <th nz-th><span>审核时间</span></th>
+            <th nz-th><span>详情</span></th>
+            <th nz-th><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of dataSet;let i = index;">
+            <td nz-td>{{item.applyUserName}}</td>
+            <td nz-td>{{item.menuName}}</td>
+            <td nz-td>{{item.btnName}}</td>
+            <!--<td nz-td>{{item.commitStatus}}</td>-->
+            <td nz-td>{{item.operateTime}}</td>
+            <td nz-td>{{item.commitNote}}</td>
+            <!--<td nz-td>{{item.auditNote}}</td>-->
+            <td nz-td>{{item.auditResult}}</td>
+            <td nz-td>{{item.auditUserName}}</td>
+            <td nz-td>{{item.auditTime}}</td>
+            <td nz-td><a *ngIf="item.btnNo==='add'"(click)="showDetail(item,'cur')" style="color: #1ba1e2;">详情</a>
+                <a *ngIf="item.btnNo==='mod'" (click)="showDetail(item,'bef')" style="color: #1ba1e2;">修改前</a>
+                <span *ngIf="item.btnNo==='mod'" nz-table-divider></span>
+                <a *ngIf="item.btnNo==='mod'" (click)="showDetail(item,'cur')" style="color: #1ba1e2;">修改后</a>
+                <a *ngIf="item.btnNo==='del'" (click)="showDetail(item,'bef')" style="color: #1ba1e2;">详情</a>
+            </td>
+            <td nz-td *ngIf="checkStatus(item.commitStatus,item.auditResult)" >
+                <a  (click)="reApply(item)" style="color: red;">重填</a>
+                <span  nz-table-divider></span>
+                <nz-popconfirm  [nzTitle]="'确定撤销吗？'" (nzOnConfirm)="changeCommitStatus(item.no)" style="color: #4749ff;">
+                    <a nz-popconfirm >撤销</a>
+                </nz-popconfirm>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

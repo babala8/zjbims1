@@ -1,0 +1,246 @@
+<!--<table class="table table-bordered">
+    <caption>配置信息</caption>
+    <tbody>
+    <tr>
+        <td >无纸化模块</td>
+        <td>
+            {{devAttrAndStatus?.pjcExist}}
+        </td>
+        <td >数据源采集方式</td>
+        <td>
+            {{devAttrAndStatus?.pjcExist}}
+        </td>
+    </tr>
+    </tbody>
+</table>-->
+<div *ngIf="flag">
+<h6 style="text-align: center; margin-bottom: 5px;">配置信息：</h6>
+<form>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">无纸化模块</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcExist">
+        </div>
+        <label class="col-sm-4 col-form-label">数据源采集方式</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcDatasource">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">无纸化模式</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcVdev">
+        </div>
+        <label class="col-sm-4 col-form-label">无纸化客户端版本号</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcVersion">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">流水Mac校验</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm"  readonly [value]="devAttrAndStatus.pjcMac">
+        </div>
+        <label class="col-sm-4 col-form-label">机具端电子流水缓存路径</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcEjfile">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">无纸化服务ip</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcIp">
+        </div>
+        <label class="col-sm-4 col-form-label">缓存流水盘剩余空间大小</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcSpacesize">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">无纸化报文类型</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcPkt">
+        </div>
+        <label class="col-sm-4 col-form-label">是否返回物理打印机真实状态</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcRealjpr">
+        </div>
+    </div>
+</form>
+
+<h6 style="text-align: center; margin-bottom: 5px;">状态信息：</h6>
+<form>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">设备状态</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.actionType">
+        </div>
+        <label class="col-sm-4 col-form-label">无纸化通讯状态</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.netWork">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">设备配置</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.devConf">
+        </div>
+        <label class="col-sm-4 col-form-label">无纸化故障信息</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.errorDetail">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">当前流水日期</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm"  readonly [value]="devAttrAndStatus.currentDate">
+        </div>
+        <label class="col-sm-4 col-form-label">最近流水上送时间</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="string2DateString(devAttrAndStatus.pjcEjSendtime)">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">pjc进程信息</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm"  readonly [value]="devAttrAndStatus.pjcCruStatus">
+        </div>
+        <label class="col-sm-4 col-form-label">剩余未发送流水缓存情况</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" readonly [value]="devAttrAndStatus.pjcEjNsend">
+        </div>
+    </div>
+</form>
+</div>
+
+<!--<div nz-row >
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>无纸化模块</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true" [(ngModel)]="devAttrAndStatus.pjcExist"></nz-input>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>数据源采集方式</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcDatasource}}</nz-input>
+    </div>
+</div>
+<div  nz-row >
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>无纸化模式</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcVdev}}</nz-input>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>无纸化客户端版本号</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcVersion}}</nz-input>
+    </div>
+</div>
+<div  nz-row >
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>流水Mac校验</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcMac}}</nz-input>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>机具端电子流水缓存路径</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcEjfile}}</nz-input>
+    </div>
+</div>
+<div  nz-row >
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>无纸化服务ip</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcIp}}</nz-input>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>缓存流水盘剩余空间大小</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcSpacesize}}</nz-input>
+    </div>
+</div>
+<div  nz-row >
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>无纸化报文类型</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcPkt}}</nz-input>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <label>是否返回物理打印机真实状态</label>
+    </div>
+    <div  nz-col style="text-align: left;" [nzSm]="6">
+        <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcRealjpr}}</nz-input>
+    </div>
+</div>-->
+
+
+<!--<form nz-form >
+    <div  nz-row >
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <label>设备状态</label>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <nz-input [nzReadonly]="true">{{devAttrAndStatus?.actionType}}</nz-input>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <label>无纸化通讯状态</label>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <nz-input [nzReadonly]="true">{{devAttrAndStatus?.actionType}}</nz-input>
+        </div>
+    </div>
+    <div  nz-row >
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <label>设备配置</label>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <nz-input [nzReadonly]="true">{{devAttrAndStatus?.actionType}}</nz-input>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <label>无纸化故障信息</label>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <nz-input [nzReadonly]="true">{{devAttrAndStatus?.actionType}}</nz-input>
+        </div>
+    </div>
+    <div  nz-row >
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <label>当前流水日期</label>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcEjDate}}{{devAttrAndStatus?.pjcEjSendtime}}</nz-input>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <label>最近流水上送时间</label>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcEjDate}}{{devAttrAndStatus?.pjcEjSendtime}}</nz-input>
+        </div>
+    </div>
+    <div  nz-row >
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <label>pjc进程信息</label>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcCruStatus}}</nz-input>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <label>剩余未发送流水缓存情况</label>
+        </div>
+        <div  nz-col style="text-align: left;" [nzSm]="6">
+            <nz-input [nzReadonly]="true">{{devAttrAndStatus?.pjcEjNsend}}</nz-input>
+        </div>
+    </div>
+
+</form>-->

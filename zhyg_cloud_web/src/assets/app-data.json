@@ -1,0 +1,95 @@
+{
+    "app": {
+        "name": "Alain",
+        "description": "Ng-zorro admin panel front-end framework"
+    },
+    "user": {
+        "name": "Admin",
+        "avatar": "./assets/img/zorro.svg",
+        "email": "cipchk@qq.com"
+    },
+    "menu": [
+        {
+            "id": "zijin-itms",
+            "text": "紫金智慧金库管理系统",
+            "group": true,
+            "children": [
+                {
+                    "id": "system",
+                    "text": "系统管理",
+                    "icon": "zijin-icon-options",
+                    "type": 0,
+                    "auth":"A",
+                    "children": [
+                        {
+                            "id": "system.menuDefine",
+                            "text": "菜单定义",
+                            "link": "/system/menuDefine",
+                            "type": 1,
+                            "auth": "A01"
+                        },
+                        {
+                            "id": "system.user",
+                            "text": "用户信息",
+                            "type": 1,
+                            "link": "/system/user"
+                        },
+                        {
+                            "id": "system.org",
+                            "text": "机构信息",
+                            "link": "/system/org"
+                        },
+                        {
+                            "id": "system.role",
+                            "text": "角色权限",
+                            "type": 1,
+                            "link": "/system/role"
+                        },
+                        {
+                            "id": "system.params",
+                            "text": "参数管理",
+                            "type": 1,
+                            "link": "/system/params"
+                        },
+                        {
+                            "id": "baseInformation.devVendor",
+                            "text": "设备品牌",
+                            "type": 1,
+                            "link": "/baseInformation/devVendor"
+                        },
+                        {
+                            "id": "baseInformation.devType",
+                            "text": "设备型号",
+                            "type": 1,
+                            "link": "/baseInformation/devType"
+                        },
+                        {
+                            "id": "baseInformation.devCompany",
+                            "text": "设备维护商",
+                            "type": 1,
+                            "link": "/baseInformation/devCompany"
+                        },
+                        {
+                            "id": "baseInformation.devInformation",
+                            "text": "设备信息",
+                            "type": 1,
+                            "link": "/baseInformation/devInformation"
+                        },
+                        {
+                            "id": "system.vault",
+                            "text": "金库信息",
+                            "type": 1,
+                            "link": "/system/vault"
+                        },
+                        {
+                            "id": "baseInformation.timedTask",
+                            "text": "定时任务查询",
+                            "type": 1,
+                            "link": "/baseInformation/timedTask"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

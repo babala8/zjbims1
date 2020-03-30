@@ -1,0 +1,67 @@
+// 建议所有项目自定义样式放在该文件夹下
+@import "context-menu";
+@import "_ng-component-tree";
+@import "zijin-fonts/style.css";
+@import "tile/index.less";
+@import "tile/tile.menu.less";
+
+[_nghost-c1] .user-content-wrapper[_ngcontent-c1] .metro-menu-wrapper.menu-activated[_ngcontent-c1] {
+    background: rebeccapurple;
+}
+
+div.jsoneditor {
+    height: calc(~"100vh - 190px") !important;
+}
+// 全局重置 ant-designer 组件的一些初始样式
+.ant-form-item-label label {
+    margin-bottom: 0;
+}
+.content-inner-wrapper {
+    .ant-form-item-control {
+        line-height: normal;
+    }
+    .search-form {
+        padding: 10px 20px;
+        margin-bottom: 0;
+    }
+    .ant-table-small .ant-table-title, .ant-table-small .ant-table-footer, .ant-table-small .ant-table-thead > tr > th {
+        padding: 7px 8px;
+        text-align: center;
+        color: #272727;
+        font-size: 14px;
+        background: #eaf7fc;
+    }
+    .ant-table-small .ant-table-tbody > tr > td {
+        padding: 5px 8px;
+        font-size: 13px;
+        color: #565656;
+    }
+    .ant-table-small .ant-table-header > table, .ant-table-small .ant-table-body > table {
+        padding: 0;
+    }
+}
+// ant-designer 模态框样式调整
+.ant-modal-content {
+    .ant-modal-body {
+        padding: 16px 20px;
+        .ant-form-item {
+            margin-bottom: 12px;
+            .ant-form-item-control {
+                line-height: normal;
+            }
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+    .ant-modal-close-x {
+        font-size: 20px;
+        color: #108ee9;
+    }
+    .ant-modal-header {
+        .ant-modal-title {
+            font-size: 18px;
+            color: #108ee9;
+        }
+    }
+}

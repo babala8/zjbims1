@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.BulletinInfoDao">
+    <insert id="add" parameterType="BulletinInfo">
+        insert into sys_bulletin_info(bulletin_id,title,content,release_date,expire_date,publisher,attachment1,attachment2,attachment3)
+        values (#{bulletinId},#{title},#{content},#{releaseDate},#{expireDate},#{publisher},#{attachment1,jdbcType=VARCHAR},#{attachment2,jdbcType=VARCHAR},#{attachment3,jdbcType=VARCHAR})
+    </insert>
+    <delete id="del" parameterType="String">
+        delete from sys_bulletin_info where bulletin_id=#{bulletinId}
+    </delete>
+    <update id="mod" parameterType="BulletinInfo">
+        update sys_bulletin_info set title=#{title},content=#{content},release_date=#{releaseDate},expire_date=#{expireDate},publisher=#{publisher},attachment1=#{attachment1,jdbcType=VARCHAR},attachment2=#{attachment2,jdbcType=VARCHAR},attachment3=#{attachment3,jdbcType=VARCHAR}
+        where bulletin_id=#{bulletinId}
+    </update>
+    <select id="qry" resultType="BulletinInfo" parameterType="Map">
+        select * from sys_bulletin_info where 1 =1
+        <if test="publisher != null&amp;&amp;publisher != ''">
+            and publisher like '%${publisher}%'
+        </if>
+        <if test="startTime != null&amp;&amp;startTime != ''">
+            and substr(release_date,1,10)>=#{startTime}
+        </if>
+        <if test="endTime != null&amp;&amp;endTime != ''">
+            and substr(release_date,1,10)&lt;=#{endTime}
+        </if>
+        <if test="title != null&amp;&amp;title != ''">
+            and title like '%${title}%'
+        </if>
+        order by release_date desc
+    </select>
+    <select id="qryMaxId"  resultType="String" databaseId="db2">
+       select max(cast(bulletin_Id as int)) as maxId from sys_bulletin_info
+    </select>
+    <select id="qryMaxId"  resultType="String" databaseId="oracle">
+       select max(cast(bulletin_Id as int)) as maxId from sys_bulletin_info
+    </select>
+    <select id="qryMaxId"  resultType="String" databaseId="mysql">
+       select max(cast(bulletin_Id as signed int)) as maxId from sys_bulletin_info
+    </select>
+    <select id="qryById" resultType="BulletinInfo" parameterType="String">
+       select * from sys_bulletin_info where bulletin_id=#{bulletinId}
+    </select>
+    <insert id="addUnread" databaseId="db2">
+        insert into UNREAD_BULLET_INFO (USER_NO, BULLET_NO)values
+        <foreach collection="userNos" item="userNo" separator="," index="index">
+            (#{userNo},#{bulletNo})
+        </foreach>
+    </insert>
+    <insert id="addUnread" databaseId="mysql">
+        insert into UNREAD_BULLET_INFO (USER_NO, BULLET_NO)values
+        <foreach collection="userNos" item="userNo" separator="," index="index">
+            (#{userNo},#{bulletNo})
+        </foreach>
+    </insert>
+    <insert id="addUnread" databaseId="oracle">
+        begin
+        insert into UNREAD_BULLET_INFO (USER_NO, BULLET_NO) (
+        <foreach collection="userNos" item="userNo" separator="union all">
+            select #{userNo},#{bulletNo} from dual
+        </foreach>
+        );end;
+    </insert>
+    <delete id="deleteUnread" parameterType="string">
+        delete from UNREAD_BULLET_INFO where BULLET_NO=#{bulletNo}
+    </delete>
+    <delete id="deleteUserUnread" parameterType="string">
+        delete from UNREAD_BULLET_INFO where USER_NO=#{userNo}
+    </delete>
+    <select id="unreadCount" parameterType="string" resultType="int">
+        select count(*) from UNREAD_BULLET_INFO where USER_NO=#{userNo}
+    </select>
+    <select id="qryByTitle" resultType="BulletinInfo" parameterType="String">
+        select * from sys_bulletin_info where title=#{title}
+    </select>
+</mapper>

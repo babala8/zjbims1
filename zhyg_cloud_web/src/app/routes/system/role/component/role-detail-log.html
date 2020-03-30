@@ -1,0 +1,64 @@
+<nz-spin [nzTip]="'正在读取数据...'" [nzSpinning]="_isSpinning">
+    <form nz-form #form="ngForm">
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'orgType'">机构级别</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <nz-input [nzSize]="'large'" [(ngModel)]="formModel['orgType']" name="orgType" [nzId]="'orgType'"
+                          [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'name'">角色名称</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <nz-input [nzSize]="'large'" [(ngModel)]="formModel['name']" name="name" [nzId]="'name'"
+                          [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'note'">角色描述</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                <nz-input [nzSize]="'large'" [(ngModel)]="formModel['note']" name="note" [nzId]="'note'"
+                          [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </form>
+    <nz-table #nzTable
+              [nzAjaxData]="dataSet"
+              nzBordered
+              style="margin: 0;"
+              [nzIsPagination]="false">
+        <thead nz-thead>
+        <tr>
+            <th nz-th [nzWidth]="'25%'"><span>模块</span></th>
+            <th nz-th [nzWidth]="'25%'"><span>功能</span></th>
+            <th nz-th [nzWidth]="'50%'"><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <ng-container *ngFor="let module of nzTable.data;">
+            <tr nz-tbody-tr *ngFor="let menu of module.menus; let i = index;">
+                <td nz-td *ngIf="i == 0" [attr.rowspan]="module.menus.length > 0 ? module.menus.length : 1">
+                    <span>{{module.moduleName}}</span>
+                </td>
+                <td nz-td>
+                    <span>{{menu.menuName}}</span>
+                </td>
+                <td nz-td>
+                    <nz-tag *ngFor="let button of menu.buttons">{{button.btnName}}</nz-tag>
+                </td>
+            </tr>
+        </ng-container>
+        </tbody>
+    </nz-table>
+    <div nz-row style="text-align:center; margin-top: 10px;">
+        <div nz-col>
+            <button nz-button [nzSize]="'large'" [nzType]="'default'" (click)="cancel()">返回</button>
+        </div>
+    </div>
+</nz-spin>

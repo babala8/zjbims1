@@ -1,0 +1,63 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'name'" nz-form-item-required>资源名称</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="name" [nzId]="'name'" [nzPlaceHolder]="'资源名称'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['name'].dirty && validateForm.controls['name'].errors">
+                <span>请输入最大25位资源名称</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'type'" nz-form-item-required>资源类型</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14">
+            <nz-select [nzSize]="'large'" formControlName="type" [nzPlaceHolder]="'--请选择资源类型--'"
+                       (ngModelChange)="selectType($event)">
+                <nz-option *ngFor="let o of resourceTypes" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+    <div *ngIf="type === '1' || type === '2'" nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'address'">资源上传</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <input #fileUpload type="file" ng2FileSelect [uploader]="uploader"/><br>
+        </div>
+    </div>
+    <div *ngIf="type === '3'" nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'text'" nz-form-item-required>广告内容</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <textarea formControlName="text" nz-input placeholder="广告内容"
+                      [nzAutosize]="{ minRows: 5, maxRows: 5}"></textarea>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['text'].dirty && validateForm.controls['text'].errors">
+                <span>广告内容超长</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'description'">资源描述</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <textarea formControlName="description" nz-input placeholder="资源描述"
+                      [nzAutosize]="{ minRows: 2, maxRows: 5}"></textarea>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading">提交</button>
+            <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading"
+                    (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

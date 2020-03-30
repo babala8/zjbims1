@@ -1,0 +1,145 @@
+<div >
+    <div class="toggleBtn">
+        <span>选择时间类型</span>&nbsp;
+        <nz-switch [(ngModel)]="switch"></nz-switch>
+    </div>
+
+    <div *ngIf="!switch">
+        <div style="text-align: center; font-size: 20px;"><p>标准工作时间段</p></div>
+        <div nz-form-item nz-row style="margin-top:20px;">
+            <div nz-col [nzSpan]="12" [nzPush]="1" *ngFor="let item of devs;">
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label [attr.for]="'devNo'" >设备号</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                    <label>{{item.no}}</label>
+                </div>
+            </div>
+        </div>
+        <form  nz-form [formGroup]="validateForm">
+            <div nz-form-item nz-row>
+                <div nz-col [nzSpan]="12" [nzPush]="1">
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label [attr.for]="'datesType'">标准日期</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-select [nzSize]="'large'" formControlName="datesType" [(ngModel)]="selectedValue" style="width: 100px;">
+                            <nz-option  *ngFor="let r of weeks" [nzLabel]="r.chName" [nzValue]="r.enName"></nz-option>
+                        </nz-select>
+                        <div nz-form-explain
+                             *ngIf="validateForm.controls['datesType'].dirty && validateForm.controls['datesType'].errors">
+                            <span>请选择工作日期</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row *ngFor="let time of standTimePicker; let i = index">
+                <div nz-col [nzSpan]="12" [nzPush]="1">
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label [attr.for]="'startTime'">开始时间</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-timepicker [nzFormat]="'HH:mm'" [nzSize]="'large'" formControlName="startTime" [(ngModel)]="time.startTime" ></nz-timepicker>
+                        <div nz-form-explain
+                             *ngIf="validateForm.controls['startTime'].dirty && validateForm.controls['startTime'].errors">
+                            <span>请选择开始时间</span>
+                        </div>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="12" [nzPull]="1">
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label [attr.for]="'endTime'">停止时间</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-timepicker [nzFormat]="'HH:mm'" [nzSize]="'large'" formControlName="endTime" [(ngModel)]="time.endTime"  ></nz-timepicker>
+                    </div>
+                    <div nz-col>
+                        <button nz-button type="button" [nzType]="'default'" (click)="addTimePicker(standTimePicker)" [nzSize]="'large'">
+                            <i class="anticon anticon-plus"></i>
+                        </button>
+                        <button nz-button type="button" [nzType]="'default'" (click)="delTimePicker(standTimePicker,i)" [nzSize]="'large'">
+                            <i class="anticon anticon-minus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="switch">
+        <div style="text-align: center; font-size: 20px;"><p>特殊工作时间段</p></div>
+        <div nz-form-item nz-row style="margin-top:20px;">
+            <div nz-col [nzSpan]="12" [nzPush]="1" *ngFor="let item of devs;">
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label [attr.for]="'devNo'" >设备号</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+                    <label>{{item.no}}</label>
+                </div>
+            </div>
+        </div>
+        <form nz-form [formGroup]="validateForm" >
+            <div nz-form-item nz-row>
+                <div nz-col [nzSpan]="12" [nzPush]="1">
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label [attr.for]="'dates'">特殊日期</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-datepicker [nzSize]="'large'" formControlName="dates" style="width: 100px;"></nz-datepicker>
+                        <div nz-form-explain
+                             *ngIf="validateForm.controls['dates'].dirty && validateForm.controls['dates'].errors">
+                            <span>请选择工作日期</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row *ngFor="let time of specialTimePicker; let i = index">
+                <div nz-col [nzSpan]="12" [nzPush]="1">
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label [attr.for]="'startTime'">开始时间</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-timepicker [nzFormat]="'HH:mm'" [nzSize]="'large'" formControlName="startTime" [(ngModel)]="time.startTime"></nz-timepicker>
+                        <div nz-form-explain
+                             *ngIf="validateForm.controls['startTime'].dirty && validateForm.controls['startTime'].errors">
+                            <span>请选择开始时间</span>
+                        </div>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="12" [nzPull]="1">
+                    <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                        <label [attr.for]="'endTime'">停止时间</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-timepicker [nzFormat]="'HH:mm'" [nzSize]="'large'" formControlName="endTime" [(ngModel)]="time.endTime"></nz-timepicker>
+                        <div nz-form-explain
+                             *ngIf="validateForm.controls['endTime'].dirty && validateForm.controls['endTime'].errors">
+                            <span>请选择停止时间</span>
+                        </div>
+                    </div>
+                    <div nz-col>
+                        <button nz-button type="button" [nzType]="'default'" (click)="addTimePicker(specialTimePicker)" [nzSize]="'large'">
+                            <i class="anticon anticon-plus"></i>
+                        </button>
+                        <button nz-button type="button" [nzType]="'default'" (click)="delTimePicker(specialTimePicker,i)" [nzSize]="'large'">
+                            <i class="anticon anticon-minus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button type="button" nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading"
+                    (click)="_submitForm()">保存
+            </button>
+            <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading"
+                    (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="fault-content">
+    <div class='base-info'>
+        <div class="base-info-item">
+            <div class="title">全行实时打开工单数:</div>
+              <div class="num">{{realTimeOpenCase}}</div>
+        </div>
+        <div class="base-info-item">
+            <div class="title">全行当天已关闭工单数:</div>
+            <div class="num">{{closeCase}}</div>
+        </div>
+        <div class="base-info-item">
+            <div class="title">全行当天新增工单数:</div>
+            <div class="num">{{addedCase}}</div>
+        </div>
+        <div class="base-info-item">
+            <div class="title">平均工单关闭时长（30天）:</div>
+            <div class="num">300</div>
+        </div>
+        <div class="base-info-item">
+            <div class="title">台平均工单数量（30天）:</div>
+            <div class="num">300</div>
+        </div>
+    </div>
+    <div class="echart-contianer">
+        <div class="chart-item">
+            <div class="chart-title">全行每日。新增工单数走势（30天）</div>
+            <div class="chart-type-one" #eachDayAddCaseCharts echarts [options]="eachDayAddCase_option"></div>
+        </div>
+        <div class="chart-item">
+            <div class="chart-title">全行每日关闭工单数走势（30天）</div>
+            <div class="chart-type-one" #eachDayCloseCaseCharts echarts [options]="eachDayCloseCase_option"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--<nz-layout>-->
+<!--        <nz-layout>-->
+<!--            <nz-content>-->
+<!--                <div>-->
+<!--                    <div>-->
+<!--                        <div class="fault">-->
+<!--                            <div #eachDayAddCaseCharts echarts [options]="eachDayAddCase_option" style="width: 22%; height: 80%; background-color: white; margin-top: 2%; margin-left: 4%;"></div>-->
+<!--                            <div #eachDayCloseCaseCharts echarts [options]="eachDayCloseCase_option" style="width: 22%; height: 80%; background-color: white; margin-top: 2%; margin-left: 1.5%;"></div>-->
+<!--                            <div style="width: 22%; height: 80%; background-color: white; margin-top: 2%; margin-left: 1.5%;">-->
+<!--                                <label style="font-size: 22px; font-family: SimHei; font-weight:Bold; color: #404040; margin-top: 20%; margin-left: 5%;">实时打开状态工单数：{{realTimeOpenCase}}</label>-->
+<!--                            </div>-->
+<!--                            <div style="width: 22%; height: 80%; background-color: white; margin-top: 2%; margin-left: 1.5%;">-->
+<!--                                <label style="font-size: 22px; font-family: SimHei; font-weight:Bold; color: #404040; margin-top: 11%; margin-left: 5%;">当天已关闭工单数：{{closeCase}}</label>-->
+<!--                                <br>-->
+<!--                                <label style="font-size: 22px; font-family: SimHei; font-weight:Bold; color: #404040; margin-top: 9%; margin-left: 5%;">当天新增工单数：{{addedCase}}</label>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <div class="fault1">-->
+<!--                            <div #avgCloseTimeCharts echarts [options]="avgCloseTime_option" style="width: 45.7%; margin-top: 1%; margin-bottom: 3%; margin-left: 4%; background-color:white;"></div>-->
+<!--                            <div #avgCaseCountCharts echarts [options]="avgCaseCount_option" style="width: 45.5%; margin-top: 1%; margin-bottom: 3%; margin-left: 1.5%; background-color:white;"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </nz-content>-->
+<!--        </nz-layout>-->
+<!--    </nz-layout>-->
+<ng-template #trigger>
+    <i class="anticon anticon-up"></i>
+</ng-template>

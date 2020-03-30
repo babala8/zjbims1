@@ -1,0 +1,40 @@
+<nz-table #nzTable [nzAjaxData]="dataSet" [nzIsPagination]="false"
+          [nzShowSizeChanger]="true"
+          [nzSize]="'small'"
+          [nzLoading]="loading"
+          [nzPageSizeSelectorValues]="[20,50,100,200]"
+          [nzShowQuickJumper]="true"
+>
+    <thead nz-thead>
+    <tr>
+        <th nz-th><span>设备号</span></th>
+        <th nz-th><span>机构</span></th>
+        <th nz-th><span>卡号</span></th>
+        <th nz-th><span>转入卡号</span></th>
+        <th nz-th><span>时间</span></th>
+        <th nz-th><span>交易类型</span></th>
+        <th nz-th><span>交易金额</span></th>
+        <th nz-th><span>本地流水号</span></th>
+        <th nz-th><span>主机流水号</span></th>
+        <th nz-th><span>交易返回码</span></th>
+        <th nz-th><span>交易结果描述</span></th>
+        <th nz-th><span>P端服务器编号</span></th>
+    </tr>
+    </thead>
+    <tbody nz-tbody>
+    <tr  nz-tbody-tr *ngFor="let data of nzTable.data">
+        <td nz-td align="center" >{{data.devno}}</td>
+        <td nz-td align="center">{{data.orgno}}</td>
+        <td nz-td align="center">{{data.cardno}}</td>
+        <td nz-td align="center">{{data.transfer}}</td>
+        <td nz-td align="center">{{data.time}}</td>
+        <td nz-td align="center">{{data.tranType}}</td>
+        <td nz-td align="center">{{data.amount}}</td>
+        <td nz-td align="center">{{data.sysTraceNo}}</td>
+        <td nz-td align="center">{{data.hostTraceNo}}</td>
+        <td nz-td align="center"  *ngIf="checkBtn(data.respCode)" [ngStyle]= " {'background-color': color } ">{{data.respCode}}</td>
+        <td nz-td align="center" *ngIf="checkBtn(data.respCode)" [ngStyle]= " {'background-color': color } ">{{data.transDescribe}}</td>
+        <td nz-td align="center">{{data.pId}}</td>
+    </tr>
+    </tbody>
+</nz-table>

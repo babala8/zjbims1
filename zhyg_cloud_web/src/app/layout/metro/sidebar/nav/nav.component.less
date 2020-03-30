@@ -1,0 +1,37 @@
+@aside-scrollbar-width: 0;
+@aside-scrollbar-height: 0;
+@aside-scrollbar-thumb-color: transparent;
+
+:host {
+    display: block;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    // margin-right: -17px;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+    // only desktop
+    // @media (min-width: 1025px) {
+    //     margin-right: -17px;
+    //     overflow-y: scroll;
+    // }
+    &::-webkit-scrollbar {
+        height: @aside-scrollbar-width;
+        width: @aside-scrollbar-height;
+    }
+    &::-webkit-scrollbar-trac {
+        -webkit-box-shadow: inset 0 0 @aside-scrollbar-width rgba(0, 0, 0, 0.3);
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: @aside-scrollbar-thumb-color;
+    }
+}
+
+ul.nav {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+}
+
+li[nav-group-item] {
+    //background-color: rgba(255,255,255,0.1);
+}

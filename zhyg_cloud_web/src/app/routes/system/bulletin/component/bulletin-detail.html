@@ -1,0 +1,52 @@
+<form nz-form #form="ngForm">
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'publisher'" nz-form-item-required>发布人</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="form.controls['publisher']">
+            <nz-input [nzSize]="'large'" [(ngModel)]="formModel['publisher']" [nzId]="'publisher'" name="publisher"
+                      [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'title'" nz-form-item-required>标题</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="form.controls['title']">
+            <nz-input [nzSize]="'large'" [(ngModel)]="formModel['title']" [nzId]="'title'" name="title"
+                      [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'releaseDate'" nz-form-item-required>发布日期</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="form.controls['releaseDate']">
+            <nz-input [nzSize]="'large'" [(ngModel)]="formModel['releaseDate']" [nzId]="'releaseDate'" name="releaseDate"
+                      [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'expireDate'" nz-form-item-required>截止日期</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="form.controls['expireDate']">
+            <nz-input [nzSize]="'large'" [(ngModel)]="formModel['expireDate']" [nzId]="'expireDate'" name="expireDate"
+                      [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'content'" nz-form-item-required>公告内容</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="form.controls['content']">
+            <nz-input [nzSize]="'large'" [(ngModel)]="formModel['content']" [nzId]="'content'" [nzType]="'textarea'" [nzRows]="'4'" name="content"
+                      [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">返回</button>
+        </div>
+    </div>
+</form>

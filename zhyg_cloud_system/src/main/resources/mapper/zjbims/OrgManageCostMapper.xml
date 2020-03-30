@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.OrgManageCostDao">
+    <select id="qryByNo" resultType="OrgManageCost" parameterType="String">
+        select * from org_manage_cost where org_no=#{orgNo} order by year,month
+    </select>
+
+    <delete id="delByKey" parameterType="String">
+        delete from org_manage_cost where org_no=#{orgNo} and year=#{year} and month=#{month}
+    </delete>
+
+    <insert id="add" parameterType="OrgManageCost">
+        insert into org_manage_cost (org_no,year,month,rent,wage,promotion,material,resource_fee,other,staff_count)
+        values (#{orgNo},#{year},#{month},#{rent},#{wage},#{promotion},#{material},#{resourceFee},#{other},#{staffCount})
+    </insert>
+</mapper>

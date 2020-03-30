@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.OrgDao">
+    <resultMap type="Org" id="OrgMap">
+        <association column="org_type" select="qryOrgTypeByNo" property="orgType" javaType="OrgType"/>
+    </resultMap>
+
+    <select id="qryByNo" resultMap="OrgMap" parameterType="String">
+        select * from sys_org left join (select no as parentOrgNo,name as parentOrgName from sys_org) t on parent_org=t.parentOrgNo where no=#{no}
+    </select>
+
+    <select id="qryOrgTypeByNo" resultType="OrgType" parameterType="String">
+        select * from sys_org_type where no=#{no}
+    </select>
+
+    <insert id="add" parameterType="Org">
+        insert into sys_org (no,name,parent_org,org_type,x,y,address,linkman,telephone,fax,email,business_range,
+        cup_area_code,area_no_province,area_no_city,area_no_county,note)
+        values (#{no},#{name},#{parentOrgNo,jdbcType=VARCHAR},#{orgTypeNo},#{x,jdbcType=VARCHAR},#{y,jdbcType=VARCHAR}
+        ,#{address,jdbcType=VARCHAR},#{linkman,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},#{fax,jdbcType=VARCHAR}
+        ,#{email,jdbcType=VARCHAR},#{businessRange,jdbcType=VARCHAR},#{cupAreaCode,jdbcType=VARCHAR},
+        #{areaNoProvince,jdbcType=VARCHAR},#{areaNoCity,jdbcType=VARCHAR},#{areaNoCounty,jdbcType=VARCHAR},#{note,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="mod" parameterType="Org">
+        update sys_org set name=#{name},parent_org=#{parentOrgNo},org_type=#{orgTypeNo},x=#{x,jdbcType=VARCHAR}
+        ,y=#{y,jdbcType=VARCHAR},linkman=#{linkman,jdbcType=VARCHAR},address=#{address,jdbcType=VARCHAR}
+        ,telephone=#{telephone,jdbcType=VARCHAR},cup_area_code=#{cupAreaCode,jdbcType=VARCHAR}
+        ,area_no_province=#{areaNoProvince,jdbcType=VARCHAR},area_no_city=#{areaNoCity,jdbcType=VARCHAR}
+        ,area_no_county=#{areaNoCounty,jdbcType=VARCHAR},note=#{note,jdbcType=VARCHAR}
+         where no=#{no}
+    </update>
+
+    <select id="qryTypeByGrade" parameterType="String" resultType="OrgType">
+        select * from sys_org_type where grade>#{grade} order by grade
+    </select>
+
+    <delete id="del" parameterType="String">
+        delete from sys_org where no=#{no}
+    </delete>
+
+    <select id="qry" parameterType="Map" resultMap="OrgMap">
+        select * from sys_org left join (select no as parentOrgNo,name as parentOrgName from sys_org) t on
+        parent_org=t.parentOrgNo where 1=1
+        <if test="userOrgNo!=null&amp;&amp;userOrgNo!=''">
+            and left_no&gt;=#{userLeftNo} and right_no&lt;=#{userRightNo}
+        </if>
+        <if test="orgNo!=null&amp;&amp;orgNo!=''">
+            and no=#{orgNo}
+        </if>
+        <if test="parentOrgNo!=null&amp;&amp;parentOrgNo!=''">
+            and left_no&gt;=#{parentLeftNo} and right_no&lt;=#{parentRightNo}
+        </if>
+        <if test="orgTypeNo!=null&amp;&amp;orgTypeNo!=''">
+            and org_type=#{orgTypeNo}
+        </if>
+        order by no,parent_org,name
+    </select>
+    
+    <select id="qryOrgTypesByOrgNo" parameterType="String" resultType="OrgType">
+        SELECT * FROM sys_org_type WHERE grade>=(
+            SELECT sot.grade
+            FROM sys_org so JOIN sys_org_type sot ON so.org_type=sot.no WHERE so.no=#{orgno}) ORDER BY grade
+    </select>
+     <select id="qryAuthOrg" parameterType="String" resultType="java.util.HashMap">
+        select no ,name,parent_Org parent_org from sys_org where left_no&gt;=(select left_no from SYS_ORG where no=#{orgNo1}) and right_no&lt;=(select right_no from SYS_ORG where no=#{orgNo2})
+    </select>
+    <update id="updateTree" parameterType="List" databaseId="db2">
+        begin atomic
+        <foreach collection='nodes' item='item' open='' close=''>
+            update sys_org set left_no=#{item.left},right_no=#{item.right} where no=#{item.no};
+        </foreach>
+        end
+    </update>
+    <update id="updateTree" parameterType="List" databaseId="oracle">
+        <foreach collection='nodes' item='item' open='begin' close=';end;' separator=';'>
+            update sys_org set left_no=#{item.left},right_no=#{item.right} where no=#{item.no}
+        </foreach>
+    </update>
+
+    <update id="updateTree" parameterType="List" databaseId="mysql">
+        <foreach collection='nodes' item='item' open='' close='' separator=';'>
+            update sys_org set left_no=#{item.left},right_no=#{item.right} where no=#{item.no}
+        </foreach>
+    </update>
+
+    <select id="qryAllOrg" parameterType="Map" resultMap="OrgMap">
+        select * from sys_org left join (select no as parentOrgNo,name as parentOrgName from sys_org) t on
+        parent_org=t.parentOrgNo
+        order by no,parent_org,name
+    </select>
+    <select id="qryCupArea" resultType="java.util.Map">
+        select code_id code_id, area_name  area_name from UNIONPAY_AREACODE_TABLE
+    </select>
+    <select id="qryProvinceCityArea" resultType="com.zjft.zhyg.system.pojo.ProvinceCityCode" parameterType="Map">
+        select code, code_name as codeName, grade, province_code as provinceCode, city_code as cityCode from province_city_code where 1=1
+        <if test="grade != null &amp;&amp; grade != ''">
+            and grade=#{grade}
+        </if>
+        <if test="provinceCode != null &amp;&amp; provinceCode != ''">
+            and province_code=#{provinceCode}
+        </if>
+        <if test="cityCode != null &amp;&amp; cityCode != ''">
+            and code like concat(#{cityCode},'%')
+        </if>
+        order by code
+    </select>
+    <select id="qryUsersByOrgNo" parameterType="String" resultType="String">
+        select no from sys_user where org_no=#{no}
+    </select>
+    <select id="qryDevsByOrgNo" parameterType="String" resultType="String">
+        select no from dev_base_info where org_no=#{no}
+    </select>
+    <select id="qryByName" resultType="Org" parameterType="String">
+        select *  from sys_org where name=#{name}
+    </select>
+    <select id="qryTopOrg" resultType="Org">
+        select * from sys_org where parent_org is null
+    </select>
+</mapper>

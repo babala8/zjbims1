@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.OrgStaticCostDao">
+    <select id="qryByNo" resultType="OrgStaticCost" parameterType="String">
+        select * from org_static_cost where org_no=#{orgNo}
+    </select>
+
+    <delete id="delByNo" parameterType="String">
+        delete from org_static_cost where org_no=#{orgNo}
+    </delete>
+
+    <insert id="add" parameterType="OrgStaticCost">
+        insert into org_static_cost (org_no,place,decoration,device,other,place_stage,decoration_stage,device_stage,other_stage)
+        values (#{orgNo},#{place},#{decoration},#{device},#{other},#{placeStage},#{decorationStage},#{deviceStage},#{otherStage})
+    </insert>
+</mapper>

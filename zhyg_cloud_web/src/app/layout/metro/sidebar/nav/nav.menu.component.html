@@ -1,0 +1,18 @@
+<ng-container *ngFor="let child of data.children">
+    <ng-container *ngIf="child._hidden !== true && child._authorized">
+        <li  [class.nav-submenu-open]="child._open">
+            <!-- link -->
+            <a *ngIf="child._type === 1" [routerLink]="child.link" [routerLinkActive]="['nav-item-selected']">
+                <i class="{{ child.icon }}"></i>
+                <span>{{child.text}}</span>
+            </a>
+            <!-- has children link -->
+            <a *ngIf="child._type === 3" (click)="toggle(child)" class="nav-sub-title">
+                <i class="{{ child.icon }}"></i>
+                <span>{{child.text}}</span>
+            </a>
+            <ul nav-menu *ngIf="child._type === 3" [source]="child">
+            </ul>
+        </li>
+    </ng-container>
+</ng-container>

@@ -1,0 +1,115 @@
+<nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [nzSize]="'large'">
+    <nz-tab>
+        <ng-template #nzTabHeading>
+            <span style="font-size: large;">标准工作时段</span>
+        </ng-template>
+        <form nz-form [formGroup]="validateForm" >
+            <div style="margin-top:5px;">
+                <span>机构：</span>
+                <span *ngFor="let item of orgs;">{{item.no}} </span>
+            </div>
+            <div>
+                <div nz-form-item nz-row  >
+                    <div nz-form-label nz-col [nzSpan]="4" >
+                        <label [attr.for]="'workTime'">工作日选择</label>
+                    </div>
+
+                    <div nz-form-control nz-col [nzSpan]="20"  style="margin-top:5px;" >
+                        <label *ngFor="let field of fields" >
+                            <label nz-checkbox  formControlName="zhang"  [nzDisabled]="field.disable"   [(ngModel)]="field.checked" >{{field.key}}</label>
+                            &nbsp; &nbsp; &nbsp;
+                        </label>
+                    </div>
+                </div>
+                <div nz-form-item nz-row >
+                    <div nz-col [nzSpan]="12" [nzPush]="1">
+                        <div nz-form-label nz-col [nzSm]="6" >
+                            <label [attr.for]="'workTime'">开始时间</label>
+                        </div>
+
+                        <div nz-form-control nz-col [nzSm]="14"  [nzValidateStatus]="getFormControl('startWorkTime')">
+                            <nz-timepicker  formControlName="startWorkTime" style="margin-right: 100px;" [nzFormat]="'HH:mm'" [(ngModel)]="datePicker.startDate" [nzPlaceHolder]="'开始时间'" ></nz-timepicker>
+                        </div>
+                    </div>
+                    <div nz-col [nzSpan]="12" [nzPush]="1">
+                        <div nz-form-control nz-col [nzSm]="6"  [nzValidateStatus]="getFormControl('endWorkTime')">
+                            <label [attr.for]="'workTime'">结束时间</label>
+                        </div>
+                        <div nz-form-control nz-col [nzSm]="14"  >
+                            <nz-timepicker  formControlName="endWorkTime" style="margin-right: 100px;" [nzFormat]="'HH:mm'" [(ngModel)]="datePicker.endDate"   [nzPlaceHolder]="'结束时间'" ></nz-timepicker>
+                        </div>
+                    </div>
+                </div>
+                <div nz-form-item nz-row style="text-align:center;">
+                    <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+                        <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading"  (click)="normalTime()">提交</button>
+                        <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </nz-tab>
+    <nz-tab>
+        <ng-template #nzTabHeading>
+            <span style="font-size: large;">特殊工作时段</span>
+        </ng-template>
+        <form nz-form [formGroup]="validateForm1" >
+            <div style="margin-top:5px;">
+                <span>机构：</span>
+                <span *ngFor="let item of orgs;">{{item.no}} </span>
+            </div>
+            <div>
+                <div nz-form-item nz-row style="text-align:center;">
+                    <div nz-form-label nz-col [nzSpan]="6" >
+                        <label [attr.for]="'businessStatus'">是否营业</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="12">
+                        <nz-select  formControlName="businessStatus" [nzPlaceHolder]="'--请选择--'" style="width: 50%;"
+                                    (ngModelChange)="changeType($event)">
+                            <nz-option *ngFor="let o of businessList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+
+                <div nz-form-item nz-row style="text-align:center;">
+                    <div nz-form-label nz-col [nzSpan]="6" >
+                        <label [attr.for]="' '">日期选择</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="12">
+                        <nz-datepicker [nzFormat]="'YYYY-MM-DD'" [nzSize]="'large'" formControlName="specialStartDate" style="width: 150px;"
+                                       [(ngModel)]="specialDatePicker.startDate" [nzPlaceHolder]="'开始日期'"></nz-datepicker>
+                        &nbsp; &nbsp;— &nbsp; &nbsp;
+                        <nz-datepicker [nzFormat]="'YYYY-MM-DD'" [nzSize]="'large'" formControlName="specialEndDate" style="width: 150px;"
+                                       [(ngModel)]="specialDatePicker.endDate" [nzPlaceHolder]="'结束日期'"></nz-datepicker>
+                    </div>
+                </div>
+                <div nz-form-item nz-row style="text-align:center;">
+                    <div nz-form-label nz-col [nzSpan]="6" >
+                        <label [attr.for]="' '">营业时间</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="12">
+
+                        <nz-timepicker   formControlName="specialStartWorkTime"  [nzFormat]="'HH:mm'"
+                                         [nzDisabled] ="isBusiness"          [(ngModel)]="datePicker.startDate" [nzPlaceHolder]="'开始时间'" ></nz-timepicker>
+                        &nbsp; &nbsp;— &nbsp; &nbsp;
+
+                        <nz-timepicker   formControlName="specialEndWorkTime"
+                                         [nzDisabled] ="isBusiness"  [nzFormat]="'HH:mm'" [(ngModel)]="datePicker.endDate"   [nzPlaceHolder]="'结束时间'"></nz-timepicker>
+                    </div>
+                </div>
+
+                <div nz-form-item nz-row style="text-align:center;">
+                    <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+                        <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" (click)="specialTime()">提交</button>
+                        <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </nz-tab>
+</nz-tabset>
+
+
+

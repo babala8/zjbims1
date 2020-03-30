@@ -1,0 +1,236 @@
+<form id="orgAddForm" nz-form [formGroup]="validateForm">
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devNo'">设备号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devNo')">
+                <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'ip'">设备ip地址</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('ip')">
+                <nz-input [nzSize]="'large'" formControlName="ip" [nzId]="'ip'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devCatalog'">设备类型</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devCatalog')">
+                <nz-select [nzSize]="'large'" formControlName="devCatalog" [nzDisabled]="true" [nzPlaceHolder]="'--请选择设备类型--'">
+                    <nz-option *ngFor="let o of devCatalogList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devVendor'">设备品牌</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devVendor')">
+                <nz-select [nzSize]="'large'" formControlName="devVendor"  [nzDisabled]="true" [nzPlaceHolder]="'--请选择设备品牌--'">
+                    <nz-option *ngFor="let o of devVendorList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'orgName'">所属机构</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('orgName')">
+                <nz-input [nzSize]="'large'" formControlName="orgName" [nzId]="'orgName'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSpan]="6">
+                <label [attr.for]="'devType'">设备型号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devType')">
+                <nz-select [nzSize]="'large'" formControlName="devType" [nzDisabled]="true" [nzPlaceHolder]="'--请选择设备型号--'">
+                    <nz-option *ngFor="let o of devTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="4" [nzXs]="24">
+            <label [attr.for]="'address'">设备地址</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="17" [nzXs]="24" nzHasFeedback
+             [nzValidateStatus]="getFormControl('address')">
+            <nz-input [nzSize]="'large'" formControlName="address" [nzId]="'address'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'awayFlag'">离行在行标志</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('awayFlag')">
+                <nz-select [nzSize]="'large'" formControlName="awayFlag" [nzDisabled]="true" [nzPlaceHolder]="'----'">
+                    <nz-option *ngFor="let o of awayFlagList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'workType'">经营方式</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('workType')">
+                <nz-select [nzSize]="'large'" formControlName="workType" [nzDisabled]="true" [nzPlaceHolder]="'--请选择经营方式--'">
+                    <nz-option *ngFor="let o of workTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devService'">设备维护商</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devService')">
+                <nz-select [nzSize]="'large'" formControlName="devService" [nzDisabled]="true" [nzPlaceHolder]="'--请选择设备维护商--'">
+                    <nz-option *ngFor="let o of devServiceList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'sp'">厂商sp类型</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('sp')">
+                <nz-select [nzSize]="'large'" formControlName="sp" [nzDisabled]="true" [nzPlaceHolder]="'--请选择厂商sp类型--'">
+                    <nz-option *ngFor="let o of spList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'virtualTellerNo'">虚拟柜员号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('virtualTellerNo')">
+                <nz-input [nzSize]="'large'" formControlName="virtualTellerNo" [nzId]="'virtualTellerNo'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'setupType'">安装方式</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('setupType')">
+                <nz-select [nzSize]="'large'" formControlName="setupType" [nzDisabled]="true" [nzPlaceHolder]="'--请选择安装方式--'">
+                    <nz-option *ngFor="let o of setupTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'x'">经度信息</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('x')">
+                <nz-input [nzSize]="'large'" formControlName="x" [nzId]="'x'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'y'">纬度信息</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('y')">
+                <nz-input [nzSize]="'large'" formControlName="y" [nzId]="'y'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'cashboxLimit'">钱箱报警金额</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('cashboxLimit')">
+                <nz-input [nzSize]="'large'" formControlName="cashboxLimit" [nzId]="'cashboxLimit'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'netType'">有线无线标志</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('netType')">
+                <nz-select [nzSize]="'large'" formControlName="netType" [nzDisabled]="true" [nzPlaceHolder]="'--请选择有线无线标志--'">
+                    <nz-option *ngFor="let o of netTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'commPacket'">通讯每包传输大小</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('commPacket')">
+                <nz-input [nzSize]="'large'" formControlName="commPacket" [nzId]="'commPacket'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+                <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                    <label [attr.for]="'serial'">设备序列号</label>
+                </div>
+                <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('serial')">
+                    <nz-input [nzSize]="'large'" formControlName="serial" [nzId]="'serial'" [nzDisabled]="true"></nz-input>
+                </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'startDate'">设备启用日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('startDate')">
+                <nz-input [nzSize]="'large'" formControlName="startDate" [nzId]="'startDate'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'stopDate'">设备停用日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('stopDate')">
+                <nz-input [nzSize]="'large'" formControlName="stopDate" [nzId]="'stopDate'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'expireDate'">保修到期日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('expireDate')">
+                <nz-input [nzSize]="'large'" formControlName="expireDate" [nzId]="'expireDate'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'patrolPeriod'">设备巡检日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('patrolPeriod')">
+                <nz-input [nzSize]="'large'" formControlName="patrolPeriod" [nzId]="'patrolPeriod'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="24">
+            <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">返回</button>
+        </div>
+    </div>
+</form>
+

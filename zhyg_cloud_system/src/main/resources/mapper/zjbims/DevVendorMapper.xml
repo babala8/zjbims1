@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevVendorDao">
+    <select id="qry" parameterType="Map" resultType="DevVendor">
+        select no,name from dev_vendor_table where 1=1
+        <if test="name!=null&amp;&amp;name!=''">
+            and name=#{name}
+        </if>
+        order by no
+    </select>
+    <select id="qryByNo" resultType="DevVendor" parameterType="String" >
+        select * from dev_vendor_table where no=#{no}
+    </select>
+    <insert id="add" parameterType="DevVendor">
+        insert into dev_vendor_table(no,name,address,hotline1,status)
+        values (#{no},#{name},#{address,jdbcType=VARCHAR},#{hotline1,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR})
+    </insert>
+    <select id="qryByName" parameterType="String" resultType="DevVendor">
+        select * from dev_vendor_table where name=#{name}
+    </select>
+    <select id="qryByNameNo" parameterType="String" resultType="DevVendor">
+        select * from dev_vendor_table where name=#{name} and no!=#{no}
+    </select>
+    <delete id="del" parameterType="String">
+        delete from dev_vendor_table where no=#{no}
+    </delete>
+    <update id="mod" parameterType="DevVendor">
+        update dev_vendor_table set name=#{name} where no=#{no}
+    </update>
+    <select id="qryTypeByVendor" resultType="DevType" parameterType="String">
+        select * from dev_type_table where dev_vendor=#{no}
+    </select>
+</mapper>

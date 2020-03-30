@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevBaseDao">
+    <resultMap type="DevBase" id="DevBaseMap">
+        <association column="org_no" select="com.zjft.zhyg.system.dao.OrgDao.qryByNo" property="org" javaType="Org"/>
+        <association column="dev_catalog" select="com.zjft.zhyg.system.dao.DevCatalogDao.qryByNo" property="devCatalog" javaType="DevCatalog"/>
+        <association column="dev_vendor" select="com.zjft.zhyg.system.dao.DevVendorDao.qryByNo" property="devVendor" javaType="DevVendor"/>
+        <association column="dev_type" select="com.zjft.zhyg.system.dao.DevTypeDao.qryByNo" property="devType" javaType="DevType"/>
+        <association column="dev_service" select="com.zjft.zhyg.system.dao.DevServiceCompanyDao.qryByNo" property="devServiceCompany" javaType="DevServiceCompany"/>
+    </resultMap>
+
+    <insert id="add" parameterType="DevBase">
+        insert into dev_base_info (no, ip, org_no,account_org_no, away_flag, dev_catalog, dev_vendor, dev_type, work_type,status, dev_service, terminal_no, serial, address,
+        buy_date, install_date, start_date, stop_date, open_time, close_time, expire_date, patrol_period, cashbox_limit, os, atmc_soft, anti_virus_soft,
+        sp, virtual_teller_no, care_level, last_pm_date, expire_pm_date, locate_no, note1, note2, note3, note4, note5, carrier, money_org, dev_status, environment, address_code, cash_type, setup_type, net_type, operate_status,
+        registration_status, comm_packet, zip_type, dek_encoded, area_no, dev_log_path, trans_rate)
+        values (#{no},#{ip},#{orgNo},#{accountOrgNo},#{awayFlag},#{devCatalogNo},#{devVendorNo},#{devTypeNo},#{workType},'1',#{devService},#{terminalNo,jdbcType=VARCHAR},
+        #{serial,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{buyDate,jdbcType=VARCHAR},#{installDate,jdbcType=VARCHAR},#{startDate,jdbcType=VARCHAR},
+        #{stopDate,jdbcType=VARCHAR},#{openTime,jdbcType=VARCHAR},#{closeTime,jdbcType=VARCHAR},#{expireDate,jdbcType=VARCHAR},#{patrolPeriod,jdbcType=VARCHAR},
+        #{cashboxLimit,jdbcType=VARCHAR},#{os,jdbcType=VARCHAR},#{atmcSoft,jdbcType=VARCHAR},
+        #{antiVirusSoft,jdbcType=VARCHAR},#{sp,jdbcType=VARCHAR},#{virtualTellerNo,jdbcType=VARCHAR},#{careLevel,jdbcType=VARCHAR},#{lastPmDate,jdbcType=VARCHAR},
+        #{expirePmDate,jdbcType=VARCHAR},#{locateNo,jdbcType=VARCHAR},#{note1,jdbcType=VARCHAR},#{note2,jdbcType=VARCHAR},#{note3,jdbcType=VARCHAR},#{note4,jdbcType=VARCHAR},
+        #{note5,jdbcType=VARCHAR},#{carrier,jdbcType=VARCHAR},#{moneyOrg,jdbcType=VARCHAR},#{devStatus,jdbcType=VARCHAR},#{environment,jdbcType=VARCHAR},#{addressCode,jdbcType=VARCHAR},
+        #{cashType,jdbcType=VARCHAR},#{setupType,jdbcType=VARCHAR},#{netType,jdbcType=VARCHAR},#{operateStatus,jdbcType=VARCHAR},#{registrationStatus,jdbcType=VARCHAR},
+        #{commPacket,jdbcType=VARCHAR},#{zipType,jdbcType=VARCHAR},#{dekEncoded,jdbcType=VARCHAR},#{areaNo,jdbcType=VARCHAR},#{devLogPath,jdbcType=VARCHAR},#{transRate,jdbcType=VARCHAR})
+    </insert>
+    <select id="qry" resultMap="DevBaseMap" parameterType="Map">
+        select * from dev_base_info b,
+                      (select m.no as orgNo from SYS_ORG m,(select s2.LEFT_NO,s2.RIGHT_NO from SYS_ORG s2 where s2.NO =#{userOrgNo}) n
+                      where m.LEFT_NO &gt;=n.LEFT_NO and m.RIGHT_NO &lt;=n.RIGHT_NO) o
+        where b.ORG_NO=o.orgNo
+        <if test="devNo!=null&amp;&amp;devNo!=''">
+            and b.no=#{devNo}
+        </if>
+        <if test="userNo!=null&amp;&amp;userNo!=''">
+            and b.DEV_CATALOG in (select DEV_CATALOG from SYS_USER_DEVROLE where USER_NO=#{userNo})
+        </if>
+        <if test="ip!=null&amp;&amp;ip!=''">
+            and b.ip=#{ip}
+        </if>
+        <if test="orgNo!=null&amp;&amp;orgNo!=''">
+            and b.org_no in
+                (select x.no from SYS_ORG x, (select s1.LEFT_NO,s1.RIGHT_NO from SYS_ORG s1 where s1.NO=#{orgNo}) y
+                where x.LEFT_NO &gt;=y.LEFT_NO and x.RIGHT_NO &lt;=y.RIGHT_NO)
+        </if>
+        <if test="devType!=null&amp;&amp;devType!=''">
+            and b.dev_type=#{devType}
+        </if>
+        <if test="devCatalog!=null&amp;&amp;devCatalog!=''">
+            and b.dev_catalog=#{devCatalog}
+        </if>
+        <if test="devVendor!=null&amp;&amp;devVendor!=''">
+            and b.dev_vendor=#{devVendor}
+        </if>
+        <if test="buyDate!=null&amp;&amp;buyDate!=''">
+            and b.buy_date=#{buyDate}
+        </if>
+        order by b.no,b.org_no
+    </select>
+    <select id="qryByNo" resultMap="DevBaseMap" parameterType="String" >
+        select * from dev_base_info where no=#{no}
+    </select>
+    <select id="qryIpByIp" resultType="DevBase" parameterType="String" >
+        select * from dev_base_info where ip=#{ip}
+    </select>
+    <select id="qryIpByIpNo" resultType="DevBase" parameterType="String" >
+        select * from dev_base_info where ip=#{ip} and no!=#{no}
+    </select>
+    <select id="qryByType" parameterType="String" resultType="String">
+        select no from dev_base_info where dev_type = #{devTypeNo}
+    </select>
+    <update id="mod" parameterType="DevBase">
+        update DEV_BASE_INFO set ip =#{ip}, org_no =#{orgNo},account_org_no=#{accountOrgNo},away_flag =#{awayFlag}, dev_catalog =#{devCatalogNo}, area_no=#{areaNo},
+        dev_vendor =#{devVendorNo}, dev_type =#{devTypeNo}, work_type =#{workType}, dev_service =#{devService}, serial =#{serial,jdbcType=VARCHAR}, address =#{address,jdbcType=VARCHAR},
+        start_date =#{startDate,jdbcType=VARCHAR}, stop_date =#{stopDate,jdbcType=VARCHAR}, expire_date =#{expireDate,jdbcType=VARCHAR}, patrol_period =#{patrolPeriod,jdbcType=VARCHAR},  cashbox_limit =#{cashboxLimit,jdbcType=VARCHAR},
+        sp =#{sp,jdbcType=VARCHAR}, virtual_teller_no =#{virtualTellerNo,jdbcType=VARCHAR},setup_type =#{setupType,jdbcType=VARCHAR}, net_type =#{netType,jdbcType=VARCHAR}, comm_packet =#{commPacket,jdbcType=VARCHAR},
+        open_time=#{openTime,jdbcType=VARCHAR},close_time=#{closeTime,jdbcType=VARCHAR},install_date=#{installDate,jdbcType=VARCHAR},atmp_area=#{atmpArea,jdbcType=VARCHAR}
+        where no =#{no}
+    </update>
+    <delete id="del" parameterType="String">
+        delete from DEV_BASE_INFO where no=#{no}
+    </delete>
+    <update id="modOperateStatus" parameterType="String">
+        update DEV_BASE_INFO set operate_status =#{operateStatus} where no =#{no}
+    </update>
+    <delete id="delAllReferDevNo" parameterType="String" databaseId="oracle">
+    begin
+        delete from dev_base_info where no=#{no};
+        delete from dev_responsor_table where dev_no=#{no};
+        delete from dev_software_info where dev_no=#{no};
+        delete from dev_hardware_info where dev_no=#{no};
+        delete from dev_software_info where dev_no=#{no};
+        delete from dev_attribute_table where dev_no=#{no};
+        delete from dev_caseno_table where dev_no=#{no};
+        delete from dev_status_table where dev_no=#{no};
+        delete from dev_status_table_expand where dev_no=#{no};
+        delete from dev_faultno_table where dev_no=#{no};
+        delete from dev_status_code where dev_no=#{no};
+        delete from param_business_config where devno=#{no};
+     end;
+    </delete>
+    <delete id="delAllReferDevNo" parameterType="String" databaseId="mysql">
+        delete from dev_base_info where no=#{no};
+        delete from dev_responsor_table where dev_no=#{no};
+        delete from dev_software_info where dev_no=#{no};
+        delete from dev_hardware_info where dev_no=#{no};
+        delete from dev_software_info where dev_no=#{no};
+        delete from dev_attribute_table where dev_no=#{no};
+        delete from dev_caseno_table where dev_no=#{no};
+        delete from dev_status_table where dev_no=#{no};
+        delete from dev_status_table_expand where dev_no=#{no};
+        delete from dev_faultno_table where dev_no=#{no};
+        delete from dev_status_code where dev_no=#{no};
+        delete from param_business_config where devno=#{no};
+    </delete>
+    <delete id="delAllReferDevNo" parameterType="String"  databaseId="db2">
+        begin atomic
+        delete from dev_base_info where no=${no};
+        delete from dev_responsor_table where dev_no=${no};
+        delete from dev_software_info where dev_no=${no};
+        delete from dev_hardware_info where dev_no=${no};
+        delete from dev_software_info where dev_no=${no};
+        delete from dev_attribute_table where dev_no=${no};
+        delete from dev_caseno_table where dev_no=${no};
+        delete from dev_status_table where dev_no=${no};
+        delete from dev_status_table_expand where dev_no=${no};
+        delete from dev_faultno_table where dev_no=${no};
+        delete from dev_status_code where dev_no=${no};
+        delete from param_business_config where devno=${no};
+        end
+    </delete>
+    <select id="qryOrgTypes" resultType="OrgType">
+        select * from sys_org_type order by grade
+    </select>
+    <select id="getAllParamTemps" resultType="ParamBusinessTemplate">
+        select * from param_business_template
+    </select>
+    <update id="addParamConf" parameterType="List">
+        begin
+        insert into param_business_config(devno,paramkey,paramvalue,adduser,addtime,taskflag,takeflag)
+        (<foreach collection="list" item="obj" separator="union all">
+        select #{obj.devNo},#{obj.paramKey},#{obj.paramValue,jdbcType=VARCHAR},#{obj.addUser,jdbcType=VARCHAR},
+        #{obj.addTime,jdbcType=VARCHAR},#{obj.taskFlag},#{obj.takeFlag}from dual
+    </foreach>);end;
+    </update>
+    <select id="getParamByDevNo" resultType="Map">
+        select * from param_business_config where devno=#{devNo}
+    </select>
+
+    <insert id="addDevOperate" parameterType="DevBase">
+        insert into
+            DEV_OPERATE_INFO (no,investment,selfbank,QUARTER_LEASE_AMOUNT,COOPERATION_NUMBER,AREA_DIV,BELONGAREA,
+            COOPERATION,CHANGE_DATE,USE_STATUS,ASSETS_NO,NETWORK_OPERATOR,REMARK,INSTALL_SITE,CASE_WAY)
+        values
+            (#{no},#{investment,jdbcType=VARCHAR},#{selfBank,jdbcType=INTEGER},#{quarterLeaseAmount,jdbcType=VARCHAR},
+            #{cooperationNumber},#{areaDiv},#{belongarea},#{cooperation,jdbcType=VARCHAR},
+            #{changeDate,jdbcType=VARCHAR},#{useStatus}, #{assetsNo,jdbcType=VARCHAR},#{networkOperator},
+            #{remark,jdbcType=VARCHAR},#{installSite},#{caseWay})
+    </insert>
+    <select id="qryDevOperate" resultType="Map">
+        select
+            SELFBANK,INVESTMENT,QUARTER_LEASE_AMOUNT,COOPERATION_NUMBER,AREA_DIV,BELONGAREA,COOPERATION,
+            CHANGE_DATE,USE_STATUS,ASSETS_NO,NETWORK_OPERATOR,REMARK,INSTALL_SITE,CASE_WAY
+        from DEV_OPERATE_INFO where no = #{devNo}
+    </select>
+    <update id="modDevOperate" parameterType="DevBase">
+        update
+            DEV_OPERATE_INFO
+        set
+            INVESTMENT = #{investment,jdbcType=VARCHAR},SELFBANK = #{selfBank,jdbcType=INTEGER},
+            QUARTER_LEASE_AMOUNT = #{quarterLeaseAmount,jdbcType=VARCHAR},
+            COOPERATION_NUMBER = #{cooperationNumber},AREA_DIV = #{areaDiv},BELONGAREA = #{belongarea},
+            COOPERATION = #{cooperation,jdbcType=VARCHAR},CHANGE_DATE = #{changeDate,jdbcType=INTEGER},
+            USE_STATUS = #{useStatus},ASSETS_NO = #{assetsNo,jdbcType=INTEGER}, INSTALL_SITE = #{installSite},
+            NETWORK_OPERATOR = #{networkOperator},REMARK = #{remark,jdbcType=INTEGER},CASE_WAY = #{caseWay}
+        WHERE no = #{no}
+
+    </update>
+    <delete id="delDevOperate">
+        delete from DEV_OPERATE_INFO where no = #{devNo}
+    </delete>
+</mapper>

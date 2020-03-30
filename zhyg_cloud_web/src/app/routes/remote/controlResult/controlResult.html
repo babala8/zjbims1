@@ -1,0 +1,108 @@
+<form nz-form  [formGroup]="validateForm" class="search-form">
+    <div nz-row >
+        <div nz-col [nzSpan]="6">
+            <div nz-form-label nz-col [nzSpan]="8" style="width:auto;">
+                <label [attr.for]="'commandId'" nz-form-item-required>控制命令</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+                <nz-select [nzSize]="'large'" formControlName="commandId"
+                           [nzPlaceHolder]="'--所有命令类型--'">
+                    <nz-option *ngFor="let o of commandList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                </nz-select>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['commandId'].dirty && validateForm.controls['commandId'].errors">
+                    {{ validateForm.controls['commandId'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-form-label nz-col [nzSpan]="8" style="width:auto;">
+                <label [attr.for]="'org'" nz-form-item-required>所属机构</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+                <org-tree formControlName="org" [zjId]="'org'"></org-tree>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['org'].dirty && validateForm.controls['org'].errors">
+                    {{ validateForm.controls['org'].errors['explain'] }}
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-form-label nz-col [nzSpan]="8" style="width:auto;">
+                <label [attr.for]="'startDate'">起始时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16" [nzValidateStatus]="getFormControl('startDate')">
+                <nz-datepicker style="width:100%;" [nzSize]="'large'" [nzPlaceHolder]="'开始日期'" [nzDisabledDate]="_disabledStartDate" formControlName="startDate">
+                </nz-datepicker>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-form-label nz-col [nzSpan]="8" style="width:auto;">
+                <label [attr.for]="'endDate'">截止时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="16" [nzValidateStatus]="getFormControl('endDate')">
+                <nz-datepicker style="width:100%;" [nzSize]="'large'" [nzPlaceHolder]="'截止日期'" [nzDisabledDate]="_disabledEndDate" formControlName="endDate">
+                </nz-datepicker>
+            </div>
+        </div>
+    </div>
+    <div nz-row style="margin-top: 10px;" nz-form-item>
+        <div nz-col [nzSpan]="6">
+            <div nz-form-label nz-col [nzSpan]="8" style="padding-left: 22px; width: auto;">
+                <label [attr.for]="'devNo'" >设备号</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16" [nzValidateStatus]="getFormControl('devNo')">
+                <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'"></nz-input>
+                <div nz-form-explain
+                     *ngIf="validateForm.controls['devNo'].dirty && validateForm.controls['devNo'].errors">
+                    <span>请输入数字或者字母，长度为4-8位</span>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="18">
+            <button nz-button [nzType]="'primary'" (click)="refreshData()" [nzSize]="'large'">
+                <i class="anticon anticon-search"></i><span>查询</span>
+            </button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i
+                class="anticon anticon-sync"></i><span>重置</span>
+            </button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="margin-top:20px; margin-left:20px; margin-right:20px;">
+    <nz-table #nzTable
+              [nzAjaxData]="dataSet"
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData()"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>操作员</span></th>
+            <th nz-th><span>远程控制类型</span></th>
+            <th nz-th><span>设备号</span></th>
+            <th nz-th><span>设备所在机构</span></th>
+            <th nz-th><span>操作日期</span></th>
+            <th nz-th><span>操作结果</span></th>
+            <th nz-th><span>操作内容</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data">
+            <td nz-td>{{item.userName}}</td>
+            <td nz-td>{{item.commandName}}</td>
+            <td nz-td>{{item.devNo}}</td>
+            <td nz-td>{{item.orgName}}</td>
+            <td nz-td>{{item.opTime}}</td>
+            <td nz-td>{{item.status}}</td>
+            <td nz-td>{{item.content}}</td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

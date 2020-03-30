@@ -1,0 +1,89 @@
+<form nz-form #form="ngForm"  [formGroup]="validateForm" class="search-form">
+    <div nz-row>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'devNo'">设备号</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="devNo" name="devNo" [nzId]="'devNo'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'org'">所属机构</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <org-tree formControlName="org" [zjId]="'org'"></org-tree>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="8">
+            <button nz-button [nzType]="'primary'" (click)="search()" [nzSize]="'large'"><i class="anticon anticon-search"></i><span>查询</span></button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="padding: 20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper] = "true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>操作</span></th>
+            <th nz-th><span>设备号</span></th>
+            <th nz-th><span>所属机构</span></th>
+            <th nz-th><span>管机员(一)</span></th>
+            <th nz-th><span>管机员(二)</span></th>
+            <th nz-th><span>网点负责人</span></th>
+            <th nz-th><span>维护员(一)</span></th>
+            <th nz-th><span>维护员(二)</span></th>
+            <th nz-th><span>维护员(三)</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+            <td nz-td>
+                <a (click)="showDevResponsible(item)" style="color: #1ba1e2;">设备责任人</a>
+            </td>
+            <td nz-td>
+                <a (click)="showDevinfo(item)" style="color: #1ba1e2;">{{item.devNo}}</a>
+            </td>
+            <td nz-td>
+                <a (click)="showOrg(item)" style="color: #1ba1e2;">{{item.orgName}}({{item.orgNo}})</a>
+            </td>
+            <td nz-td>
+                <span *ngFor="let manager of item.managerfirst;let i1=index">
+                    <a (click)="showManager(manager)" style="color: #1ba1e2;">{{manager.name}}</a>
+                    <span *ngIf="i1!=item.managerfirst.length-1" nz-table-divider></span>
+                </span>
+            </td>
+            <td nz-td>
+                <span *ngFor="let manager of item.managersecond;let i1=index">
+                    <a (click)="showManager(manager)" style="color: #1ba1e2;">{{manager.name}}</a>
+                </span>
+            </td>
+            <td nz-td>
+                <span *ngFor="let manager of item.managerthird;let i1=index">
+                    <a (click)="showManager(manager)" style="color: #1ba1e2;">{{manager.name}}</a>
+                </span>
+            </td>
+            <td nz-td>{{item.servicefirst}}</td>
+            <td nz-td>{{item.servicesecond}}</td>
+            <td nz-td>{{item.servicethird}}</td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

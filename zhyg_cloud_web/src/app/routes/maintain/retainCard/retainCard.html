@@ -1,0 +1,9 @@
+
+<!--
+    <page-iframe #csIframe [srcUrl]="vuelink" [linkKey]="linkKey" [userSession]="userSession"></page-iframe>
+-->
+<page2-iframe #retainCardIframe [srcUrl]="vuelink"
+              [linkKey]="linkKey"
+              [initData]="userSession"
+              (getdata)="getSonData($event)">
+</page2-iframe>

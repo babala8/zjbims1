@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.MenuDao">
+    <select id="qryByNo" resultType="Menu" parameterType="String">
+        select * from sys_menu where no=#{no}
+    </select>
+
+    <delete id="delMenusByRoleNo" parameterType="String">
+        delete from sys_role_menu where role_no=#{roleNo}
+    </delete>
+
+    <select id="qryAll" resultType="Menu">
+        select no,name from sys_menu order by NO
+    </select>
+
+    <select id="qryInfos" resultType="MenuNode">
+        select NO as id, NAME as text, BG_COLOR, TILE_IMAGE, LINK, ICON from SYS_MENU where NO != '0' order by "MENU_ORDER",NO
+    </select>
+    <update id="mod" parameterType="MenuNode">
+        begin
+        <foreach collection="menus" item="menu" separator=";">
+            update SYS_MENU set NAME=#{menu.text}, BG_COLOR=#{menu.bg_color,jdbcType=VARCHAR}, TILE_IMAGE=#{menu.tile_image,jdbcType=VARCHAR},
+            LINK=#{menu.link,jdbcType=VARCHAR}, ICON=#{menu.icon,jdbcType=VARCHAR} where NO=#{menu.id}
+        </foreach>
+        ;end;
+    </update>
+
+
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.zjucp.POrgWorkTimeDao">
+    <delete id="delOnceWorkTime" parameterType="List">
+        delete from  ORG_WORK_TIME_TABLE
+        where  1=1
+        <foreach collection="ids" item="id" open="and Logic_Id in (" close=") " separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="batchSpecialWorkTime" parameterType="OrgWorkTime">
+       insert into ORG_WORK_TIME_TABLE(logic_id,ORG_NO,DATES_TYPE,DATES_TYPE_STATEMENT,DATES,BUSINESSFLAG,START_TIME,END_TIME)
+         values(   #{param.logicId},#{param.OrgNo},#{param.datesType},#{param.datesTypeStatement},#{param.dates},#{param.businessFlag},#{param.startTime},#{param.endTime})
+    </insert>
+</mapper>

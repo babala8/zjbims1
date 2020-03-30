@@ -1,0 +1,378 @@
+<form nz-form #form="ngForm" [formGroup]="validateForm" class="search-form">
+    <div nz-row style="margin-left:20px; margin-right:20px;">
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'org'">机构</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <org-tree formControlName="org" [zjId]="'org'"></org-tree>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'year'">年份</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="year" name="year" [nzId]="'year'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'quarter'">季度</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" formControlName="quarter" name="quarter" nzAllowClear
+                               [nzPlaceHolder]="'--请选择季度--'">
+                        <nz-option *ngFor="let c of quarterList" [hidden]="!c" [nzLabel]="c?.name"
+                                   [nzValue]="c?.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-col [nzSpan]="24" style="text-align:center;">
+                    <button nz-button [nzType]="'primary'" (click)="search()" [nzSize]="'large'"><i
+                        class="anticon anticon-search"></i><span>查询</span></button>
+                    <button nz-button [nzType]="'primary'" (click)="getPdf()" [nzSize]="'large'"><i
+                        class="anticon anticon-download"></i><span>导出PDF报告</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<nz-layout>
+    <nz-content>
+        <div id="export_content" style="background-color: white; background-size: cover; height: 100%; width: 100%;">
+            <div nz-row style="width:  100%; height: 100%; ">
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  48px;">
+                    <span>&nbsp;</span>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  36px; color:  black;">
+                    <span>平安银行{{orgInfo.name}}</span>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  36px; color: black;">
+                    <span>{{Year}}年</span><span>{{Quarter}}能效分析报告</span>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  48px;">
+                    <span>&nbsp;</span>
+                </div>
+
+                <table class="table table-bordered" style="text-align:  center; width: 50%; margin:0 auto;">
+                    <caption style="text-align:  center; caption-side: top; font-size:  24px; color: black;">基本信息
+                    </caption>
+                    <thead>
+                    <tr>
+                        <td colspan="2">机构号</td>
+                        <td colspan="2">机构名称</td>
+                        <td colspan="2">工作时间</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="2">{{orgInfo.no}}</td>
+                        <td colspan="2">{{orgInfo.name}}</td>
+                        <td colspan="2">{{orgInfo.workTime}}</td>
+                    </tr>
+                    </tbody>
+                    <thead>
+                    <tr>
+                        <td colspan="3">电话</td>
+                        <td colspan="3">手机</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="3">{{orgInfo.telephone}}</td>
+                        <td colspan="3">{{orgInfo.mobile}}</td>
+                    </tr>
+                    </tbody>
+                    <thead>
+                    <tr>
+                        <td colspan="3">员工总数</td>
+                        <td colspan="3">地址</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="3">{{changeCostInfo.staffCount}}</td>
+                        <td colspan="3">{{orgInfo.address}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  56px;">
+                    <span>&nbsp;</span>
+                </div>
+
+                <table class="table table-bordered" style="text-align:  center; width: 50%; margin:0 auto;">
+                    <caption style="text-align:  center; caption-side: top; font-size:  24px; color: black;">成本信息
+                    </caption>
+                    <thead>
+                    <tr>
+                        <td colspan="2">成本分析</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>固定成本</td>
+                        <td>运营成本</td>
+                    </tr>
+                    <tr>
+                        <td>场地购置：{{constantCostInfo.place}}</td>
+                        <td>场地租金：{{changeCostInfo.rent}}</td>
+                    </tr>
+                    <tr>
+                        <td>场地装修：{{constantCostInfo.decoration}}</td>
+                        <td>员工工资：{{changeCostInfo.wage}}</td>
+                    </tr>
+                    <tr>
+                        <td>购买设备：{{constantCostInfo.device}}</td>
+                        <td>水电费用：{{changeCostInfo.resourceFee}}</td>
+                    </tr>
+                    <tr>
+                        <td>其他费用：{{constantCostInfo.other}}</td>
+                        <td>营销推广：{{changeCostInfo.promotion}}</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2"></td>
+                        <td>日常材料：{{changeCostInfo.material}}</td>
+                    </tr>
+                    <tr>
+                        <td>其他费用：{{changeCostInfo.other}}</td>
+                    </tr>
+                    <tr>
+                        <td>银行总固定支出金额：{{constantCostInfo.staticCost}}</td>
+                        <td>运营支出总费用：{{changeCostInfo.manageCost}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">总成本：{{bankCostInfo}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  24px; color: black; height: 100px; margin-top: 80px; z-index: 999;">
+                    <span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>成本占比</span>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align: center; font-size: 24px; margin-top: -180px;">
+                    <div style="padding:30px;">
+                        <div nz-row [nzGutter]="12">
+                            <div nz-col [nzSpan]="24">
+                                <div echarts [options]="option_transCostInfo"
+                                     style="width:  100%; height:  300px;"></div>
+                            </div>
+                            <div nz-col [nzSpan]="12" [nzPush]="5">
+                                <div echarts [options]="option_constantCostInfo"
+                                     style="width:  50%; height:  300px;"></div>
+                            </div>
+                            <div nz-col [nzSpan]="12" [nzPush]="1">
+                                <div echarts [options]="option_changeCostInfo"
+                                     style="width:  50%; height:  300px;"></div>
+                            </div>
+                            <div nz-col [nzSpan]="12">
+                                <div nz-row [nzGutter]="12">
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  black;">
+                                        <span>固定成本</span>
+                                    </div>
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  indianred;">
+                                        <span>场地购置:{{constantCostInfo.place}}</span><span>&nbsp;&nbsp;</span><span>购买设备金额:{{constantCostInfo.device}}</span>
+                                    </div>
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  indianred;">
+                                        <span>场地装修:{{constantCostInfo.decoration}}</span><span>&nbsp;&nbsp;</span><span>其他费用:{{constantCostInfo.other}}</span>
+                                    </div>
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  indianred;">
+                                        <span>银行总固定支出金额:{{constantCostInfo.staticCost}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div nz-col [nzSpan]="12">
+                                <div nz-row [nzGutter]="12">
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  black;">
+                                        <span>运营成本</span>
+                                    </div>
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  blue;">
+                                        <span>场地租金:{{changeCostInfo.rent}}</span><span>&nbsp;&nbsp;</span><span>员工工资:{{changeCostInfo.wage}}</span>
+                                    </div>
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  blue;">
+                                        <span>日常材料:{{changeCostInfo.material}}</span><span>&nbsp;&nbsp;</span><span>营销推广:{{changeCostInfo.promotion}}</span>
+                                    </div>
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  blue;">
+                                        <span>水电费用:{{changeCostInfo.resourceFee}}</span><span>&nbsp;&nbsp;</span><span>其他费用:{{changeCostInfo.other}}</span>
+                                    </div>
+                                    <div nz-col [nzSpan]="24"
+                                         style="text-align:  center; font-size:  12px; color:  indianred;">
+                                        <span>银行总经营支出金额:{{changeCostInfo.manageCost}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  24px; color: black;">
+                    <span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>成本合计：{{bankCostInfo}}</span>
+                </div>
+
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  72px;">
+                    <span>&nbsp;</span>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  72px;">
+                    <span>&nbsp;</span>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  48px;">
+                    <span>&nbsp;</span>
+                </div>
+
+                <table class="table table-bordered" style="text-align:  center; width: 50%; margin:0 auto;">
+                    <caption style="text-align:  center; caption-side: top; font-size:  24px; color: black;">交易分析
+                    </caption>
+                    <thead>
+                    <tr>
+                        <td class="w100">
+                            <span class="s1">交易信息</span>
+                            <p></p>
+                            <span class="s2">月份</span>
+                        </td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>交易总金额</td>
+                        <td>2500</td>
+                        <td>5000</td>
+                        <td>6000</td>
+                    </tr>
+                    </tbody>
+                    <thead>
+                    <tr>
+                        <td>交易总数量</td>
+                        <td>1000</td>
+                        <td>2500</td>
+                        <td>4000</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>交易总价值</td>
+                        <td>3000</td>
+                        <td>8000</td>
+                        <td>6000</td>
+                    </tr>
+                    </tbody>
+                    <thead>
+                    <tr>
+                        <td>人均价值</td>
+                        <td>500</td>
+                        <td>800</td>
+                        <td>600</td>
+                    </tr>
+                    </thead>
+                </table>
+
+                <div nz-col [nzOffset]="'5'" [nzSpan]="24" style="text-align: center; font-size: 24px;">
+                    <div style="padding:30px;">
+                        <div nz-row [nzGutter]="24">
+                            <div nz-col [nzSpan]="24">
+                                <div echarts [options]="option_transValueInfo1"
+                                     style="width:  60%; height:  300px;"></div>
+                            </div>
+                            <div nz-col [nzSpan]="24">
+                                <div echarts [options]="option_transValueInfo2"
+                                     style="width:  60%; height:  300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  48px;">
+                    <span> &nbsp;</span>
+                </div>
+
+                <table class="table table-bordered" style="text-align:  center; width: 50%; margin:0 auto;">
+                    <caption style="text-align:  center; caption-side: top; font-size:  24px; color: black;">能效分析
+                    </caption>
+                    <thead>
+                    <tr>
+                        <td>网点总数</td>
+                        <td>{{transEnergy.length}}</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>交易价值排名</td>
+                        <td>{{transEnergy.transValueIndex}}</td>
+                    </tr>
+                    </tbody>
+                    <thead>
+                    <tr>
+                        <td>成本排名</td>
+                        <td>{{transEnergy.costIndex}}</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>交易总数排名</td>
+                        <td>{{transEnergy.transCountIndex}}</td>
+                    </tr>
+                    </tbody>
+                    <thead>
+                    <tr>
+                        <td>人均能效排名</td>
+                        <td>{{transEnergy.personEnergy}}</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>交易金额排名</td>
+                        <td>{{transEnergy.transAmountIndex}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  24px;">
+                    <span>&nbsp;</span>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  center; font-size:  24px; color: black; margin-top: 350px;">
+                    <span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>能效排名</span>
+                </div>
+                <div nz-col [nzOffset]="'5'" [nzSpan]="24" style="text-align: center; font-size: 24px;">
+                    <div style="padding:30px;">
+                        <div nz-row [nzGutter]="24">
+                            <div nz-col [nzSpan]="24">
+                                <div echarts [options]="option_ranfing" style="width:  60%; height:  300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-size: 26px; margin: 300px;">
+                    <p>总结：该网点大额现金交易偏多，现钞机使用率较高，非现金设备交易价值偏低，存折用户较其他网点较多，建议替换将原有ATM设备替换为现钞机</p>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  right; font-size:  24px; color:  black;">
+                    <span>数据来源:紫金综合运管系统</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span>
+                </div>
+                <div nz-col [nzSpan]="24" style="text-align:  right; font-size:  24px; color:  black;">
+                    <span>{{date.year}}年{{date.month}}月{{date.day}}日{{date.hours}}:{{date.minute}}
+                        :{{date.second}}</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span>
+                </div>
+            </div>
+        </div>
+    </nz-content>
+</nz-layout>
+

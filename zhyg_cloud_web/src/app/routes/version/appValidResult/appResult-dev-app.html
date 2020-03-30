@@ -1,0 +1,29 @@
+<div class="search-result-list">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzAjaxData]="dataSet"
+              [nzIsPagination]="false"
+              [nzShowQuickJumper] = "false">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>应用标识</span></th>
+            <th nz-th><span>应用名称</span></th>
+            <th nz-th><span>当前版本</span></th>
+            <th nz-th><span>目标版本</span></th>
+            <th nz-th><span>指定生效方式</span></th>
+            <th nz-th><span>指定生效时间</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data">
+            <td nz-td>{{item.appsId}}</td>
+            <td nz-td>{{item.appsName}}</td>
+            <td nz-td>{{item.currVersion}}</td>
+            <td nz-td>{{item.targetVersion}}</td>
+            <td nz-td>{{item.updateMode}}</td>
+            <td nz-td>{{item.updateTime}}</td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

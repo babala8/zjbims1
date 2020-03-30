@@ -1,0 +1,44 @@
+<nz-layout class="layout">
+    <nz-layout>
+        <nz-sider [nzWidth]="250" style="background:#fff;" >
+            <ul nz-menu [nzMode]="'inline'" style="height:100%;">
+                <li nz-submenu nzOpen="nzOpen">
+                    <span title>定制报表</span>
+                    <ul>
+                        <li nz-menu-item [nzSelected]="true" (click)="switchTabs('devInfo')" >定制-设备基本信息报表</li>
+                        <li nz-menu-item  (click)="switchTabs('customOpenRate')" >定制-开机率统计报表</li>
+                        <li nz-menu-item (click)="switchTabs('customTransInfo')" >定制-交易统计报表</li>
+
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout >
+            <nz-content style="background:#fff;">
+                <div [ngSwitch]="showCase" style="float: left; width: 100%;" >
+                    <div *ngSwitchDefault >
+                        <devInfo-factor></devInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'devInfo'" >
+                        <devInfo-factor></devInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'customOpenRate'" >
+                        <customOpenRateInfo-factor></customOpenRateInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'customTransInfo'" >
+                        <custom-trans-factor></custom-trans-factor>
+                    </div>
+                   <div *ngSwitchCase="'poundageInfo'" >
+                        <poundageInfo-factor></poundageInfo-factor>
+                      </div>
+                </div>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+</nz-layout>
+
+
+
+
+
+

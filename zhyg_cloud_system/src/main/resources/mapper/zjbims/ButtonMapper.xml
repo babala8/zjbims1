@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.ButtonDao">
+    <resultMap id="ButtonMap" type="Button">
+        <association column="menu" select="com.zjft.zhyg.system.dao.MenuDao.qryByNo" property="menu" javaType="Menu"/>
+    </resultMap>
+    <select id="qryByNo" resultMap="ButtonMap" parameterType="String">
+        select * from sys_button where no=#{no}
+    </select>
+
+    <select id="qryAllButtons" resultType="com.zjft.zhyg.system.dto.ButtonMenuDto">
+        select b.NO as btnNo, b.NAME as btnName, b.MENU as btnMenu, b.BUTTON_ORDER as btnOrder
+        , b.NOTE as note, m.NAME as menuName, m.no as menuNo from SYS_BUTTON b,SYS_MENU m
+        where b.MENU = m.NO order by b.menu, b.button_order
+    </select>
+
+    <delete id="delButtonsByRoleNo" parameterType="String">
+        DELETE from sys_role_button where role_no=#{roleNo}
+    </delete>
+</mapper>

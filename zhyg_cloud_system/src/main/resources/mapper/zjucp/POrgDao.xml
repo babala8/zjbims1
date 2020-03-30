@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.zjucp.POrgDao">
+    <insert id="add" parameterType="Org">
+        insert into sys_org (no,name,parent_org,org_type,x,y,address,linkman,telephone,fax,email,business_range,
+        cup_area_code,area_no_province,area_no_city,area_no_county,note)
+        values (#{no},#{name},#{parentOrgNo,jdbcType=VARCHAR},#{orgTypeNo},#{x,jdbcType=VARCHAR},#{y,jdbcType=VARCHAR}
+        ,#{address,jdbcType=VARCHAR},#{linkman,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},#{fax,jdbcType=VARCHAR}
+        ,#{email,jdbcType=VARCHAR},#{businessRange,jdbcType=VARCHAR},#{cupAreaCode,jdbcType=VARCHAR},
+        #{areaNoProvince,jdbcType=VARCHAR},#{areaNoCity,jdbcType=VARCHAR},#{areaNoCounty,jdbcType=VARCHAR},#{note,jdbcType=VARCHAR})   </insert>
+
+    <update id="mod" parameterType="Org">
+        update sys_org set name=#{name},parent_org=#{parentOrgNo},org_type=#{orgTypeNo},x=#{x,jdbcType=VARCHAR}
+        ,y=#{y,jdbcType=VARCHAR},linkman=#{linkman,jdbcType=VARCHAR},address=#{address,jdbcType=VARCHAR}
+        ,telephone=#{telephone,jdbcType=VARCHAR},cup_area_code=#{cupAreaCode,jdbcType=VARCHAR}
+        ,area_no_province=#{areaNoProvince,jdbcType=VARCHAR},area_no_city=#{areaNoCity,jdbcType=VARCHAR}
+        ,area_no_county=#{areaNoCounty,jdbcType=VARCHAR},note=#{note,jdbcType=VARCHAR}
+         where no=#{no}
+     </update>
+    <delete id="del" parameterType="String">
+        delete from sys_org where no=#{no}
+    </delete>
+
+    <select id="qry" parameterType="String" resultType="java.util.HashMap">
+        select * from sys_org where no = #{orgNo}
+    </select>
+
+    <update id="updateTree" parameterType="List" databaseId="oracle">
+        <foreach collection='nodes' item='item' open='begin' close=';end;' separator=';'>
+            update sys_org set left_no=#{item.left},right_no=#{item.right} where no=#{item.no}
+        </foreach>
+    </update>
+
+    <update id="updateTree" parameterType="List" databaseId="mysql">
+        <foreach collection='nodes' item='item' open='' close='' separator=';'>
+            update sys_org set left_no=#{item.left},right_no=#{item.right} where no=#{item.no}
+        </foreach>
+    </update>
+
+    <update id="updateTree" parameterType="List" databaseId="db2">
+        begin atomic
+        <foreach collection='nodes' item='item' open='' close=''>
+            update sys_org set left_no=#{item.left},right_no=#{item.right} where no=#{item.no};
+        </foreach>
+        end
+    </update>
+</mapper>

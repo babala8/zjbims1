@@ -1,0 +1,97 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'elockId'" nz-form-item-required>锁具编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('elockId')">
+            <nz-input [nzSize]="'large'" formControlName="elockId" [nzId]="'elockId'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['elockId'].dirty && validateForm.controls['elockId'].errors">
+                <span>编号不能为空</span>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="margin-top:20px;">
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'devNo'" nz-form-item-required>设备号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('devNo')">
+            <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['devNo'].dirty && validateForm.controls['devNo'].errors">
+                <span>设备号不能为空</span>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'startTime'" nz-form-item-required>计划开始时间</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14">
+            <nz-datepicker [nzSize]="'large'" formControlName="startTimeDate" ></nz-datepicker>
+            <nz-timepicker [nzSize]="'large'" formControlName="startTimeTime" ></nz-timepicker>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['startTimeDate'].dirty && validateForm.controls['startTimeDate'].errors  ||
+                        validateForm.controls['startTimeTime'].dirty && validateForm.controls['startTimeTime'].errors">
+                <span>请选择计划开始时间</span>
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'endTime'" nz-form-item-required>计划结束时间</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14">
+            <nz-datepicker [nzSize]="'large'" formControlName="endTimeDate" ></nz-datepicker>
+            <nz-timepicker [nzSize]="'large'" formControlName="endTimeTime" ></nz-timepicker>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['endTimeDate'].dirty && validateForm.controls['endTimeDate'].errors ||
+                        validateForm.controls['endTimeTime'].dirty && validateForm.controls['endTimeTime'].errors">
+                <span>请选择计划结束时间</span>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'user1No'" nz-form-item-required>开锁人员1编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14">
+            <nz-select [nzSize]="'large'" formControlName="user1No" [nzPlaceHolder]="'--请选择开锁人员1--'">
+                <nz-option *ngFor="let bMP of bankManagerPersionList" [nzLabel]="bMP.name" [nzValue]="bMP.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['user1No'].dirty && validateForm.controls['user1No'].errors">
+                {{ validateForm.controls['user1No'].errors['explain'] }}
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'user2No'" nz-form-item-required>开锁人员2编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14">
+            <nz-select [nzSize]="'large'" formControlName="user2No" [nzPlaceHolder]="'--请选择开锁人员2--'">
+                <nz-option *ngFor="let bMP of bankManagerPersionList" [nzLabel]="bMP.name" [nzValue]="bMP.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['user1No'].dirty && validateForm.controls['user1No'].errors">
+                {{ validateForm.controls['user1No'].errors['explain'] }}
+            </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" >提交</button>
+            <button nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

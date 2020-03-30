@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.zjucp.PDevBaseDao">
+    <insert id="add" parameterType="DevBase">
+        insert into TERMINALDEF (TERMID, TELLERNO,AREA, IPADDR, TERMTYPE, ORGNO, ADDRESS, CURRSTATUS,CORE_ORGNO,DEV_VENDOR,DEV_TYPE,AWAY_FLAG)
+        values (#{no},#{virtualTellerNo,jdbcType=VARCHAR},#{areaNo,jdbcType=VARCHAR},#{ip},#{devCatalogNo},#{orgNo},#{address,jdbcType=VARCHAR},#{currstatus,jdbcType=VARCHAR},
+        #{accountOrgNo,jdbcType=VARCHAR},#{devVendorNo,jdbcType=VARCHAR},#{devTypeNo,jdbcType=VARCHAR},#{awayFlag,jdbcType=VARCHAR})
+    </insert>
+    <update id="mod" parameterType="DevBase">
+        update TERMINALDEF set TELLERNO=#{virtualTellerNo,jdbcType=VARCHAR},IPADDR =#{ip}, TERMTYPE =#{devCatalogNo},
+        ORGNO =#{orgNo}, ADDRESS =#{address,jdbcType=VARCHAR},AREA=#{areaNo,jdbcType=VARCHAR},CORE_ORGNO=#{accountOrgNo,jdbcType=VARCHAR},
+        DEV_VENDOR = #{devVendorNo,jdbcType=VARCHAR},DEV_TYPE =#{devTypeNo,jdbcType=VARCHAR},AWAY_FLAG =#{awayFlag,jdbcType=VARCHAR},
+        CURRSTATUS =#{currstatus}
+         where TERMID =#{no}
+    </update>
+    <delete id="del" parameterType="String">
+        delete from TERMINALDEF where TERMID=#{no}
+    </delete>
+    <select id="qry" parameterType="String" resultType="java.util.HashMap">
+        select * from TERMINALDEF where TERMID = #{no}
+    </select>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.RunParamDao">
+    <update id="mod" parameterType="ServicePropSystem">
+        update service_prop_system set value=#{value},note=#{note}
+        where key_id=#{keyId}
+    </update>
+    <select id="qry" resultType="ServicePropSystem" parameterType="Map">
+        select * from service_prop_system where 1 =1
+        <if test="all == 2">
+            and note like concat('%',concat('(单位','%'))
+        </if>
+        <if test="paramName != null&amp;&amp;paramName != ''">
+            and note like concat('%',concat(#{paramName},'%'))
+        </if>
+    </select>
+    <select id="qryById" resultType="ServicePropSystem" parameterType="String">
+       select * from service_prop_system where key_id=#{keyId}
+    </select>
+</mapper>

@@ -1,0 +1,62 @@
+<div class="trans-content">
+    <div class="base-info">
+        <div class="info-item">
+            设备总量:<span>{{devCount}}</span>台
+        </div>
+        <div class="info-item">
+            网点数量:<span>{{nodeCount}}</span>个
+        </div>
+    </div>
+    <div class="echart-content">
+        <!--            左右箭头-->
+        <i class="anticon anticon-left-circle-o arrow-left" (click)="changePage(true)"></i>
+        <i class="anticon anticon-right-circle-o arrow-right" (click)="changePage( ) "></i>
+        <!--        跑马灯-->
+        <div class="carousel-container">
+            <nz-carousel #transCarousel [nzVertical]="true">
+
+                <div nz-carousel-content>
+                    <div class="echarts-group">
+                        <div class="size1 chart-item">
+                            <div class="chart-title">各类设备类型占比</div>
+                            <div class="chart-type-one" #scaleCharts echarts [options]="option_pie"></div>
+                        </div>
+                        <div class="size2 chart-item ">
+                            <div class="chart-title">自助/柜面交易量走势</div>
+                            <div class="chart-type-two"></div>
+                        </div>
+                        <div class="size1 chart-item">
+                            <div class="chart-title">装机量走势</div>
+                            <div class="chart-type-one" #devCountTrendCharts echarts [options]="devCountTrend"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div nz-carousel-content>
+                    <div class="echarts-group">
+                        <div class="size1 chart-item">
+                            <div class="chart-title">交易类型排名</div>
+                            <div class="chart-type-one" #transCountRankCharts echarts [options]="transCountRank"></div>
+                        </div>
+                        <div class="size2 chart-item ">
+                            <div class="chart-title">自助/柜面交易金额走势</div>
+                            <div class="chart-type-two"></div>
+                        </div>
+                        <div class="size1 chart-item">
+                            <div class="chart-title">各类型交易量排名</div>
+                            <div class="chart-type-one"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </nz-carousel>
+        </div>
+
+    </div>
+</div>
+
+
+
+<ng-template #trigger>
+    <i class="anticon anticon-up"></i>
+</ng-template>

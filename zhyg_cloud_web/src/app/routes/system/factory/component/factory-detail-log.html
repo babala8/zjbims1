@@ -1,0 +1,78 @@
+<form nz-form [formGroup]="validateForm" >
+    <div nz-form-item nz-row >
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'no'" nz-form-item-required>编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="no" [nzId]="'no'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'name'" nz-form-item-required>姓名</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" >
+            <nz-input [nzSize]="'large'" formControlName="name" [nzId]="'name'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'devServiceManager'" >所属维护商</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="devServiceManager" [nzDisabled]="true">
+                <nz-option *ngFor="let o of devServiceManagerList" [nzLabel]="o.name" [nzValue]="o.no" ></nz-option>
+            </nz-select>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'status'">状态</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="status" [nzDisabled]="true">
+                <nz-option *ngFor="let o of statusList" [nzLabel]="o.name" [nzValue]="o.no" ></nz-option>
+            </nz-select>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'phone'">固定电话</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="phone" [nzId]="'phone'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'mobile'">手机号码</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="mobile" [nzId]="'mobile'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'email'">电子邮箱</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="email" [nzId]="'email'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'leader'">维护员上级</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="leader" [nzId]="'leader'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">返回
+            </button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,39 @@
+<div *ngFor="let item of caseNoticeList;">
+    <nz-table #nzTable
+              [nzDataSource]="item"
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzIsPagination]="false">
+        <thead nz-thead>
+        <tr>
+            <th nz-th colspan="8" style="text-align: left;">
+                <span style="display:block; float:left; padding: 1px 30px 1px 1px;">通知号：{{item.notifyId}}</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr >
+            <td nz-td>创建时间:</td><td nz-td>{{item.createTime}}</td>
+            <td nz-td>通知类型:</td><td nz-td>{{item.notifyType}}</td>
+            <td nz-td>通知方式:</td><td nz-td>{{item.notifyWay}}</td>
+            <td nz-td>通知对象:</td><td nz-td>{{item.receiver}}</td>
+        </tr>
+        <tr nz-tbody-tr >
+            <td nz-td>通知手机:</td><td nz-td>{{item.mobile}}</td>
+            <td nz-td>通知邮箱:</td><td nz-td>{{item.email}}</td>
+            <td nz-td>已通知次数:</td><td nz-td>{{item.sendTimes}}</td>
+            <td nz-td>最近通知时间:</td><td nz-td>{{item.sendTime}}</td>
+        </tr>
+        <tr nz-tbody-tr >
+            <td nz-td>通知内容:</td>
+            <td nz-td colspan="7">{{item.content}}</td>
+        </tr>
+        </tbody>
+    </nz-table>
+    <br><br>
+</div>
+<div nz-form-item nz-row style="text-align:center;">
+    <div nz-form-control nz-col [nzSpan]="24">
+        <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">返回</button>
+    </div>
+</div>

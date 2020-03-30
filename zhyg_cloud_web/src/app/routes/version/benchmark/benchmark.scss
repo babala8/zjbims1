@@ -1,0 +1,41 @@
+:host ::ng-deep .custom-image img {
+    display: block;
+}
+
+:host ::ng-deep .ant-card-body {
+    padding: 0;
+}
+:host ::ng-deep .ant-tabs-bar {
+    padding: 10px 10px 0;
+}
+:host ::ng-deep .ant-tabs-card {
+    margin-bottom: 20px;
+}
+#searchForm, #titleDiv, #contentDiv {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+}
+#contentDiv {
+    padding-bottom: 65px;
+}
+#editBtn:hover {
+    -webkit-animation: highLight 500ms;
+    animation-fill-mode: forwards;
+    border-radius: 10px;
+}
+
+@-webkit-keyframes highLight {
+    from {
+        background: white;
+    }
+    to {
+        background: #ffec8b;
+    }
+}
+
+.modelType {
+    filter: grayscale(100%);
+    filter: gray;
+}
+

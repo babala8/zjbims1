@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="spin">
+      <a nz-tooltip="大屏展示" class="tile-button" routerLink="/screen">
+          <span class="zijin-icon-icon_screen"></span>
+      </a>
+      <a  nz-tooltip="系统公告" class="tile-button"  routerLink="/system/bulletin" (click)="toggle()" >
+          <nz-badge [nzCount]=count>
+          </nz-badge>
+          <span class="zijin-icon-addressbook" ></span>
+      </a>
+    <a nz-tooltip="帮助" class="tile-button">
+        <nz-dropdown nzTrigger="click" nzPlacement="bottomRight">
+            <span class="anticon anticon-question-circle-o" nz-dropdown></span>
+<!--            <div nz-menu style="width:200px;">-->
+<!--                <div nz-menu-item class="theme-switch">-->
+<!--                    <header-theme></header-theme>-->
+<!--                </div>-->
+<!--                <div nz-menu-item>-->
+<!--                    <header-fullscreen></header-fullscreen>-->
+<!--                </div>-->
+<!--                <div nz-menu-item>-->
+<!--                    <header-storage></header-storage>-->
+<!--                </div>-->
+<!--                &lt;!&ndash;<div nz-menu-item>-->
+<!--                    <header-i18n></header-i18n>-->
+<!--                </div>&ndash;&gt;-->
+<!--            </div>-->
+        </nz-dropdown>
+    </a>
+    <a nz-tooltip="退出" class="tile-button" (click)="logout()">
+      <span class="zijin-icon-power"></span>
+    </a>
+  </div>
+</div>
+

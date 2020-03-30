@@ -1,0 +1,55 @@
+<div nz-form-item nz-row >
+<table>
+    <tr>
+        <td nz-td>
+            <div nz-col [nzSpan]="12" [nzPush]="2">
+                <span>管机员一</span>
+                <zj-transfer [id]="'m1'" [resourdata]="manager" [targetdata]="managerfirst" (dataChange)="dataChangemanagerfirst($event)"></zj-transfer>
+            </div>
+        </td>
+        <td nz-td>
+            <div nz-col [nzSpan]="12" [nzPush]="6">
+                <span>维护员一</span>
+                <zj-transfer [id]="'s1'" [resourdata]="service" [targetdata]="servicefirst" (dataChange)="dataChangeservicefirst($event)"></zj-transfer>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nz-td>
+            <div nz-col [nzSpan]="12" [nzPush]="2">
+                <span>管机员二</span>
+                <zj-transfer [id]="'m2'" [resourdata]="manager" [targetdata]="managersecond" (dataChange)="dataChangemanagersecond($event)"></zj-transfer>
+            </div>
+        </td>
+        <td nz-td>
+            <div nz-col [nzSpan]="12" [nzPush]="6">
+                <span>维护员二</span>
+                <zj-transfer [id]="'s2'" [resourdata]="service" [targetdata]="servicesecond" (dataChange)="dataChangeservicesecond($event)"></zj-transfer>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td nz-td>
+            <div nz-col [nzSpan]="12" [nzPush]="2">
+                <span>网点负责人</span>
+                <zj-transfer [id]="'m3'" [resourdata]="manager" [targetdata]="managerthird" (dataChange)="dataChangemanagerthird($event)"></zj-transfer>
+            </div>
+        </td>
+        <td nz-td>
+            <div nz-col [nzSpan]="12" [nzPush]="6">
+                <span>维护员三</span>
+                <zj-transfer [id]="'s3'" [resourdata]="service" [targetdata]="servicethird" (dataChange)="dataChangeservicethird($event)"></zj-transfer>
+            </div>
+        </td>
+    </tr>
+</table>
+<div nz-form-item nz-row style="text-align:center; margin-top:20px;">
+        <div nz-col [nzSpan]="24" style="text-align:center;">
+            <button nz-button [nzType]="'primary'" (click)="submit()" [nzSize]="'large'"><span>保存</span></button>
+            &nbsp;&nbsp;
+            <button nz-button (click)="cancel()" [nzSize]="'large'"><span>取消</span></button>
+        </div>
+</div>
+</div>
+
+

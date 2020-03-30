@@ -1,0 +1,68 @@
+<div class="columnStyle" [style.width]="columnWidth" *ngFor="let col of cols; let i = index">
+    <div class="cellStyle" *ngFor="let cell of col; let j = index">
+        <nz-card nzNoHovering [nzLoading]="(editCell && editCell != cell.transType) || loading"
+                 (mouseover)="highCell = cell.transType" (mouseout)="highCell = null">
+            <ng-template #title>
+                {{cell.transTypeName}}
+                <!-- 编辑按钮 -->
+                <div class="editBtn"
+                     [@showEdit]="(highCell == cell.transType && !editCell) || (editCell == cell.transType)? 'show' : 'hide'"
+                     [@highlight]="(overEdit || (editCell == cell.transType)) ? 'show' : 'hide'"
+                     (click)="edit(cell)" (mouseover)="overEdit = true" (mouseout)="overEdit = false">
+                    <i class="anticon anticon-edit"></i>
+                </div>
+            </ng-template>
+            <ng-template #body>
+                <!-- 交易价值列表 -->
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" *ngFor="let item of cell.valueList; let j = index">
+                        <span style="float: left;">{{item.itemName}}:</span>
+                        <!-- 价值标签 -->
+                        <span class="valueSpan" *ngIf="editCell != cell.transType">
+                            {{item.staticValue}}
+                        </span>
+                        <!-- 删除按钮 -->
+                        <div class="deleteBtn" *ngIf="editCell == cell.transType"
+                             [@highlight]="(overDelete && overDelete.transType == cell.transType && overDelete.itemNo == item.itemNo) ? 'show' : 'hide'"
+                             (mouseover)="overDelete = {transType: cell.transType, itemNo: item.itemNo}"
+                             (mouseout)="overDelete = null" (click)="delItem(cell.valueList, j)">
+                            <i class="anticon anticon-delete"></i>
+                        </div>
+                        <!-- 价值输入框 -->
+                        <nz-input style="width: 25%; float: right; margin-right: 12px;" [nzSize]="'small'"
+                                  *ngIf="editCell == cell.transType" [(ngModel)]="item.staticValue"></nz-input>
+                    </li>
+                    <ng-container *ngIf="showItems">
+                        <li class="list-group-item" *ngFor="let item of selectableItems; let k = index"
+                            [@highlight]="overAddItem == item.no ? 'show' : 'hide'"
+                            (mouseover)="overAddItem = item.no" (mouseout)="overAddItem = null"
+                            (click)="addItem(cell.valueList, k)">
+                            <span style="float: left;">{{item.name}}</span>
+                            <div class="deleteBtn">
+                                <i class="anticon anticon-plus"></i>
+                            </div>
+                        </li>
+                    </ng-container>
+                    <!-- 添加按钮 -->
+                    <li *ngIf="editCell == cell.transType">
+                        <div class="addBtn" [@highlight]="overAdd == cell.transType ? 'show' : 'hide'"
+                             (mouseover)="overAdd = cell.transType" (mouseout)="overAdd = null"
+                             (click)="showItems = !showItems">
+                            <i *ngIf="!showItems" class="anticon anticon-plus"></i>
+                            <i *ngIf="showItems" class="anticon anticon-up"></i>
+                        </div>
+                    </li>
+                </ul>
+                <!-- 确认、取消按钮 -->
+                <div *ngIf="editCell == cell.transType">
+                    <button nz-button class="confirmBtn" type="button" [nzShape]="'circle'" (click)="submit(i, j)">
+                        <i class="anticon anticon-check"></i>
+                    </button>
+                    <button nz-button class="cancelBtn" type="button" [nzShape]="'circle'" (click)="cancel(i ,j)">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+            </ng-template>
+        </nz-card>
+    </div>
+</div>

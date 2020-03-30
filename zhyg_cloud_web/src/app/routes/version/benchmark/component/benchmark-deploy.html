@@ -1,0 +1,271 @@
+<div nz-row class="zijin-row" style="margin-left: 20px; margin-right: 20px;">
+    <div nz-col [nzSpan]="21">
+            <span style="font-size: 17px; color: #6a00ff;">已部署应用:</span>
+    </div>
+    <div nz-col [nzSpan]="1" style="text-align: right;">
+        <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="refreshData()">
+            <i class="anticon anticon-reload"></i>刷新
+        </button>
+    </div>
+    <div nz-col [nzSpan]="2" style="text-align: right;">
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="showAdd()">
+            <i class="anticon anticon-plus"></i>添加应用
+        </button>
+    </div>
+</div>
+<br>
+<div class="search-result-list" style="margin-left: 20px; margin-right: 20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzLoading]="loading"
+              [nzAjaxData]="benchmarkComponent.curVersion"
+              [nzIsPagination]="false"
+              [nzScroll]="{y: 500 }"
+              nzSize="small">
+        <ng-template #nzFixedHeader>
+            <thead nz-thead>
+            <tr>
+                <th nz-th [nzWidth]="'200px'"><span>应用标识</span></th>
+                <th nz-th [nzWidth]="'200px'"><span>应用名称</span></th>
+                <th nz-th [nzWidth]="'500px'"><span>应用版本</span></th>
+                <th nz-th [nzWidth]="'200px'"><span>生效方式</span></th>
+                <th nz-th [nzWidth]="'200px'"><span>生效时间</span></th>
+                <th nz-th><span>操作</span></th>
+            </tr>
+            </thead>
+        </ng-template>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index;">
+            <td nz-td>{{item.appsId}}</td>
+            <td nz-td>{{item.appsName}}</td>
+            <td nz-td>
+                <nz-dropdown>
+                    <button nz-button nz-dropdown>
+                        <span>{{item.versionInfo}}</span><i class="anticon anticon-down"></i>
+                    </button>
+                    <ul nz-menu>
+                        <li nz-menu-item *ngFor="let a of mergeHistoryVersions[item.appsId]; let j = index;"
+                            (click)="changeVersion(item.appsId, a, i, j, 'qry')">
+                            <a>{{a}}</a>
+                        </li>
+                    </ul>
+                </nz-dropdown>
+            </td>
+            <td nz-td>
+                <nz-select [nzSize]="'default'" [(ngModel)]="item.updateMode"
+                           (ngModelChange)="item.updateMode=$event">
+                    <nz-option *ngFor="let c of updateModes" [nzLabel]="c?.name"
+                               [nzValue]="c?.no"></nz-option>
+                </nz-select>
+            </td>
+            <td nz-td>
+                <nz-datepicker *ngIf="item.updateMode == '2'" (ngModelChange)="item.updateTime=$event"
+                               [ngModel]="item.updateTime" [nzShowTime]="true"
+                               [nzFormat]="'YYYY-MM-DD HH:mm:ss'" [nzPlaceHolder]="'valid time'">
+                </nz-datepicker>
+            </td>
+            <td nz-td noWrap>
+                <button [nzType]="'primary'" nz-button (click)="setParam(item)" style="margin-bottom: 5px;">保存</button>&nbsp;
+                <nz-popconfirm [nzTitle]="'确认删除应用?'" (nzOnConfirm)="confirmDel(item.appsId)" (nzOnCancel)="cancel()"
+                               [nzPlacement]="'top'">
+                    <button nz-popconfirm nz-button class="ant-btn">删除</button>
+                </nz-popconfirm>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+    <br>
+    <button nz-button [nzType]="'primary'" (click)="syn()" style="margin-left: 580px;">
+        <i class="anticon anticon-sync"></i><span>立即同步</span></button>&nbsp;&nbsp;&nbsp;&nbsp;
+    <button nz-button [nzType]="'default'" (click)="backModel()">
+        <i class="anticon anticon-enter"></i><span>返回</span></button>
+    <!-- 添加应用窗口 -->
+    <nz-modal [nzVisible]="addVisible" nzTitle="添加应用" [nzWidth]="1100" [nzContent]="modalContent"
+              [nzFooter]="modalFooter" [nzClosable]="false" [nzStyle]="{'margin-top':'50px'}">
+        <ng-template #modalContent>
+            <form nz-form #form="ngForm" class="search-form">
+                <div nz-row>
+                    <div nz-col [nzSpan]="10">
+                        <div nz-row>
+                            <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                                <label [attr.for]="'appName_qry'">应用名称</label>
+                            </div>
+                            <div nz-form-control nz-col [nzSpan]="16">
+                                <nz-input [nzSize]="'large'" [(ngModel)]="appName_qry" name="appName_qry"
+                                          (ngModelChange)="searchApp()"></nz-input>
+                            </div>
+                        </div>
+                    </div>
+                    <div nz-col [nzSpan]="2" [nzOffset]="2" style="width: auto;">
+                        <button nz-button (click)="showAll()" [nzSize]="'large'">
+                            <i class="anticon anticon-rollback"></i>
+                            <span>重置</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <nz-table #nzTable
+                      [nzShowSizeChanger]="true"
+                      [nzLoading]="loading"
+                      [nzAjaxData]="otherAppVersions"
+                      [nzIsPagination]="false"
+                      [nzSize]="'small'"
+                      [nzScroll]="{y: 300 }">
+                <ng-template #nzFixedHeader>
+                    <thead nz-thead>
+                    <tr>
+                        <th nz-th [nzWidth]="'100px'">
+                            <span><label nz-checkbox (ngModelChange)="selectAll($event)" [(ngModel)]="allchecked" [nzIndeterminate]="indeterminate"></label></span>
+                        </th>
+                        <th nz-th [nzWidth]="'200px'"><span>应用标识</span></th>
+                        <th nz-th [nzWidth]="'200px'"><span>应用名称</span></th>
+                        <th nz-th><span>版本号</span></th>
+                        <th nz-th [nzWidth]="'200px'"><span>生效方式</span></th>
+                        <th nz-th [nzWidth]="'200px'"><span>生效时间</span></th>
+                    </tr>
+                    </thead>
+                </ng-template>
+                <tbody nz-tbody>
+                <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index;">
+                    <td nz-td nzCheckbox>
+                        <label nz-checkbox (ngModelChange)="selectApp(i)" [(ngModel)]="item.selected"></label>
+                    </td>
+                    <td nz-td>{{item.appsId}}</td>
+                    <td nz-td>{{item.appsName}}</td>
+                    <td nz-td>
+                        <nz-dropdown>
+                            <button nz-button nz-dropdown>
+                                <span>{{item.selectedVersion}}</span><i class="anticon anticon-down"></i>
+                            </button>
+                            <ul nz-menu>
+                                <li nz-menu-item *ngFor="let a of item.versions; let j = index;"
+                                    (click)="changeVersion(item.appsId, a, i, j, 'add')">
+                                    <a>{{a}}</a>
+                                </li>
+                            </ul>
+                        </nz-dropdown>
+                    </td>
+                    <td nz-td>
+                        <nz-select [nzSize]="'default'" [(ngModel)]="item.updateMode"
+                                   (ngModelChange)="item.updateMode=$event">
+                            <nz-option *ngFor="let c of updateModes" [nzLabel]="c?.name"
+                                       [nzValue]="c?.no"></nz-option>
+                        </nz-select>
+                    </td>
+                    <td nz-td>
+                        <nz-datepicker *ngIf="item.updateMode == '2'" (ngModelChange)="item.updateTime=$event"
+                                       [ngModel]="item.updateTime" [nzShowTime]="true"
+                                       [nzFormat]="'YYYY-MM-DD HH:mm:ss'" [nzPlaceHolder]="'valid time'">
+                        </nz-datepicker>
+                    </td>
+                </tr>
+                </tbody>
+            </nz-table>
+        </ng-template>
+        <ng-template #modalFooter>
+            <button nz-button nzType="default" (click)="cancelAdd()">取消</button>
+            <button nz-button nzType="primary" (click)="submitAdd()" [nzLoading]="loading">提交</button>
+        </ng-template>
+    </nz-modal>
+    <!-- 设置参数页面 -->
+    <nz-modal [nzVisible]="paramVisible"
+              nzTitle="应用设置" [nzWidth]="600"
+              [nzContent]="modalContent_param"
+              [nzFooter]="modalFooter_param"
+              [nzClosable]="false"
+              [nzStyle]="{'margin-top':'25px'}"
+              nzSize="small">
+        <ng-template #modalContent_param>
+            <span>参数设置</span>&nbsp;&nbsp;&nbsp;<nz-switch [(ngModel)]="modParam"></nz-switch>
+            <nz-table #nzTable
+                      [nzShowSizeChanger]="true"
+                      [nzLoading]="loading"
+                      [nzAjaxData]="params"
+                      [nzIsPagination]="false"
+                      [nzScroll]="{y: 190 }"
+                      *ngIf="modParam">
+                <ng-template #nzFixedHeader>
+                    <thead nz-thead>
+                    <tr>
+                        <th nz-th [nzWidth]="'150px'"><span>参数名称</span></th>
+                        <th nz-th [nzWidth]="'200px'"><span>参数值</span></th>
+                        <th nz-th [nzWidth]="'250px'"><span>参数描述</span></th>
+                    </tr>
+                    </thead>
+                </ng-template>
+                <tbody nz-tbody>
+                <tr nz-tbody-tr *ngFor="let item of nzTable.data; let i = index;">
+                    <td nz-td>{{item.paramKey}}</td>
+                    <td nz-td *ngIf="item.inputType === 'input'">
+                        <nz-input [(ngModel)]="item.paramValue" [nzPlaceHolder]="'请输入参数'"></nz-input>
+                    </td>
+                    <td nz-td *ngIf="item.inputType === 'select'">
+                        <nz-select style="width: 120px;" [(ngModel)]="item.paramValue" [nzPlaceHolder]="'请选择参数'"
+                                   nzAllowClear>
+                            <nz-option
+                                *ngFor="let option of item.options"
+                                [nzLabel]="option.name"
+                                [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </td>
+                    <td nz-td *ngIf="item.inputType === 'checkbox'">
+                        <span *ngFor="let option of item.options">
+                            <label nz-checkbox  [(ngModel)]="option.selected">{{option.name}}</label>
+                            <br>
+                        </span>
+                    </td>
+                    <td nz-td>{{item.remark}}</td>
+                </tr>
+                </tbody>
+            </nz-table>
+            <br>
+            <span style="width: 100px; margin-left: 8px;">同步方式</span>
+            <nz-select style="width: 120px; margin-left: 77px;" [(ngModel)]="synMode" [nzPlaceHolder]="'设置'"
+                       nzAllowClear>
+                <nz-option
+                    *ngFor="let option of synModes"
+                    [nzLabel]="option.name"
+                    [nzValue]="option.no">
+                </nz-option>
+            </nz-select>
+            <br><br>
+            <!-- 同步模式为闲时同步时，需要设置开始时间和结束时间 -->
+            <div *ngIf="synMode === '3'">
+                <span style="margin-left: 8px; margin-right: 77px;">开始时间</span>
+                <nz-datepicker [(ngModel)]="syn_start_time" style="margin-right: 50px;"
+                               [nzFormat]="'YYYY-MM-DD HH:mm:ss'" nzShowTime (ngModelChange)="startTimeChange()">
+                </nz-datepicker>
+                <br><br>
+                <span style="margin-left: 8px; margin-right: 77px;">结束时间</span>
+                <nz-datepicker [(ngModel)]="syn_end_time" style="margin-right: 50px;"
+                               [nzFormat]="'YYYY-MM-DD HH:mm:ss'"
+                               nzShowTime (ngModelChange)="endTimeChange()">
+                </nz-datepicker>
+                <br><br>
+            </div>
+            <span style="width: 100px; margin-left: 8px;">生效方式</span>
+            <nz-select style="width: 120px; margin-left: 77px;" [(ngModel)]="updateMode" [nzPlaceHolder]="'设置'"
+                       nzAllowClear>
+                <nz-option
+                    *ngFor="let option of updateModes"
+                    [nzLabel]="option.name"
+                    [nzValue]="option.no">
+                </nz-option>
+            </nz-select>
+            <br><br>
+            <!-- 生效方式为指定时间时，需要设置生效时间 -->
+            <div *ngIf="updateMode === '2'">
+                <span style="margin-left: 8px; margin-right: 77px;">生效时间</span>
+                <nz-datepicker [(ngModel)]="update_time" style="margin-right: 50px;"
+                               [nzFormat]="'YYYY-MM-DD HH:mm:ss'"
+                               nzShowTime>
+                </nz-datepicker>
+            </div>
+        </ng-template>
+        <ng-template #modalFooter_param>
+            <button nz-button nzType="default" (click)="cancelParam()">取消</button>
+            <button nz-button nzType="primary" (click)="submitParam()" [nzLoading]="loading">保存</button>
+        </ng-template>
+    </nz-modal>
+</div>

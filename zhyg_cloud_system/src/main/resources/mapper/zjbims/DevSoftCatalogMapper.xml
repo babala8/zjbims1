@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevSoftCatalogDao">
+    <insert id="add" parameterType="DevSoftCatalog">
+        insert into rvc_project_type(groupId,groupType,groupName,groupValue)
+        values (#{groupId},#{groupType},#{groupName},#{groupValue})
+    </insert>
+    <delete id="del" parameterType="String">
+        delete from rvc_project_type where groupId=#{groupId}
+    </delete>
+    <!--<update id="mod" parameterType="DevSoftCatalog">
+        update sys_bulletin_info set title=#{title},content=#{content},release_date=#{releaseDate},expire_date=#{expireDate},publisher=#{publisher},attachment1=#{attachment1,jdbcType=VARCHAR},attachment2=#{attachment2,jdbcType=VARCHAR},attachment3=#{attachment3,jdbcType=VARCHAR}
+        where bulletin_id=#{bulletinId}
+    </update>-->
+    <select id="qry" resultType="DevSoftCatalog" parameterType="Map">
+        select * from rvc_project_type where 1 =1
+        <if test="groupType != null&amp;&amp;groupType != ''">
+            and groupType = #{groupType}
+        </if>
+        order by groupid
+    </select>
+    <select id="qryMaxId"  resultType="String" databaseId="db2">
+       select max(cast(groupId as int)) as maxId from rvc_project_type
+    </select>
+    <select id="qryMaxId"  resultType="String" databaseId="oracle">
+       select max(cast(groupId as int)) as maxId from rvc_project_type
+    </select>
+    <select id="qryMaxId"  resultType="String" databaseId="mysql">
+       select max(cast(groupId as signed int)) as maxId from rvc_project_type
+    </select>
+    <!--<select id="qryById" resultType="DevSoftCatalog" parameterType="String">
+       select * from sys_bulletin_info where bulletin_id=#{bulletinId}
+    </select>-->
+
+</mapper>

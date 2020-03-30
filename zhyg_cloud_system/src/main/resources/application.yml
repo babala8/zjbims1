@@ -1,0 +1,62 @@
+server:
+  port: 8092
+spring:
+  application:
+    name: system
+  datasource:
+    zjbims:
+      #driver-class-name: oracle.jdbc.OracleDriver
+      #url: jdbc:oracle:thin:@localhost:1521:orcl
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/zjbims?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+      username: root
+      password: root
+      type: com.alibaba.druid.pool.DruidDataSource
+    zjucp:
+      enable: false
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/zjuap?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+      username: zjuap
+      password: zjuap
+      type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      max-active: 20
+      initial-size: 2
+      max-wait: 60000
+      min-idle: 2
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 30000
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      connect-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  aop:
+    proxy-target-class: true
+    auto: true
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8090/eureka/
+  instance:
+    prefer-ip-address: true
+mybatis:
+  type-aliases-package: com.zjft.zhyg.${spring.application.name}.pojo
+  mapper-locations-zjbims: classpath:mapper/zjbims/*.xml
+  mapper-locations-zjucp: classpath:mapper/zjucp/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+logging:
+  config: classpath:${spring.application.name}-logback.xml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env,health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+zj:
+  gateway-name: gateway

@@ -1,0 +1,74 @@
+<div class="sum-container">
+<!--    头部-->
+    <div class="page-top-title">
+        <div class="timer"><i class="anticon anticon-clock-circle-o"></i><span >{{curDateTime|date: 'yyyy-MM-dd HH: mm: ss'}}</span></div>
+        <span class="word-title">IT网点监控</span>
+    </div>
+        <div class="charts-content">
+
+<!--左start-->
+        <div class="content-left">
+            <div class="size1  chart-item">
+                <div class="chart-title">
+                    <img src="{{resourceUrl}}/img/networkOperatingRate.png" alt=""/>
+                    网点开机率
+                </div>
+                <div class="chart-size1" #rateCharts echarts [options]="option_linechart4rate"></div>
+            </div>
+            <div class="size1 margin-top chart-item">
+                <div class="chart-title">
+                    <img src="{{resourceUrl}}/img/devVolume.png" alt=""/>
+                    设备量
+                </div>
+                <div class="chart-size2" #pieCharts echarts [options]="option_pie"></div>
+            </div>
+            <div class="size1 margin-top chart-item">
+                <div class="chart-title">
+                    <img src="{{resourceUrl}}/img/tradingVolume.png" alt=""/>
+                    交易量
+                </div>
+                <div class="chart-size1" #transTypeCharts echarts [options]="option_Histogram"></div>
+            </div>
+        </div>
+<!--    左end -->
+<!--        中 start-->
+        <div class="content-middle">
+            <div class="size2 chart-item">
+                <div class="chart-title">
+                    <img src="{{resourceUrl}}/img/tradingDetail.png" alt=""/>
+                    月交易明细
+                </div>
+                <div class="chart-size3" #monCharts echarts [options]="option_linechart" ></div>
+            </div>
+            <div class="size2 margin-top chart-item">
+                <div class="chart-title">
+                    <img src="{{resourceUrl}}/img/tradingHeatMap.png" alt=""/>
+                    设备交易热力图
+                </div>
+                <div class="chart-size3" #hotCharts echarts [options]="option_hotdisplay" ></div>
+            </div>
+        </div>
+<!--        中  end-->
+<!--        右 start-->
+        <div class="content-right">
+            <div class="size2 chart-item">
+                <div class="chart-title">
+                    <img src="{{resourceUrl}}/img/bootRate.png" alt=""/>
+                    开机率排名
+                </div>
+                <div class="chart-size3" #RateRkCharts echarts [options]="option_rateRank"></div>
+            </div>
+            <div class="size2 margin-top chart-item">
+                <div class="chart-title">
+                    <img src="{{resourceUrl}}/img/tradingVolumeNo.png" alt=""/>
+                    交易量网点排名
+                </div>
+                <div class="chart-size3" #TransRkCharts echarts [options]="option_volumeRk" ></div>
+            </div>
+        </div>
+<!--        右end-->
+        </div>
+
+</div>
+
+

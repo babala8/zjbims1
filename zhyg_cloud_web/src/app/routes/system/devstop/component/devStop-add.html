@@ -1,0 +1,108 @@
+<form id="devStopAddForm" nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'devNo'">设备号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'" [nzDisabled]="true"></nz-input>
+        </div>
+        <div nz-form-explain
+             *ngIf="validateForm.controls['devNo'].dirty && validateForm.controls['devNo'].errors">
+        </div>
+    </div>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'stopDevType'" nz-form-item-required>是否事后停机</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14">
+            <nz-select [nzSize]="'large'" formControlName="isAfter" [nzPlaceHolder]="'请选择'">
+                <nz-option *ngFor="let o of isAfter" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['isAfter'].dirty && validateForm.controls['isAfter'].errors">
+                <span>请选择停机类型</span>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="">
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'stopDevType'" nz-form-item-required>停机原因种类</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14">
+            <nz-select [nzSize]="'large'" formControlName="stopDevType" [nzPlaceHolder]="'--请选择停机原因类型--'">
+                <nz-option *ngFor="let o of stopType" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['stopDevType'].dirty && validateForm.controls['stopDevType'].errors">
+                <span>请选择停机原因种类</span>
+            </div>
+        </div>
+    </div>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'stopReason'" nz-form-item-required>停机原因</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14">
+            <nz-input [nzSize]="'large'" formControlName="stopReason">
+            </nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['stopReason'].dirty && validateForm.controls['stopReason'].errors">
+                <span>请输入停机原因2-80中英文字符</span>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'stopDevStartTime'" nz-form-item-required>停机开始时间</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="8" [nzXs]="24">
+            <nz-datepicker formControlName="stopDevStartDate" style="margin-right: 10px;" [nzFormat]="'YYYY-MM-DD'" [nzSize]="'large'"
+                           [(ngModel)]="datePicker.startDate"></nz-datepicker>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['stopDevStartDate'].dirty && validateForm.controls['stopDevStartDate'].errors">
+                <span>请选择停机开始日期</span>
+            </div>
+        </div>
+        <div nz-form-control nz-col [nzSm]="4" [nzXs]="24">
+            <nz-timepicker [nzFormat]="'HH:mm'" [nzSize]="'large'" formControlName="StartTime" style="margin-right: 35px;"></nz-timepicker>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['StartTime'].dirty && validateForm.controls['StartTime'].errors">
+                <span>请选择停机开始时间</span>
+            </div>
+        </div>
+    </div>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'stopDevEndDate'" nz-form-item-required>停机结束时间</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="8" [nzXs]="24">
+            <nz-datepicker formControlName="stopDevEndDate" style="margin-right: 10px;" [nzFormat]="'YYYY-MM-DD'" [nzSize]="'large'"
+                           [(ngModel)]="datePicker.endDate"></nz-datepicker>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['stopDevEndDate'].dirty && validateForm.controls['stopDevEndDate'].errors">
+                <span>请选择停机结束日期</span>
+            </div>
+        </div>
+        <div nz-form-control nz-col [nzSm]="4" [nzXs]="24">
+            <nz-timepicker [nzFormat]="'HH:mm'" [nzSize]="'large'" formControlName="EndTime" style="margin-right: 35px;"></nz-timepicker>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['EndTime'].dirty && validateForm.controls['EndTime'].errors">
+                <span>请选择停机结束时间</span>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="24">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading">提交</button>
+            <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading"
+                    (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

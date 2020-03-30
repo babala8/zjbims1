@@ -1,0 +1,170 @@
+<form id="faultQueryDetailForm" nz-form [formGroup]="validateForm">
+    <div nz-form-item nz-row style="margin-top:20px;">
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'caseNo'">case编号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('caseNo')">
+                <nz-input [nzSize]="'large'" formControlName="caseNo" [nzId]="'caseNo'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devNo'">设备号</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devNo')">
+                <nz-input [nzSize]="'large'" formControlName="devNo" [nzId]="'devNo'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devVendor'">设备品牌</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devVendor')">
+                <nz-input [nzSize]="'large'" formControlName="devVendor" [nzId]="'devVendor'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'devType'">设备机型</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('devType')">
+                <nz-input [nzSize]="'large'" formControlName="devType" [nzId]="'devType'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'orgName'">机构</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('orgName')">
+                <nz-input [nzSize]="'large'" formControlName="orgName" [nzId]="'orgName'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSpan]="6">
+                <label [attr.for]="'address'">装机地址</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('address')">
+                <nz-input [nzSize]="'large'" formControlName="address" [nzId]="'address'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'caseCatalogName'">CASE类型</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('caseCatalogName')">
+                <nz-input [nzSize]="'large'" formControlName="caseCatalogName" [nzId]="'caseCatalogName'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'status'">处理状态</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('status')">
+                <nz-input [nzSize]="'large'" formControlName="status" [nzId]="'status'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'modCatalogName'">故障模块</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('modCatalogName')">
+                <nz-input [nzSize]="'large'" formControlName="modCatalogName" [nzId]="'modCatalogName'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'grade'">CASE级别</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('grade')">
+                <nz-input [nzSize]="'large'" formControlName="grade" [nzId]="'grade'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'openTime'">开启时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('openTime')">
+                <nz-input [nzSize]="'large'" formControlName="openTime" [nzId]="'openTime'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'notifyTime'">通知时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('notifyTime')">
+                <nz-input [nzSize]="'large'" formControlName="notifyTime" [nzId]="'notifyTime'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'precloseTime'">预计关闭时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('precloseTime')">
+                <nz-input [nzSize]="'large'" formControlName="precloseTime" [nzId]="'precloseTime'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'closeTime'">实际关闭时间</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('closeTime')">
+                <nz-input [nzSize]="'large'" formControlName="closeTime" [nzId]="'closeTime'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'faultCode'">故障码</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('faultCode')">
+                <nz-input [nzSize]="'large'" formControlName="faultCode" [nzId]="'faultCode'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'vendorCode'">厂商故障码</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('vendorCode')">
+                <nz-input [nzSize]="'large'" formControlName="vendorCode" [nzId]="'vendorCode'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12" [nzPush]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'description'">故障描述</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('description')">
+                <nz-input [nzSize]="'large'" formControlName="description" [nzId]="'description'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" [nzPull]="1">
+            <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+                <label [attr.for]="'solution'">处理意见</label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" [nzValidateStatus]="getFormControl('solution')">
+                <nz-input [nzSize]="'large'" formControlName="solution" [nzId]="'solution'" [nzDisabled]="true"></nz-input>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="24">
+            <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" *ngIf="caseStatus=='O'" (click)="closeCase()">关闭当前CASE</button>
+            <button nz-button type="button" [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">返回</button>
+        </div>
+    </div>
+</form>

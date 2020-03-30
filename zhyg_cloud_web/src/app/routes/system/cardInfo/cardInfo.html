@@ -1,0 +1,90 @@
+<form nz-form #form="ngForm" [formGroup]="validateForm" class="search-form">
+    <div nz-row>
+        <div nz-col [nzSpan]="8">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'cardBin'">卡BIN</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="cardBin" [nzId]="'cardBin'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col style="width: auto;">
+            <button nz-button [nzType]="'primary'" (click)="refreshData(true)" [nzSize]="'large'"><i class="anticon anticon-search"></i><span>查询</span></button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+            <button nz-button  (click)="addCardInfo()" [nzType]="'primary'" [nzSize]="'large'"><i class="anticon anticon-plus"></i><span>添加</span>
+            </button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="margin-top:10px; margin-left:10px; margin-right:10px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper]="true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>识别的磁道号</span></th>
+            <th nz-th><span>识别串1</span></th>
+            <th nz-th><span>识别串2</span></th>
+            <th nz-th><span>识别串3</span></th>
+            <th nz-th><span>识别串4</span></th>
+            <th nz-th><span>卡号标识</span></th>
+            <th nz-th><span>卡号偏移量</span></th>
+            <th nz-th><span>卡号长度</span></th>
+            <th nz-th><span>主账号标识</span></th>
+            <th nz-th><span>主账号偏移量</span></th>
+            <th nz-th><span>主账号长度</span></th>
+            <th nz-th><span>个人密码长度</span></th>
+            <th nz-th><span>卡类型</span></th>
+            <th nz-th><span>本行标识</span></th>
+            <th nz-th><span>发卡行</span></th>
+            <th nz-th><span>卡名称</span></th>
+            <th nz-th><span>用户编号</span></th>
+            <th nz-th><span>操作时间</span></th>
+            <th nz-th><span>备注</span></th>
+            <th nz-th><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+            <td nz-td>{{item.idFlag}}</td>
+            <td nz-td>{{item.idString1}}</td>
+            <td nz-td>{{item.idString2}}</td>
+            <td nz-td>{{item.idString3}}</td>
+            <td nz-td>{{item.idString4}}</td>
+            <td nz-td>{{item.cardNoFlag}}</td>
+            <td nz-td>{{item.cardNoOffset}}</td>
+            <td nz-td>{{item.cardNoLength}}</td>
+            <td nz-td>{{item.panFlag}}</td>
+            <td nz-td>{{item.panOffset}}</td>
+            <td nz-td>{{item.panLength}}</td>
+            <td nz-td>{{item.pcPwdLength}}</td>
+            <td nz-td>{{item.cardTypeName}}</td>
+            <td nz-td>{{item.localFlagName}}</td>
+            <td nz-td>{{item.cardBank}}</td>
+            <td nz-td>{{item.cardName}}</td>
+            <td nz-td>{{item.userId}}</td>
+            <td nz-td>{{string2DateString(item.oprTime)}}</td>
+            <td nz-td>{{item.note}}</td>
+            <td nz-td style="text-align: center; width: 160px;">
+                <a  (click)="modifyCardInfo(item)" style="color: #1ba1e2;">修改</a>
+                <span nz-table-divider></span>
+                <nz-popconfirm [nzTitle]="'确定要删除该卡表吗？'" (nzOnConfirm)="confirmDel(item.serNo)" (nzOnCancel)="cancel()">
+                    <a  nz-popconfirm style="color: red;">删除</a>
+                </nz-popconfirm>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

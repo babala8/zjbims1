@@ -1,0 +1,49 @@
+<div class="search-result-list" style="padding: 20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper] = "true"
+
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>case故障类型号</span></th>
+            <th nz-th><span>分类名称</span></th>
+            <th nz-th><span>负责人类型</span></th>
+            <th nz-th><span>要求到场时间（在行）</span></th>
+            <th nz-th><span>要求到场时间（离行）</span></th>
+            <th nz-th><span>要求关闭时间（在行）</span></th>
+            <th nz-th><span>要求关闭时间（离行）</span></th>
+            <th nz-th><span>升级通知方式</span></th>
+            <th nz-th><span>通知次数</span></th>
+            <th nz-th><span>通知方式</span></th>
+            <th nz-th><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+            <td nz-td>{{item.catalogNo}}</td>
+            <td nz-td>{{item.catalogName}}</td>
+            <td nz-td>{{item.responsorCatalog}}</td>
+            <td nz-td>{{item.onsiteInterval}}</td>
+            <td nz-td>{{item.closeInterval}}</td>
+            <td nz-td>{{item.onsiteInterval1}}</td>
+            <td nz-td>{{item.closeInterval1}}</td>
+            <td nz-td>{{item.sendMsgMethod}}</td>
+            <td nz-td>{{item.maxGrade}}</td>
+            <td nz-td>{{item.notifyWay}}</td>
+            <td nz-td style="text-align: center;">
+                <a (click)="modCaseCatalog(item)" style="color: #1ba1e2;">修改</a>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

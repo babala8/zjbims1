@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevTypeDao">
+    <resultMap type="DevType" id="typeMap">
+        <association column="dev_catalog" select="com.zjft.zhyg.system.dao.DevCatalogDao.qryByNo" property="devCatalog" javaType="DevCatalog"/>
+        <association column="dev_vendor" select="com.zjft.zhyg.system.dao.DevVendorDao.qryByNo" property="devVendor" javaType="DevVendor"/>
+    </resultMap>
+    <select id="qry" resultMap="typeMap" parameterType="Map" >
+        select u.* from dev_type_table u left join (select name as catalogName,no as catalogNo from dev_catalog_table )o on u.dev_catalog=o.catalogNo left join (select
+        name as vendorName,no as vendorNo from dev_vendor_table)r on u.dev_vendor=r.vendorNo where 1=1
+        <if test="param.devCatalog!=null&amp;&amp;param.devCatalog!=''">
+            and u.dev_catalog=#{param.devCatalog}
+        </if>
+        <if test="param.userNo!=null&amp;&amp;param.userNo!=''">
+            and u.DEV_CATALOG in(select DEV_CATALOG from SYS_USER_DEVROLE where USER_NO=#{param.userNo})
+        </if>
+        <if test="param.devVendor!=null&amp;&amp;param.devVendor!=''">
+            and u.dev_vendor=#{param.devVendor}
+        </if>
+        order by u.no
+    </select>
+    <select id="qryByNo" resultMap="typeMap" parameterType="String" >
+        select * from dev_type_table where no=#{no}
+    </select>
+    <insert id="add" parameterType="DevType">
+        insert into dev_type_table (no,name,dev_vendor,dev_catalog,spec,weight,watt,cash_type)
+        values (#{no},#{name},#{vendorNo},#{catalogNo},#{spec,jdbcType=VARCHAR},#{weight,jdbcType=VARCHAR},#{watt,jdbcType=VARCHAR},#{cashType,jdbcType=VARCHAR})
+    </insert>
+    <delete id="del" parameterType="String">
+        delete from dev_type_table where no=#{no}
+    </delete>
+    <update id="mod" parameterType="DevType">
+        update dev_type_table set name=#{name},dev_vendor=#{vendorNo},dev_catalog=#{catalogNo},cash_type=#{cashType,jdbcType=VARCHAR} where no=#{no}
+    </update>
+    <select id="qryByName" parameterType="String" resultType="DevType">
+        select * from dev_type_table where name=#{name}
+    </select>
+    <select id="qryByNameNo" parameterType="String" resultType="DevType">
+        select * from dev_type_table where name=#{name} and no!=#{no}
+    </select>
+</mapper>

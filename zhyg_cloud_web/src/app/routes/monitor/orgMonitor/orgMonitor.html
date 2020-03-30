@@ -1,0 +1,620 @@
+<nz-card nzNoHovering>
+    <ng-template #body>
+        <div (click)="showDetail()" class="case-red" nz-card-grid [ngStyle]="gridStyle" >
+            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-top: -30px; margin-left: 160px;">
+            </div>
+            <div style="width: 30px; margin-top: -15px; margin-left: 180px;">
+                <span>繁忙</span>
+            </div>
+            <div style="margin-top: -5px;">
+                <span>深圳平安(10001)</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <div>
+                    <nz-tooltip [nzTitle]="'自助ATM'">
+                        <div style="float: left; margin-left: 14px;">
+                            <span>自助ATM</span>
+                        </div>
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/atm.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left;">
+                        <span>自助现钞机</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'自助现钞机'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/cash.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 42px;">
+                        <span>柜面</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'柜面'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Countertop.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'柜面服务中/柜面空闲/全部柜面'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 12px;">
+                        <span>取号人数</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'取号人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Takequeue.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span>5</span>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div style="float: left; margin-left: 13px;">
+                    <span>当前人数</span>
+                </div>
+                <div>
+                    <nz-tooltip [nzTitle]="'当前人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/allpeople.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span >10</span>
+                </div>
+            </div>
+            <div style="margin-top: 45px;">
+                <span>17546324946</span>
+            </div>
+        </div>
+        <div (click)="showDetail()" class="case-red" nz-card-grid [ngStyle]="gridStyle" >
+            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-top: -30px; margin-left: 160px;">
+            </div>
+            <div style="width: 30px; margin-top: -15px; margin-left: 180px;">
+                <span>繁忙</span>
+            </div>
+            <div style="margin-top: -5px;">
+                <span>南京平安(10002)</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <div>
+                    <nz-tooltip [nzTitle]="'自助ATM'">
+                        <div style="float: left; margin-left: 14px;">
+                            <span>自助ATM</span>
+                        </div>
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/atm.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>2/7/30</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left;">
+                        <span>自助现钞机</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'自助现钞机'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/cash.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/30</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 42px;">
+                        <span>柜面</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'柜面'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Countertop.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'柜面服务中/柜面空闲/全部柜面'">
+                        <span nz-tooltip>5/8/30</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 12px;">
+                        <span>取号人数</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'取号人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Takequeue.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span>5</span>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div style="float: left; margin-left: 13px;">
+                    <span>当前人数</span>
+                </div>
+                <div>
+                    <nz-tooltip [nzTitle]="'当前人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/allpeople.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span >10</span>
+                </div>
+            </div>
+            <div style="margin-top: 45px;">
+                <span>16542358964</span>
+            </div>
+        </div>
+        <div (click)="showDetail()" class="case-yellow" nz-card-grid [ngStyle]="gridStyle" >
+            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: yellow; margin-top: -30px; margin-left: 160px;">
+            </div>
+            <div style="width: 30px; margin-top: -15px; margin-left: 180px;">
+                <span>一般</span>
+            </div>
+            <div style="margin-top: -5px;">
+                <span>上海平安(10003)</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <div>
+                    <nz-tooltip [nzTitle]="'自助ATM'">
+                        <div style="float: left; margin-left: 14px;">
+                            <span>自助ATM</span>
+                        </div>
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/atm.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left;">
+                        <span>自助现钞机</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'自助现钞机'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/cash.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 42px;">
+                        <span>柜面</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'柜面'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Countertop.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'柜面服务中/柜面空闲/全部柜面'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 12px;">
+                        <span>取号人数</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'取号人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Takequeue.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span>5</span>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div style="float: left; margin-left: 13px;">
+                    <span>当前人数</span>
+                </div>
+                <div>
+                    <nz-tooltip [nzTitle]="'当前人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/allpeople.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span >10</span>
+                </div>
+            </div>
+            <div style="margin-top: 45px;">
+                <span>16425893245</span>
+            </div>
+        </div>
+        <div (click)="showDetail()" class="case-yellow" nz-card-grid [ngStyle]="gridStyle" >
+            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: yellow; margin-top: -30px; margin-left: 160px;">
+            </div>
+            <div style="width: 30px; margin-top: -15px; margin-left: 180px;">
+                <span>一般</span>
+            </div>
+            <div style="margin-top: -5px;">
+                <span>北京平安(10004)</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <div>
+                    <nz-tooltip [nzTitle]="'自助ATM'">
+                        <div style="float: left; margin-left: 14px;">
+                            <span>自助ATM</span>
+                        </div>
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/atm.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left;">
+                        <span>自助现钞机</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'自助现钞机'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/cash.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 42px;">
+                        <span>柜面</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'柜面'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Countertop.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'柜面服务中/柜面空闲/全部柜面'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 12px;">
+                        <span>取号人数</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'取号人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Takequeue.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span>5</span>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div style="float: left; margin-left: 13px;">
+                    <span>当前人数</span>
+                </div>
+                <div>
+                    <nz-tooltip [nzTitle]="'当前人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/allpeople.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span >10</span>
+                </div>
+            </div>
+            <div style="margin-top: 45px;">
+                <span>1345684265</span>
+            </div>
+        </div>
+        <div (click)="showDetail()" class="case-yellow" nz-card-grid [ngStyle]="gridStyle" >
+            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: yellow; margin-top: -30px; margin-left: 160px;">
+            </div>
+            <div style="width: 30px; margin-top: -15px; margin-left: 180px;">
+                <span>一般</span>
+            </div>
+            <div style="margin-top: -5px;">
+                <span>福建平安(10005)</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <div>
+                    <nz-tooltip [nzTitle]="'自助ATM'">
+                        <div style="float: left; margin-left: 14px;">
+                            <span>自助ATM</span>
+                        </div>
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/atm.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left;">
+                        <span>自助现钞机</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'自助现钞机'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/cash.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 42px;">
+                        <span>柜面</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'柜面'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Countertop.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'柜面服务中/柜面空闲/全部柜面'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 12px;">
+                        <span>取号人数</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'取号人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Takequeue.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span>5</span>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div style="float: left; margin-left: 13px;">
+                    <span>当前人数</span>
+                </div>
+                <div>
+                    <nz-tooltip [nzTitle]="'当前人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/allpeople.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span >10</span>
+                </div>
+            </div>
+            <div style="margin-top: 45px;">
+                <span>13452654896</span>
+            </div>
+        </div>
+        <div (click)="showDetail()" class="case-green" nz-card-grid [ngStyle]="gridStyle" >
+            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: green; margin-top: -30px; margin-left: 160px;">
+            </div>
+            <div style="width: 30px; margin-top: -15px; margin-left: 180px;">
+                <span>空闲</span>
+            </div>
+            <div style="margin-top: -5px;">
+                <span>河北平安(10006)</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <div>
+                    <nz-tooltip [nzTitle]="'自助ATM'">
+                        <div style="float: left; margin-left: 14px;">
+                            <span>自助ATM</span>
+                        </div>
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/atm.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left;">
+                        <span>自助现钞机</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'自助现钞机'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/cash.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 42px;">
+                        <span>柜面</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'柜面'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Countertop.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'柜面服务中/柜面空闲/全部柜面'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 12px;">
+                        <span>取号人数</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'取号人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Takequeue.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span>5</span>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div style="float: left; margin-left: 13px;">
+                    <span>当前人数</span>
+                </div>
+                <div>
+                    <nz-tooltip [nzTitle]="'当前人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/allpeople.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span >10</span>
+                </div>
+            </div>
+            <div style="margin-top: 45px;">
+                <span>16424523698</span>
+            </div>
+        </div>
+        <div (click)="showDetail()" class="case-green" nz-card-grid [ngStyle]="gridStyle" >
+            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: green; margin-top: -30px; margin-left: 160px;">
+            </div>
+            <div style="width: 30px; margin-top: -15px; margin-left: 180px;">
+                <span>空闲</span>
+            </div>
+            <div style="margin-top: -5px;">
+                <span>河南平安(10007)</span>
+            </div>
+            <div style="margin-top: 15px;">
+                <div>
+                    <nz-tooltip [nzTitle]="'自助ATM'">
+                        <div style="float: left; margin-left: 14px;">
+                            <span>自助ATM</span>
+                        </div>
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/atm.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left;">
+                        <span>自助现钞机</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'自助现钞机'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/cash.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'交易中设备/开机设备/全部设备'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 42px;">
+                        <span>柜面</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'柜面'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Countertop.png" style="float: left; width:25px;" >
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <nz-tooltip [nzTitle]="'柜面服务中/柜面空闲/全部柜面'">
+                        <span nz-tooltip>5/8/10</span>
+                    </nz-tooltip>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div>
+                    <div style="float: left; margin-left: 12px;">
+                        <span>取号人数</span>
+                    </div>
+                    <nz-tooltip [nzTitle]="'取号人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/Takequeue.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span>5</span>
+                </div>
+            </div>
+            <br>
+            <div style="margin-top: 15px;">
+                <div style="float: left; margin-left: 13px;">
+                    <span>当前人数</span>
+                </div>
+                <div>
+                    <nz-tooltip [nzTitle]="'当前人数'">
+                        <img nz-tooltip src="assets/images/monitor/orgMonitor/allpeople.png" style="float: left; width:25px;">
+                    </nz-tooltip>
+                </div>
+                <div style="float: left; margin-left: 30px;">
+                    <span >10</span>
+                </div>
+            </div>
+            <div style="margin-top: 45px;">
+                <span>13542896325</span>
+            </div>
+        </div>
+    </ng-template>
+</nz-card>

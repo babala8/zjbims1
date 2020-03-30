@@ -1,0 +1,172 @@
+<form style="padding: 10px;" nz-form #form="ngForm" class="search-form" enctype="multipart/form-data">
+    <div nz-row>
+        <div nz-col [nzSpan]="5">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'appType'">应用类型</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" [(ngModel)]="formModel['appType']" name="appCatalog" nzAllowClear
+                               [nzPlaceHolder]="'--请选择应用类型--'" (ngModelChange)="refreshData(true)">
+                        <nz-option *ngFor="let c of appTypes" [hidden]="!c" [nzLabel]="c?.name"
+                                   [nzValue]="c?.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="5">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'appCatalog'">应用分类</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-select [nzSize]="'large'" [(ngModel)]="formModel['appCatalog']" name="appCatalog" nzAllowClear
+                               [nzPlaceHolder]="'--请选择应用分类--'" (ngModelChange)="refreshData(true)">
+                        <nz-option *ngFor="let c of appCatalogs" [hidden]="!c" [nzLabel]="c?.name"
+                                   [nzValue]="c?.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="5">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'appName'">应用名称</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" [(ngModel)]="formModel['appName']"
+                              nzAllowClear name="appName" [nzId]="'appName'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="5">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'busiNo'">业务版本号</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" [(ngModel)]="formModel['busiNo']"
+                              nzAllowClear name="busiNo" [nzId]="'busiNo'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="4">
+            <button nz-button (click)="search()" [nzSize]="'large'">
+                <i class="anticon anticon-sync"></i>
+                <span>查询</span>
+            </button>
+            <button nz-button [nzSize]="'large'" (click)="showUpload()">
+                <i class="anticon anticon-upload"></i>
+                <span>制作版本</span>
+            </button>
+        </div>
+    </div>
+</form>
+<div style="padding: 20px;">
+<nz-table #nzTable
+          [nzShowSizeChanger]="true"
+          [nzLoading]="loading"
+          [nzAjaxData]="dataSet"
+          [(nzPageIndex)]="page.curPage"
+          [(nzPageSize)]="page.pageSize"
+          [nzTotal]="page.totalRow"
+          [nzPageSizeSelectorValues]="[20,40,100]"
+          [nzShowTotal]="true"
+          [nzShowQuickJumper]="true"
+          (nzPageSizeChange)="refreshData(true)"
+          (nzPageIndexChange)="refreshData()"
+          [nzSize]="'small'">
+    <thead nz-thead>
+    <tr>
+        <th nz-th nzExpand></th>
+        <th nz-th><span>应用标识</span></th>
+        <th nz-th><span>应用名称</span></th>
+        <th nz-th><span>应用类型</span></th>
+        <th nz-th><span>应用分类</span></th>
+        <th nz-th><span>适用设备类型</span></th>
+        <th nz-th><span>操作</span></th>
+    </tr>
+    </thead>
+    <tbody nz-tbody>
+    <ng-template ngFor let-data [ngForOf]="nzTable.data">
+        <tr nz-tbody-tr>
+            <td nz-td nzExpand (click)="showDetail(data.appsId)">
+                <nz-row-expand-icon [(nzExpand)]="data.expand"></nz-row-expand-icon>
+            </td>
+            <td nz-td>{{data.appsId}}</td>
+            <td nz-td>{{data.appsName}}</td>
+            <td nz-td>{{getTypeName(data.appsType)}}</td>
+            <td nz-td>{{data.catalogName}}</td>
+            <td nz-td>{{data.limitCatalogName}}</td>
+
+            <td nz-td style="text-align: center;">
+                <a *ngIf="checkBtn('应用管理','修改')" (click)="modApp(data)" style="color: #1ba1e2;">修改</a>
+                <!--
+                <span *ngIf="checkBtn('应用管理','修改')" nz-table-divider></span>
+                <nz-popconfirm [nzTitle]="'确定要删除该应用吗？'" (nzOnConfirm)="confirmDel(data.appsId)"
+                               (nzOnCancel)="cancel()">
+                    <a *ngIf="checkBtn('应用管理','删除')" nz-popconfirm [ngStyle]="{'color':'red'}">删除</a>
+                </nz-popconfirm>
+                -->
+            </td>
+        </tr>
+
+        <tr nz-tbody-tr *ngIf="data.expand && data.versions">
+            <td nz-td></td>
+            <td nz-td colspan="5">
+                <nz-table #nzTable
+                          [nzLoading]="loading"
+                          [nzAjaxData]="data.versions"
+                          [nzSize]="'small'"
+                          [nzIsPagination]="false"
+                          [nzBordered]="false">
+                    <thead nz-thead>
+                        <tr>
+                            <th nz-th><span>应用版本号</span></th>
+                            <th nz-th><span>业务版本号</span></th>
+                            <th nz-th><span>依赖版本</span></th>
+                            <th nz-th><span>版本状态</span></th>
+                            <th nz-th><span>添加人</span></th>
+                            <th nz-th><span>添加时间</span></th>
+                            <th nz-th><span>版本描述</span></th>
+                        </tr>
+                    </thead>
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let item of nzTable.data">
+                        <td nz-td>{{item.versionAppNo}}</td>
+                        <td nz-td>{{item.versionBusNo}}</td>
+                        <td nz-td>{{item.dependVersion}}</td>
+                        <td nz-td>{{item.versionStatus}}</td>
+                        <td nz-td>{{item.addUser}}</td>
+                        <td nz-td>{{item.addTime}}</td>
+                        <td nz-td>{{item.versionDescription}}</td>
+                    </tr>
+                    </tbody>
+                </nz-table>
+            </td>
+        </tr>
+
+        <tr nz-tbody-tr *ngIf="data.expand && !data.versions">
+            <td nz-td></td>
+            <td nz-td colspan="4">
+                该应用还没有版本
+            </td>
+        </tr>
+    </ng-template>
+    </tbody>
+</nz-table>
+</div>
+
+<nz-modal [nzVisible]="uploadVisible" nzTitle="版本文件上传" [nzWidth]="400" [nzContent]="modalContent"
+          [nzFooter]="modalFooter" [nzClosable]="false" [nzStyle]="{'margin-top':'50px'}">
+    <ng-template #modalContent>
+        <input #fileUpload [(ngModel)]="fileName" type="file" ng2FileSelect [uploader]="uploader"
+               (change)="checkFile($event)"/><br>
+    </ng-template>
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="cancelUpload()">取消</button>
+        <button nz-button nzType="primary" (click)="saveVersion()" [nzLoading]="loading" [disabled]="uploadDisable">
+            上传
+        </button>
+    </ng-template>
+</nz-modal>

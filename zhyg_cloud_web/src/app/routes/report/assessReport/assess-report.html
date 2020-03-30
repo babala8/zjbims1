@@ -1,0 +1,49 @@
+
+<nz-layout class="layout">
+    <nz-layout>
+        <nz-sider [nzWidth]="250" style="background:#fff;" >
+            <ul nz-menu [nzMode]="'inline'" style="height:100%;">
+                <li nz-submenu nzOpen="nzOpen">
+                    <span title><i nz-icon type="mail"></i> 考核类报表</span>
+                    <ul>
+                        <li nz-menu-item [nzSelected]="true" (click)="switchTabs('devTypeInfo')" >机型考核报表</li>
+                        <li nz-menu-item (click)="switchTabs('devAdminAssessInfo')" >管机员考核表</li>
+                        <li nz-menu-item  (click)="switchTabs('adminDetailInfo')" >管机员考核明细表</li>
+<!--                        <li nz-menu-item  (click)="switchTabs('devVersionInfo')" >设备版本信息表</li>-->
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout >
+            <nz-content style="background:#fff;">
+                <div [ngSwitch]="showCase" style="float: left; width: 100%;" >
+                    <div *ngSwitchDefault>
+                        <devTypeInfo-factor></devTypeInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'devAdminAssessInfo'" >
+                        <devAdminAssessInfo-factor></devAdminAssessInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'devServiceInfo'" >
+                        <devServiceInfo-factor></devServiceInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'adminDetailInfo'" >
+                        <adminDetailInfo-factor></adminDetailInfo-factor>
+                    </div>
+<!--                    <div *ngSwitchCase="'devSoftHard'" >-->
+<!--                        <softHardWare-factor></softHardWare-factor>-->
+<!--                    </div>-->
+<!--                    <div *ngSwitchCase="'devAmount'" >-->
+<!--                        <devInfo-factor></devInfo-factor>-->
+<!--                    </div>-->
+<!--                    <div *ngSwitchCase="'devVersionInfo'" >-->
+<!--                        <devVersionInfo-factor></devVersionInfo-factor>-->
+<!--                    </div>-->
+
+                </div>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+</nz-layout>
+
+
+

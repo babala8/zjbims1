@@ -1,0 +1,119 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="_submitForm()">
+    <div nz-form-item nz-row>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'no'" nz-form-item-required>编号</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('no')">
+            <nz-input [nzSize]="'large'" formControlName="no" [nzId]="'no'" [nzDisabled]="true"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['no'].dirty && validateForm.controls['no'].errors">
+                <span>编号无效不能为空</span>
+            </div>
+        </div>
+    </div>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'name'" nz-form-item-required>姓名</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24" nzHasFeedback [nzValidateStatus]="getFormControl('name')">
+            <nz-input [nzSize]="'large'" formControlName="name" [nzId]="'name'" (ngModelChange)="updateConfirmValidator()"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['name'].dirty && validateForm.controls['name'].errors">
+                <span>维护员姓名输入限制合法字符，长度限制2-20个字符</span>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'devServiceManager'" nz-form-item-required>所属维护商</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="devServiceManager" [nzPlaceHolder]="'----'">
+                <nz-option *ngFor="let o of devServiceManagerList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['devServiceManager'].dirty && validateForm.controls['devServiceManager'].errors">
+                <span>选择项不能为空</span>
+            </div>
+        </div>
+    </div>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'status'" nz-form-item-required>状态</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-select [nzSize]="'large'" formControlName="status" [nzPlaceHolder]="'----'">
+                <nz-option *ngFor="let o of statusList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['status'].dirty && validateForm.controls['status'].errors">
+                <span>选择项不能为空</span>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'phone'" nz-form-item-required>固定电话</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="phone" [nzId]="'phone'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['phone'].dirty && validateForm.controls['phone'].errors">
+                <span>请输入正确格式的固话，如023-6383****</span>
+            </div>
+        </div>
+    </div>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'mobile'" nz-form-item-required>手机号码</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="mobile" [nzId]="'mobile'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['mobile'].dirty && validateForm.controls['mobile'].errors">
+                <span>请输入正确的手机号码</span>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'email'">电子邮箱</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="email" [nzId]="'email'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['email'].dirty && validateForm.controls['email'].errors">
+                <span>请输入正确的邮箱</span>
+            </div>
+        </div>
+    </div>
+        <div nz-col [nzSm]="12">
+        <div nz-form-label nz-col [nzSm]="8" [nzXs]="24">
+            <label [attr.for]="'leader'">维护员上级</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <nz-input [nzSize]="'large'" formControlName="leader" [nzId]="'leader'"></nz-input>
+            <div nz-form-explain
+                 *ngIf="validateForm.controls['leader'].dirty && validateForm.controls['leader'].errors">
+                <span>维护员上级输入限制合法字符，长度限制2-20个字符</span>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div nz-form-item nz-row style="text-align:center;">
+        <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+            <button nz-button [nzSize]="'large'" [nzType]="'primary'" [nzLoading]="loading" >提交</button>
+            <button type="button" nz-button [nzSize]="'large'" [nzType]="'default'" [nzLoading]="loading" (click)="cancel()">取消
+            </button>
+        </div>
+    </div>
+</form>

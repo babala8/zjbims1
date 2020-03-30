@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevStopDao">
+    <resultMap id="DevStopMap" type="DevStop">
+    </resultMap>
+    <select id="qry" resultType="java.util.Map" parameterType="java.util.Map" databaseId="db2">
+        select db.no dev_no,db.ip  dev_ip,db.address  address,so.name  org_name,
+        db.org_no  org_no,db.operate_status  operate_status,ds.stopdev_start_time  stop_dev_start_time,
+        ds.stopdev_end_time  stop_dev_end_time ,ds.isafter  is_after,ds.logic_id  logic_id from dev_base_info db left join dev_stop_table ds on
+        (db.no=ds.dev_no and (ds.stopdev_end_time>= #{nowDate}))
+        left join sys_org so on db.org_no=so.no where 1=1
+        <if test="userNo!=null&amp;&amp;userNo!=''">
+            and db.DEV_CATALOG in(select DEV_CATALOG from SYS_USER_DEVROLE where USER_NO=#{userNo})
+        </if>
+        <if test="devNo!=null&amp;&amp;devNo!=''">
+            and db.no =#{devNo}
+        </if>
+        <if test="devIp!=null&amp;&amp;devIp!=''">
+            and db.ip=#{devIp}
+        </if>
+        <if test="orgNo!=null&amp;&amp;orgNo!=''">
+            and db.org_no in
+            (select no from sys_org where (left_no&gt;(select left_no from SYS_ORG where no=#{orgNo})
+            and right_no&lt;(select right_no from SYS_ORG where no=#{orgNo})) or no=#{orgNo})
+        </if>
+        <if test="devType!=null&amp;&amp;devType!=''">
+            and db.dev_type=#{devType}
+        </if>
+        <if test="devCatalog!=null&amp;&amp;devCatalog!=''">
+            and db.dev_catalog=#{devCatalog}
+        </if>
+        <if test="devVendor!=null&amp;&amp;devVendor!=''">
+            and db.dev_vendor=#{devVendor}
+        </if>
+        <if test="operateStatus!=null&amp;&amp;operateStatus!=''">
+            and db.operate_status=#{operateStatus}
+        </if>
+        <if test="address!=null&amp;&amp;addresss!=''">
+            and db.address like '%${address}%'
+        </if>
+        <if test="stopDevEndTime!=null&amp;&amp;stopDevEndTime!=''">
+            and  substr(ds.stopdev_end_time,0,10)=#{stopDevEndTime}
+        </if>
+        order by db.no
+    </select>
+    <select id="qry" resultType="java.util.Map" parameterType="java.util.Map">
+        select db.no dev_no,db.ip  dev_ip,db.address  address,so.name  org_name,
+        db.org_no  org_no,db.operate_status  operate_status,ds.stopdev_start_time  stop_dev_start_time,
+        ds.stopdev_end_time  stop_dev_end_time ,ds.isafter  is_after,ds.logic_id  logic_id from dev_base_info db left join dev_stop_table ds on
+        (db.no=ds.dev_no and (ds.stopdev_end_time>= #{nowDate}))
+        left join sys_org so on db.org_no=so.no where 1=1
+        <if test="userNo!=null&amp;&amp;userNo!=''">
+            and db.DEV_CATALOG in(select DEV_CATALOG from SYS_USER_DEVROLE where USER_NO=#{userNo})
+        </if>
+    <if test="devNo!=null&amp;&amp;devNo!=''">
+        and db.no like '%${devNo}%'
+    </if>
+    <if test="devIp!=null&amp;&amp;devIp!=''">
+        and db.ip=#{devIp}
+    </if>
+    <if test="orgNo!=null&amp;&amp;orgNo!=''">
+        and db.org_no in
+        (select no from sys_org where (left_no&gt;(select left_no from SYS_ORG where no=#{orgNo})
+        and right_no&lt;(select right_no from SYS_ORG where no=#{orgNo})) or no=#{orgNo})
+    </if>
+    <if test="devType!=null&amp;&amp;devType!=''">
+        and db.dev_type=#{devType}
+    </if>
+    <if test="devCatalog!=null&amp;&amp;devCatalog!=''">
+        and db.dev_catalog=#{devCatalog}
+    </if>
+    <if test="devVendor!=null&amp;&amp;devVendor!=''">
+        and db.dev_vendor=#{devVendor}
+    </if>
+    <if test="operateStatus!=null&amp;&amp;operateStatus!=''">
+        and db.operate_status=#{operateStatus}
+    </if>
+        <if test="address!=null&amp;&amp;addresss!=''">
+            and db.address like '%${address}%'
+        </if>
+    <if test="stopDevEndTime!=null&amp;&amp;stopDevEndTime!=''">
+        and  substr(ds.stopdev_end_time,1,10)=#{stopDevEndTime}
+    </if>
+        order by db.no
+    </select>
+    <insert id="add" parameterType="DevStop">
+        insert into dev_stop_table (logic_id,dev_no,set_time,stopdev_start_time,stopdev_end_time,stopdev_type,stopdev_reason,status,op_no,isafter)
+        values (#{logicId},#{devNo},#{setTime},#{stopDevStartTime,jdbcType=VARCHAR},#{stopDevEndTime,jdbcType=VARCHAR},#{stopDevType},#{stopDevReason},#{status,jdbcType=VARCHAR},#{opNo,jdbcType=VARCHAR},#{isAfter,jdbcType=VARCHAR})
+    </insert>
+    <select id="qryByDevNo" parameterType="String" resultMap="DevStopMap">
+       select * from dev_stop_table where dev_no=#{devNo}
+    </select>
+    <select id="qryStopDevDetail" parameterType="java.util.Map" resultType="java.util.Map">
+        select ds.dev_no dev_no,db.ip dev_ip,so.name  org_name,db.org_no org_no,dt.name  dev_type
+        ,db.operate_status operate_status,ds.stopdev_start_time stop_dev_start_time,
+        ds.stopdev_end_time stop_dev_end_time ,ds.stopdev_type stop_dev_type from dev_stop_table ds left join dev_base_info db
+        on ds.dev_no=db.no left join sys_org so on db.org_no=so.no left join dev_type_table dt
+        on db.dev_type = dt.no where 1=1
+        <if test="devNo!=null&amp;&amp;devNo!=''">
+            and db.no like '%${devNo}%'
+        </if>
+        <if test="stopDevType!=null&amp;&amp;stopDevType!=''">
+            and ds.stopdev_type=#{stopDevType}
+        </if>
+        <if test="orgNo!=null&amp;&amp;orgNo!=''">
+            and db.org_no in
+            (select no from sys_org where (left_no&gt;(select left_no from SYS_ORG where no=#{orgNo})
+            and right_no&lt;(select right_no from SYS_ORG where no=#{orgNo})) or no=#{orgNo})
+        </if>
+        <if test="devType!=null&amp;&amp;devType!=''">
+            and db.dev_type=#{devType}
+        </if>
+        <if test="devCatalog!=null&amp;&amp;devCatalog!=''">
+            and db.dev_catalog=#{devCatalog}
+        </if>
+        <if test="devVendor!=null&amp;&amp;devVendor!=''">
+            and db.dev_vendor=#{devVendor}
+        </if>
+        <if test="stopDevStartTime!=null&amp;&amp;stopDevStartTime!=''">
+            and  substr(ds.stopdev_start_time,1,10)&gt;=#{stopDevStartTime}
+        </if>
+        <if test="stopDevEndTime!=null&amp;&amp;stopDevEndTime!=''">
+            and  substr(ds.stopdev_end_time,1,10)&lt;=#{stopDevEndTime}
+        </if>
+        order by db.no
+    </select>
+    <select id="qryAll" parameterType="Integer"  resultType="DevStop">
+        select * from dev_stop_table where status =#{status} order by dev_no
+    </select>
+    <select id="qryByLogicId" parameterType="String" resultType="DevStop">
+        select * from dev_stop_table where logic_id=#{logicId}
+    </select>
+    <update id="mod" parameterType="DevStop">
+         update dev_stop_table set set_time =#{setTime},stopdev_start_time =#{stopDevStartTime},
+         stopdev_end_time =#{stopDevEndTime},stopdev_type = #{stopDevType},stopdev_reason =#{stopDevReason},
+         op_no =#{opNo},status =#{status} where logic_id =#{logicId}
+    </update>
+    <select id="qryStopHis" parameterType="Map" resultType="Map">
+        select a.stopdev_start_time as stop_dev_start_time,a.stopdev_end_time as stop_dev_end_time,a.dev_no,b.ip as dev_ip,b.address,c.no as org_no,c.name as org_name from
+        dev_stop_table a,dev_base_info b,sys_org c
+        where a.dev_no=b.no and b.org_no=c.no
+        <if test="devNo!=null&amp;&amp;devNo!=''">
+            and a.dev_no=#{devNo}
+        </if>
+        <if test="userNo!=null&amp;&amp;userNo!=''">
+            and b.DEV_CATALOG in(select DEV_CATALOG from SYS_USER_DEVROLE where USER_NO=#{userNo})
+        </if>
+        <if test="orgNo!=null&amp;&amp;orgNo!=''">
+            and c.no in
+            (select no from sys_org where (left_no&gt;(select left_no from SYS_ORG where no=#{orgNo})
+            and right_no&lt;(select right_no from SYS_ORG where no=#{orgNo})) or no=#{orgNo})
+        </if>
+        order by a.stopdev_start_time
+    </select>
+</mapper>

@@ -1,0 +1,100 @@
+<div *ngIf="fla">
+
+
+    <div class="sum-container">
+        <div class="page-top-title">
+            <div class="timer"><i class="anticon anticon-clock-circle-o"></i><span >{{curDateTime|date: 'yyyy-MM-dd HH: mm: ss'}}</span></div>
+            <span class="close">
+                  <i class="anticon anticon-close" (click)="back()"></i>
+            </span>
+            <span class="word-title">全行交易类大屏展示</span>
+        </div>
+
+
+        <!--            content start-->
+        <div class="content-map">
+            <!-- 左 -->
+            <div class="chart-left-container">
+                <div class="c-l-top">
+                    <div class="base-info">
+                        <div class="trading-title">交易总金额</div>
+                        <label id="transAmount" ></label>
+                    </div>
+                    <div class="base-info has-icon">
+                        <div class="trading-title">交易总数量</div>
+                        <label id="transCount"></label>
+                    </div>
+                    <div class="base-info has-icon">
+                        <div class="trading-title">平均已叫号人次</div>
+                        <div class="num">{{callCount.called}}</div>
+                        <div class="person-icons"><img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt=""></div>
+                    </div>
+                    <div class="base-info has-icon">
+                        <div class="trading-title">平均排队人次</div>
+                        <div class="num">{{callCount.wait}}</div>
+                        <div class="person-icons"><img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt="">
+                            <img src="{{resourceUrl}}/img/person2.png" alt=""></div>
+                    </div>
+                </div>
+                <div class="c-l-bottom">
+                    <div class="chart-item">
+                        <div class="chart-title">
+                            <img src="{{resourceUrl}}/img/realTimeTrading.png" alt=""/>实时交易分析（每小时）
+                        </div>
+                        <div class="chart1" #pieHistogramCharts echarts [options]="init_option_pie_histogram"></div>
+                    </div>
+                    <div class="chart-item">
+                        <div class="chart-title">
+                            <img src="{{resourceUrl}}/img/tradingHeatMap.png" alt="">交易热力图
+                        </div>
+                        <div class="chart1" #HotMapCharts echarts [options]="option_Hotmap"></div>
+                    </div>
+                </div>
+
+            </div>
+            <!--            右-->
+            <div class="chart-right-container ">
+                <div class="c-r-item chart-item ">
+                    <div class="chart-title">
+                        <img src="{{resourceUrl}}/img/tradingStatistics.png" alt=""/>
+                        交易统计 （30天）
+                    </div>
+                    <div class="chart2" #histogramCharts echarts [options]="transHistogram_option"></div>
+
+                </div>
+                <div class="c-r-item chart-item chart-m-top ">
+                    <div class="chart-title ">
+                        <img src="{{resourceUrl}}/img/tradingStatistics.png" alt=""/>
+                        <img src="{{resourceUrl}}/img/devType.png" alt="">交易类型排名
+                    </div>
+                    <div class="chart2" #transCountRankCharts echarts [options]="transCountRank"></div>
+                </div>
+            </div>
+            <!--            右end-->
+
+
+        </div>
+        <!--content end-->
+    </div>
+</div>
+
+<ng-template #trigger>
+    <i class="anticon anticon-up"></i>
+</ng-template>

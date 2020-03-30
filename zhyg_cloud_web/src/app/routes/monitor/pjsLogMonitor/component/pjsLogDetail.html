@@ -1,0 +1,44 @@
+<div *ngIf="searchDiv"
+    style="width: 25%; position: fixed; top: 20px; right: 40px; padding: 10px; border-radius: 5px; background-color: white;">
+    <nz-input style="width: 68%;" [(ngModel)]="keyStr"  [nzPlaceHolder]="'请输入检索内容'" >
+    </nz-input>
+    <nz-button-group style="float: right;">
+        <button nz-button title="检索" (click)="search()"><i class="anticon anticon-search"></i></button>
+        <button nz-button title="上一个" (click)="start(-1)" [disabled]="!isInput"><i class="anticon anticon-up"></i></button>
+        <button nz-button title="下一个" (click)="start(1)" [disabled]="!isInput"><i class="anticon anticon-down"></i></button>
+        <button nz-button title="关闭"  (click)="closeSearch()"><i class="anticon anticon-close"></i></button>
+    </nz-button-group>
+</div>
+<div style="width: auto; height: 400px;">
+    <div style="width: 100%; height: 10%; text-align: center;">
+        <!--<nz-input [nzType]="'search'" [nzPlaceHolder]="'请输入检索内容'" [(ngModel)]="searchText" (nzOnSearch)="onSearch($event)"
+                  style="width: 150px; float: left;">
+        </nz-input>-->
+        <button nz-button [nzType]="'default'" (click)="preDay()">
+            <i class="anticon anticon-left"></i><span>前一天</span>
+        </button>
+        <span>&nbsp;&nbsp;设备号{{params.devNo}}&nbsp;流水查询时间({{params.logDate}})&nbsp;&nbsp;</span>
+        <button nz-button *ngIf="!today" [nzType]="'default'" (click)="postDay()">
+            <span>后一天</span><i class="anticon anticon-right"></i>
+        </button>
+        <button nz-button *ngIf="today" [nzType]="'default'" (click)="refreshData(false)">
+            <i class="fa fa-refresh"></i><span>&nbsp;刷新</span>
+        </button>
+        <nz-button-group style=" float: right;">
+            <button nz-button [nzType]="'default'" (click)="showSearch()" style="margin-right: 50px;">
+                <i class="fa fa-search"></i><span>检索</span>
+            </button>
+            <button nz-button [nzType]="'default'" (click)="exportPdf()">
+                <i class="fa fa-file-pdf-o"></i><span>&nbsp;导出</span>
+            </button>
+        </nz-button-group>
+    </div>
+
+   <!-- <div style="width: 100%; height: 90%; text-align: center;">
+        <textarea style="width: 100%; height: 100%; text-align: left;"> {{contexts}} </textarea>
+    </div>-->
+    <div style="width: 100%; height: 90%; text-align: center;">
+        <div id="textarea"  style="width: 100%; height: 100%; text-align: left; overflow: auto; white-space: pre-line;">{{contexts}}</div>
+    </div>
+
+</div>

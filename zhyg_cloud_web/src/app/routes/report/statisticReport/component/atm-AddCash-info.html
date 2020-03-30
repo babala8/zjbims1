@@ -1,0 +1,143 @@
+<script src="../../../system/OrgWorkTime/component/org-setTime.component.ts"></script><h3 style="width: 70%; text-align:center;">ATM加钞统计报表</h3>
+<form nz-form #form="ngForm" [formGroup]="validateForm" class="search-form"  >
+
+    <div nz-form-item nz-row style=" width: 70%; ">
+        <div nz-form-label nz-col [nzSpan]="6">
+            <label [attr.for]="'org'">所属机构</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="12">
+            <org-tree formControlName="org" [zjId]="'org'"></org-tree>
+        </div>
+    </div>
+
+
+    <div nz-form-item nz-row style=" width: 70%;">
+        <div nz-form-label nz-col [nzSpan]="6" >
+            <label [attr.for]="'reportType'">报表类型</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="12">
+            <nz-select [nzSize]="'large'" formControlName="reportType" [nzPlaceHolder]="'----'" style="width: 50%;" (ngModelChange)="changeReportType($event)">
+                <nz-option *ngFor="let o of reportTypeList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+
+    <div [ngSwitch]="reportType" >
+        <div *ngSwitchDefault >
+            <div nz-form-item nz-row style=" width: 70%;">
+                <div nz-form-label nz-col [nzSpan]="6" >
+                    <label [attr.for]="'reportMonth'">月份</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-datepicker  [nzFormat]="'YYYY-MM'" [nzMode]="'month'" [nzDisabledDate]="_disabledDate" formControlName="reportMonth" [nzSize]="'large'" style="width: 50%;"></nz-datepicker>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchCase="'season'" >
+            <div nz-form-item nz-row style=" width: 70%;">
+                <div nz-form-label nz-col [nzSpan]="6" >
+                    <label [attr.for]="'reportYear'">年份</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-select [nzSize]="'large'" formControlName="reportYear" [nzPlaceHolder]="'--请选择年份--'" style="width: 50%;">
+                        <nz-option *ngFor="let o of yearList" [nzLabel]="o.name" [nzValue]="o"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+                        <div nz-form-item nz-row style=" width: 70%;">
+                            <div nz-form-label nz-col [nzSpan]="6" >
+                                <label [attr.for]="'day'">季份</label>
+                            </div>
+                            <div nz-form-control nz-col [nzSpan]="12">
+                                <nz-select  formControlName="season" [nzPlaceHolder]="'--今年季份--'" style="width: 50%;">
+                                    <nz-option *ngFor="let o of seasonList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+        </div>
+        <div *ngSwitchCase="'half'" >
+            <div nz-form-item nz-row style=" width: 70%;">
+                <div nz-form-label nz-col [nzSpan]="6" >
+                    <label [attr.for]="'reportYear'">年份</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-select [nzSize]="'large'" formControlName="reportYear" [nzPlaceHolder]="'--请选择年份--'" style="width: 50%;">
+                        <nz-option *ngFor="let o of yearList" [nzLabel]="o.name" [nzValue]="o"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+            <div nz-form-item nz-row style=" width: 70%;">
+                <div nz-form-label nz-col [nzSpan]="6" >
+                    <label [attr.for]="'half'">半年</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-select  formControlName="halfYear" [nzPlaceHolder]="'--请选择半年份--'" style="width: 50%;">
+                        <nz-option *ngFor="let o of halfYearList" [nzLabel]="o.name" [nzValue]="o.no"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchCase="'year'" >
+            <div nz-form-item nz-row style=" width: 70%; ">
+                <div nz-form-label nz-col [nzSpan]="6">
+                    <label [attr.for]="'reportYear'">年份</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-select [nzSize]="'large'" formControlName="reportYear" [nzPlaceHolder]="'--请选择年份--'" style="width: 50%;">
+                        <nz-option *ngFor="let o of yearList" [nzLabel]="o.name" [nzValue]="o"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchCase="'startend'" >
+            <div nz-form-item nz-row style=" width: 70%; ">
+                <div nz-form-label nz-col [nzSpan]="6">
+                    <label [attr.for]="'startTime'">开始时间</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-datepicker  formControlName="startTime"  [nzDisabledDate]="_disabledStartDate"  [nzSize]="'large'" style="width: 50%;"></nz-datepicker>
+                </div>
+            </div>
+
+            <div nz-form-item nz-row style=" width: 70%; ">
+                <div nz-form-label nz-col [nzSpan]="6">
+                    <label [attr.for]="'endTime'">结束时间</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-datepicker  formControlName="endTime"  [nzDisabledDate]="_disabledEndDate" [nzSize]="'large'" style="width: 50%;"></nz-datepicker>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!--    <div nz-form-item nz-row style=" width: 70%; ">-->
+
+<!--        <div nz-form-label nz-col [nzSpan]="6">-->
+<!--            <label [attr.for]="'devVendor'">设备品牌</label>-->
+<!--        </div>-->
+<!--        <div nz-form-control nz-col [nzSpan]="12">-->
+<!--            <label *ngFor="let field of rows"  formControlName="rows">-->
+<!--                <label nz-checkbox   [nzDisabled]="field.disable"   [(ngModel)]="field.checked" >{{field.key}}</label>&nbsp; &nbsp; &nbsp;-->
+<!--            </label>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+
+
+
+    <div nz-row>
+        <div nz-col [nzSpan]="16" style="text-align:center;">
+            <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="getDevExcel()"><i class="anticon anticon-export"></i><span>导出Excel</span></button>
+            <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+
+        </div>
+    </div>
+
+</form>
+
+
+
+

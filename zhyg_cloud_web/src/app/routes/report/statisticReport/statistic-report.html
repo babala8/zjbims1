@@ -1,0 +1,71 @@
+<nz-layout class="layout">
+    <nz-layout>
+        <nz-sider [nzWidth]="250" style="background:#fff;" >
+            <ul nz-menu [nzMode]="'inline'" style="height:100%;">
+                <li nz-submenu nzOpen="nzOpen">
+                    <span title>统计类类报表</span>
+                    <ul>
+                        <li nz-menu-item (click)="switchTabs('devVersion')" >故障情况统计表</li>
+                        <li nz-menu-item (click)="switchTabs('openRate')" >开机率统计报表</li>
+                        <li nz-menu-item (click)="switchTabs('openRateDetail')" >开机率明细报表</li>
+                        <li nz-menu-item (click)="switchTabs('devCount')" >设备数量统计报表</li>
+                        <li nz-menu-item (click)="switchTabs('retainCardInfo')" >吞卡明细报表</li>
+                        <li nz-menu-item (click)="switchTabs('devAddCashInfo')" >设备加钞记录表</li>
+                        <li nz-menu-item (click)="switchTabs('shorten')" >设备缺纸缺钞统计表</li>
+                        <li nz-menu-item (click)="switchTabs('shorten-Detail')" >设备缺纸缺钞明细表</li>
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout >
+            <nz-content style="background:#fff;">
+                <div [ngSwitch]="showCase" style="float: left; width: 100%;" >
+                    <div *ngSwitchDefault >
+                        <devFaultInfo-factor></devFaultInfo-factor>
+                    </div>
+<!--                   &#45;&#45;&#45;&#45;&#45;&#45;-->
+                    <div *ngSwitchCase="'devVersion'" >
+                        <devFaultInfo-factor></devFaultInfo-factor>
+                    </div>
+                    <!--                   &#45;&#45;&#45;&#45;&#45;&#45;-->
+                    <div *ngSwitchCase="'openRate'" >
+                        <openRateInfo-factor></openRateInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'devCount'" >
+                        <devCount-factor></devCount-factor>
+                    </div>
+                    <div *ngSwitchCase="'retainCardInfo'" >
+                        <orgRetainCardInfo-factor></orgRetainCardInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'transInfo'" >
+                        <trans-factor></trans-factor>
+                    </div>
+                    <div *ngSwitchCase="'openRateDetail'" >
+                        <openRateDetail-factor></openRateDetail-factor>
+                    </div>
+                    <div *ngSwitchCase="'devAddCashInfo'" >
+                        <devAddCashInfo-factor></devAddCashInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'shorten'" >
+                        <shorten-factor></shorten-factor>
+                    </div>
+                    <div *ngSwitchCase="'shorten-Detail'" >
+                        <shorten-Detail-factor></shorten-Detail-factor>
+                    </div>
+                    <div *ngSwitchCase="'transPoundageInfo'" >
+                        <transPoundageInfo-factor></transPoundageInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'atm-AddCashInfo'" >
+                        <atm-AddCashInfo-factor></atm-AddCashInfo-factor>
+                    </div>
+                </div>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+</nz-layout>
+
+
+
+
+
+

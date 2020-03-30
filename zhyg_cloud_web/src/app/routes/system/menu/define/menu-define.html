@@ -1,0 +1,131 @@
+<split>
+    <split-area [size]="20">
+        <div class="menu-wrapper">
+            <div class="menu-header">
+            </div>
+            <div class="tree-view">
+                <nz-tree #tree [nzNodes]="treeNodes" [nzOptions]="options"></nz-tree>
+            </div>
+        </div>
+        <!--<tree-root #tree [nodes]="nodes" [options]="options"></tree-root>-->
+
+    </split-area>
+    <!--<split-area [size]="35">-->
+        <!--<form nz-form #form="ngForm">-->
+            <!--<div nz-row>-->
+                <!--<div nz-form-label nz-col [nzSm]="6" [nzXs]="24">-->
+                    <!--<label [attr.for]="'type'">菜单类型</label>-->
+                <!--</div>-->
+                <!--<div nz-form-control nz-col [nzSm]="14" [nzXs]="24">-->
+                    <!--<nz-select style="width:100%;" name="type"-->
+                               <!--[nzPlaceHolder]="'节点类型'"-->
+                               <!--(ngModelChange)="nodeTypeChange(menu)"-->
+                               <!--[(ngModel)]="menu.type">-->
+                        <!--<nz-option [nzLabel]="'导航节点'" [nzValue]="0"></nz-option>-->
+                        <!--<nz-option [nzLabel]="'路由节点'" [nzValue]="1"></nz-option>-->
+                        <!--<nz-option [nzLabel]="'按钮节点'" [nzValue]="2"></nz-option>-->
+                    <!--</nz-select>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-row>-->
+                <!--<div nz-form-label nz-col [nzSm]="6" [nzXs]="24">-->
+                    <!--<label [attr.for]="'clientID'">菜单编号</label>-->
+                <!--</div>-->
+                <!--<div nz-form-control nz-col [nzSm]="14" [nzXs]="24">-->
+                    <!--<nz-select style="width:100%;" name="type"-->
+                               <!--[nzPlaceHolder]="'菜单编号'"-->
+                               <!--(ngModelChange)="menuNoChange($event,menu)"-->
+                               <!--[(ngModel)]="menu.id">-->
+                        <!--<nz-option *ngFor="let i of menuList" [nzLabel]="i.no" [nzValue]="i.no"></nz-option>-->
+                    <!--</nz-select>-->
+                    <!--&lt;!&ndash;<nz-input [nzSize]="'large'" name="id" [nzId]="'id'"&ndash;&gt;-->
+                              <!--&lt;!&ndash;[(ngModel)]="menu.id"></nz-input>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-row>-->
+                <!--<div nz-form-label nz-col [nzSm]="6" [nzXs]="24">-->
+                    <!--<label [attr.for]="'name'">菜单名称</label>-->
+                <!--</div>-->
+                <!--<div nz-form-control nz-col [nzSm]="14" [nzXs]="24">-->
+                    <!--<nz-input [nzSize]="'large'" name="text" [nzId]="'text'"-->
+                              <!--[(ngModel)]="menu.text"></nz-input>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-row *ngIf="menu.type == 0">-->
+                <!--<div nz-form-label nz-col [nzSm]="6" [nzXs]="24">-->
+                    <!--<label [attr.for]="'icon'">图标</label>-->
+                <!--</div>-->
+                <!--<div nz-form-control nz-col [nzSm]="14" [nzXs]="24">-->
+                    <!--<nz-input [nzSize]="'large'" [(ngModel)]="menu.icon" [nzId]="'icon'"-->
+                              <!--name="icon"></nz-input>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-row *ngIf="menu.type == 1">-->
+                <!--<div nz-form-label nz-col [nzSm]="6" [nzXs]="24">-->
+                    <!--<label [attr.for]="'link'">路由(route)</label>-->
+                <!--</div>-->
+                <!--<div nz-form-control nz-col [nzSm]="14" [nzXs]="24">-->
+                    <!--<nz-input [nzSize]="'large'" [(ngModel)]="menu.link" [nzId]="'link'"-->
+                              <!--name="link"></nz-input>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-row *ngIf="menu.type == 1">-->
+                <!--<div nz-form-label nz-col [nzSm]="6" [nzXs]="24">-->
+                    <!--<label [attr.for]="'background'">metro图片</label>-->
+                <!--</div>-->
+                <!--<div nz-form-control nz-col [nzSm]="14" [nzXs]="24">-->
+                    <!--<nz-input [nzSize]="'large'" [(ngModel)]="menu.background" [nzId]="'background'"-->
+                              <!--name="background"></nz-input>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-row *ngIf="menu.type == 1">-->
+                <!--<div nz-form-label nz-col [nzSm]="6" [nzXs]="24">-->
+                    <!--<label [attr.for]="'tile_size'">图片大小</label>-->
+                <!--</div>-->
+                <!--<div nz-form-control nz-col [nzSm]="14" [nzXs]="24">-->
+                    <!--<nz-radio-group name="tile_size" [(ngModel)]="menu.tile_size" [nzSize]="'large'">-->
+                        <!--<label nz-radio-button [nzValue]="'tile-small'">-->
+                            <!--<span>小</span>-->
+                        <!--</label>-->
+                        <!--<label nz-radio-button [nzValue]="'tile'">-->
+                            <!--<span>中</span>-->
+                        <!--</label>-->
+                        <!--<label nz-radio-button [nzValue]="'tile-wide'">-->
+                            <!--<span>大</span>-->
+                        <!--</label>-->
+                    <!--</nz-radio-group>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div nz-row *ngIf="menu.type == 1">-->
+                <!--<div nz-form-label nz-col [nzSm]="6" [nzXs]="24">-->
+                    <!--<label [attr.for]="'textShowFlag'">文字显示</label>-->
+                <!--</div>-->
+                <!--<div nz-form-control nz-col [nzSm]="14" [nzXs]="24">-->
+                    <!--<nz-switch name="textShowFlag" [(ngModel)]="menu.textShowFlag" [nzSize]="'large'"></nz-switch>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</form>-->
+    <!--</split-area>-->
+    <split-area [size]="45">
+        <!-- 该处的nodes数组内部对象属性的变更，不会被绑定 -->
+        <!--<button nz-button [nzSize]="'large'" [nzType]="'primary'" (click)="synchronizeNodes()">刷新</button>-->
+        <json-editor [options]="editorOptions" [data]="nodes"></json-editor>
+    </split-area>
+</split>
+
+<footer-toolbar style="z-index: 13;">
+    <button nz-button [nzType]="'primary'" nzSize="large" (click)="save()">提交</button>
+</footer-toolbar>
+
+<context-menu>
+    <ng-template contextMenuItem (execute)="addSiblingNode($event.item)">
+        新增兄弟节点
+    </ng-template>
+    <ng-template contextMenuItem (execute)="addChildNode($event.item)">
+        新增子节点
+    </ng-template>
+    <ng-template contextMenuItem [divider]="true"></ng-template>
+    <ng-template contextMenuItem (execute)="deleteNode($event.item)">
+        删除当前节点
+    </ng-template>
+</context-menu>

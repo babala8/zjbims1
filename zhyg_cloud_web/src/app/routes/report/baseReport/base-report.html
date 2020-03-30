@@ -1,0 +1,48 @@
+
+<nz-layout class="layout">
+    <nz-layout>
+        <nz-sider [nzWidth]="250" style="background:#fff;" >
+            <ul nz-menu [nzMode]="'inline'" style="height:100%;">
+                <li nz-submenu nzOpen="nzOpen">
+                    <span title><i nz-icon type="mail"></i> 基本类报表</span>
+                    <ul>
+                        <li nz-menu-item [nzSelected]="true" (click)="switchTabs('devInfo')" >设备基本信息表</li>
+<!--                        <li nz-menu-item (click)="switchTabs('devVersion')" >设备版本信息表</li>-->
+                        <li nz-menu-item (click)="switchTabs('devSoftHard')" >设备软硬件信息表</li>
+<!--                        <li nz-menu-item  (click)="switchTabs('devAmount')" >设备数量信息表</li>-->
+                        <li nz-menu-item  (click)="switchTabs('devVersionInfo')" >设备版本信息表</li>
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout >
+            <nz-content style="background:#fff;">
+                <div [ngSwitch]="showCase" style="float: left; width: 100%;" >
+                    <div *ngSwitchDefault >
+                        <devInfo-factor></devInfo-factor>
+                    </div>
+                    <div *ngSwitchCase="'devInfo'" >
+                        <devInfo-factor></devInfo-factor>
+                    </div>
+<!--                    <div *ngSwitchCase="'devVersion'" >-->
+<!--                        &lt;!&ndash;<devVersion-tab></devVersion-tab>&ndash;&gt;-->
+<!--                        <devInfo-factor></devInfo-factor>-->
+<!--                    </div>-->
+                    <div *ngSwitchCase="'devSoftHard'" >
+                        <softHardWare-factor></softHardWare-factor>
+                    </div>
+<!--                    <div *ngSwitchCase="'devAmount'" >-->
+<!--                        <devInfo-factor></devInfo-factor>-->
+<!--                    </div>-->
+                    <div *ngSwitchCase="'devVersionInfo'" >
+                        <devVersionInfo-factor></devVersionInfo-factor>
+                    </div>
+
+                </div>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+</nz-layout>
+
+
+

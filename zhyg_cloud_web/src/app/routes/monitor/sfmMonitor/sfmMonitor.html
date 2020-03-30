@@ -1,0 +1,280 @@
+<div>
+    <button nz-button [style.color]="style_DevMonitor" (click)="onDevMonitor()">
+        <span>{{Ex_Monitor}}</span>
+    </button>
+    <button nz-button [style.color]="style_Exec" (click)="onOrgNavi()">
+        <span>机构导航</span>
+    </button>
+    <button nz-button [style.color]="style_Exec" (click)="onMonitorStatus()">
+        <span>监控状态</span>
+    </button>
+    <button nz-button [style.color]="style_Exec" (click)="onMonitorSelect()">
+        <span>过滤条件</span>
+    </button>
+    <button nz-button [style.color]="style_Exec" (click)="onShowType()">
+        <span>{{Ex_ShowType}}</span>
+    </button>
+    <label nz-form [formGroup]="validateForm">
+        <span>刷新频率(秒)：</span>
+        <nz-input [nzSize]="'default'" [nzId]="'monitorInterval'" formControlName="monitorInterval"
+                  style="width: 40px;" (nzBlur)="onChange()"  [(ngModel)]="inputValue">
+        </nz-input>
+    </label>
+</div>
+<div style="height: 30px; background: #1ba1e2; text-align:center; line-height:30px;">
+    <span>{{Ex_groupName}}&nbsp;&nbsp;&nbsp;&nbsp;监控机构：{{Ex_orgName}}&nbsp;&nbsp;&nbsp;&nbsp;监控台数：{{Ex_totalCount}}&nbsp;&nbsp;&nbsp;&nbsp;服务台数：{{Ex_serviceCount}}&nbsp;&nbsp;&nbsp;&nbsp;非服务台数：{{Ex_unserviceCount}}</span>
+</div>
+
+<ng-container *ngIf='ShowTypeflag'>
+    <div *ngFor="let option of infoList4matrix" (click)="onMatrixEvent(option.devNo)"
+         style="margin-left: 20px; margin-top: 15px; width: 160px; height: 100px; float: left;"
+         [style.border]="'1px solid ' + option.mainstatus_color">
+        <div style="vertical-align:middle; text-align: center; padding: 7px; height: 40%;">
+            <nz-popover *ngIf="!(allRunChecked == false && indeterminate_run == false)">
+                <img width="25px" src="{{option.runstatus_img}}" nz-popover/>
+                <ng-template #nzTemplate>
+                    <div>
+                        <p>运行状态：{{option.runstatus}}</p>
+                    </div>
+                </ng-template>
+            </nz-popover>
+            <nz-popover *ngIf="!(allModChecked == false && indeterminate_mod == false)">
+                <img style="margin-left: 10px;" width="25px" src="{{option.modstatus_img}}" nz-popover/>
+                <ng-template #nzTemplate>
+                    <div>
+                        <p>模块状态：{{option.modstatus}}</p>
+                    </div>
+                </ng-template>
+            </nz-popover>
+            <nz-popover *ngIf="!(allCardChecked == false && indeterminate_card == false)">
+                <img style="margin-left: 10px;" width="25px" src="{{option.cardstatus_img}}" nz-popover/>
+                <ng-template #nzTemplate>
+                    <div>
+                        <p>卡箱状态：{{option.cardstatus}}</p>
+                    </div>
+                </ng-template>
+            </nz-popover>
+            <nz-popover *ngIf="!(allNetChecked == false && indeterminate_net == false)">
+                <img style="margin-left: 10px;" width="25px" src="{{option.netstatus_img}}" nz-popover/>
+                <ng-template #nzTemplate>
+                    <div>
+                        <p>网络状态：{{option.netstatus}}</p>
+                    </div>
+                </ng-template>
+            </nz-popover>
+        </div>
+        <nz-popover [nzPlacement]="'bottomRight'">
+            <div style="height: 60%; text-align: center; padding: 7px;" [style.background]="option.mainstatus_color"
+                 nz-popover>
+                <p>{{option.devNo}}</p>
+                <p>{{option.orgName}}</p>
+            </div>
+            <ng-template #nzTemplate>
+                <div>
+                    <p>
+                        所属机构：{{option.orgName}}&nbsp;&nbsp;设备地址：{{option.address}}&nbsp;&nbsp;设备品牌：{{option.devVendorName}}</p>
+                </div>
+            </ng-template>
+        </nz-popover>
+    </div>
+</ng-container>
+<ng-container *ngIf='!ShowTypeflag'>
+    <div class="search-result-list" style="margin-left:20px; margin-right:20px;">
+        <nz-table #nzTable
+                  [nzShowSizeChanger]="true"
+                  [nzSize]="'small'"
+                  [nzLoading]="loading"
+                  [nzAjaxData]="DevStatusdata"
+                  [nzShowQuickJumper]="true"
+                  [(nzPageIndex)]="page.curPage"
+                  [(nzPageSize)]="formModel['page']"
+                  [nzTotal]="page.totalRow"
+                  [nzPageSizeSelectorValues]="[20,50,100,200]"
+                  nzShowTotal>
+            <thead nz-thead>
+            <tr>
+                <th nz-th><span>设备号</span></th>
+                <th nz-th><span>运行状态</span></th>
+                <th nz-th><span>模块状态</span></th>
+<!--                <th nz-th><span>卡箱状态</span></th>-->
+                <th nz-th><span>网络状态</span></th>
+                <th nz-th><span>设备型号</span></th>
+                <th nz-th><span>所属机构</span></th>
+<!--                <th nz-th><span>卡箱张数</span></th>-->
+                <th nz-th><span>回收箱张数</span></th>
+                <th nz-th><span>IP地址</span></th>
+                <th nz-th><span>装机地址</span></th>
+                <th nz-th><span>查询case</span></th>
+            </tr>
+            </thead>
+            <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+                <td nz-td>{{item.no}}</td>
+                <td nz-td>{{item.devRunStatus}}</td>
+                <td nz-td>{{item.devModStatus}}</td>
+                <td nz-td>{{item.devCardStatus}}</td>
+<!--                <td nz-td>{{item.devNetStatus}}</td>-->
+                <td nz-td>{{item.devTypeName}}</td>
+                <td nz-td>{{item.orgName}}</td>
+<!--                <td nz-td>{{item.devCardsNum}}</td>-->
+                <td nz-td>{{item.devRecoverNum}}</td>
+                <td nz-td>{{item.ip}}</td>
+                <td nz-td>{{item.address}}</td>
+                <td nz-td><a  (click)="qryCase(item.no)" [ngStyle]="{'color':'blue'}">查看</a></td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</ng-container>
+
+<nz-modal [nzVisible]="displayorgtree" [nzWidth]="300" [nzContent]="modalContent"
+          [nzFooter]="modalFooter" [nzClosable]="false" [nzStyle]="{'margin-top':'50px'}" nzKeyboard="true">
+    <ng-template #modalContent>
+        <div nz-form-control nz-col>
+            <org-tree [(ngModel)]="formModel['org']" [zjId]="'org'" name="org"></org-tree>
+        </div>
+    </ng-template>
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="onOrgCancel()">取消</button>
+        <button nz-button nzType="primary" (click)="onOrgConfirm()" [nzLoading]="loading">
+            确定
+        </button>
+    </ng-template>
+</nz-modal>
+<nz-modal [nzVisible]="displaystatus" [nzWidth]="650" [nzTitle]="modalTitle" [nzContent]="modalContent1"
+          [nzFooter]="modalFooter1" [nzClosable]="false" [nzStyle]="{'margin-top':'50px',top : '20'}">
+    <ng-template #modalTitle>
+        <div style="height: 20px; line-height:20px;">
+            <span>自定义模式&nbsp;&nbsp;&nbsp;运行/模块/网络&nbsp;&nbsp;&nbsp;</span>
+            <nz-radio-group [(ngModel)]="radioValue" (ngModelChange)="onstatusRelationShip($event)">
+                <label nz-radio nzValue="Allsatisfied">全部满足</label>
+                <label nz-radio nzValue="Satisfyone">满足其一</label>
+            </nz-radio-group>
+        </div>
+    </ng-template>
+    <ng-template #modalContent1>
+        <div style="height: 315px;">
+            <div style="width: 25%; float: left;">
+                <label nz-checkbox [(ngModel)]="allRunChecked" (ngModelChange)="updateAllRunChecked()"
+                       [nzIndeterminate]="indeterminate_run">
+                    运行状态
+                </label>
+                <div *ngFor="let option of runstatus">
+                    <label nz-checkbox [(ngModel)]="option.checked"
+                           (ngModelChange)="updateSingleRunChecked(option.checked,option)">
+                        <img style="margin-left: 10px;" width="25px" src="{{option.img}}"/> {{option.label}}
+                    </label>
+                </div>
+            </div>
+            <div style="width: 25%; float: left;">
+                <label nz-checkbox [(ngModel)]="allModChecked" (ngModelChange)="updateAllModChecked()"
+                       [nzIndeterminate]="indeterminate_mod">
+                    模块状态
+                </label>
+                <div *ngFor="let option of modstatus">
+                    <label nz-checkbox [(ngModel)]="option.checked"
+                           (ngModelChange)="updateSingleModChecked(option.checked,option)">
+                        <img style="margin-left: 10px;" width="25px" src="{{option.img}}"/> {{option.label}}
+                    </label>
+                </div>
+            </div>
+<!--            <div style="width: 25%; float: left;">-->
+<!--                <label nz-checkbox [(ngModel)]="allCardChecked" (ngModelChange)="updateAllCardChecked()"-->
+<!--                       [nzIndeterminate]="indeterminate_card">-->
+<!--                    卡箱状态-->
+<!--                </label>-->
+<!--                <div *ngFor="let option of cardstatus">-->
+<!--                    <label nz-checkbox [(ngModel)]="option.checked"-->
+<!--                           (ngModelChange)="updateSingleCardChecked(option.checked,option)">-->
+<!--                        <img style="margin-left: 10px;" width="25px" src="{{option.img}}"/> {{option.label}}-->
+<!--                    </label>-->
+<!--                </div>-->
+<!--            </div>-->
+            <div style="width: 25%; float: left;">
+                <label nz-checkbox [(ngModel)]="allNetChecked" (ngModelChange)="updateAllNetChecked()"
+                       [nzIndeterminate]="indeterminate_net">
+                    网络状态
+                </label>
+                <div *ngFor="let option of netstatus">
+                    <label nz-checkbox [(ngModel)]="option.checked"
+                           (ngModelChange)="updateSingleNetChecked(option.checked,option)">
+                        <img style="margin-left: 10px;" width="25px" src="{{option.img}}"/> {{option.label}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #modalFooter1>
+        <button nz-button nzType="default" (click)="onStatusCancel()">取消</button>
+        <button nz-button nzType="primary" (click)="onStatusConfirm()">
+            确定
+        </button>
+    </ng-template>
+</nz-modal>
+<nz-modal [nzVisible]="displayselect" [nzWidth]="650" [nzContent]="modalContent2"
+          [nzFooter]="modalFooter2" [nzClosable]="false" [nzStyle]="{'margin-top':'50px',top : '20'}">
+    <ng-template #modalContent2>
+        <div nz-form-item nz-row >
+            <div nz-form-label nz-col [nzSpan]="24">
+                <label >过滤条件</label>
+                <HR>
+            </div>
+        </div>
+        <div nz-form-item nz-row >
+            <div nz-form-label nz-col [nzSpan]="8">
+                <label >设备号</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-input [(ngModel)]="formModel['devNo']" [nzSize]="'large'" [nzId]="'devNo'" style="width:70%;"></nz-input>
+            </div>
+        </div>
+        <div nz-form-item nz-row >
+            <div nz-form-label nz-col [nzSpan]="8">
+                <label >设备品牌</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" [(ngModel)]="formModel['devVendor']" style="width:70%;">
+                    <nz-option *ngFor="let c of devVendorList" [hidden]="!c" [nzLabel]="c?.name"
+                               [nzValue]="c?.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div nz-form-item nz-row >
+            <div nz-form-label nz-col [nzSpan]="8">
+                <label >经营方式</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" [(ngModel)]="formModel['workType']" style="width:70%;">
+                    <nz-option *ngFor="let c of workTypeInfo" [hidden]="!c" [nzLabel]="c?.name"
+                               [nzValue]="c?.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div nz-form-item nz-row >
+            <div nz-form-label nz-col [nzSpan]="8">
+                <label >在行标志</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" [(ngModel)]="formModel['awayFlag']" style="width:70%;">
+                    <nz-option *ngFor="let c of awayFlagInfo" [hidden]="!c" [nzLabel]="c?.name"
+                               [nzValue]="c?.no"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div nz-form-item nz-row >
+            <div nz-form-label nz-col [nzSpan]="8">
+                <label >每页显示台数</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="14">
+                <nz-select [nzSize]="'large'" [(ngModel)]="formModel['page']" style="width:70%;">
+                    <nz-option *ngFor="let c of PageSizeSelectorValues" [hidden]="!c" [nzLabel]="c"
+                               [nzValue]="c"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #modalFooter2>
+        <button nz-button nzType="default" (click)="onSelectCancel()">取消</button>
+        <button nz-button nzType="primary" (click)="onSelectConfirm()">确定</button>
+    </ng-template>
+</nz-modal>

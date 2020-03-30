@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.CaseCatalogDao">
+
+    <resultMap type="CaseCatalog" id="caseCatalogMap">
+        <association column="org_no" select="com.zjft.zhyg.system.dao.OrgDao.qryByNo" property="org" javaType="Org"/>
+    </resultMap>
+
+    <select id="qry" resultMap="caseCatalogMap" parameterType="Map">
+       select * from CASE_CATALOG_TABLE where ORG_NO=#{orgNo}
+    </select>
+
+    <select id="qryZHNo"  resultType="String">
+       select org.no as NO from SYS_ORG org,SYS_ORG_TYPE otype where org.org_type = otype.no and otype.grade = '1'
+     </select>
+
+    <select id="qryAllGrade"  resultType="Integer">
+       select GRADE from CASE_GRADE
+    </select>
+    <update id="mod" parameterType="CaseCatalog">
+        update CASE_CATALOG_TABLE set CATALOG_NAME =#{catalogName}, RESPONSOR_CATALOG =#{responsorCatalog}, ONSITE_INTERVAL =#{onsiteInterval,jdbcType=INTEGER},
+         ONSITE_INTERVAL1 =#{onsiteInterval1,jdbcType=INTEGER}, CLOSE_INTERVAL =#{closeInterval,jdbcType=INTEGER}, CLOSE_INTERVAL1 =#{closeInterval1,jdbcType=INTEGER}, MAX_GRADE =#{maxGrade,jdbcType=INTEGER},
+         NOTIFY_WAY =#{notifyWay,jdbcType=INTEGER}, SENDMSGMETHOD =#{sendMsgMethod,jdbcType=INTEGER} where ORG_NO =#{orgNo} and CATALOG_NO =#{catalogNo}
+    </update>
+</mapper>

@@ -1,0 +1,140 @@
+<form nz-form #form="ngForm"  [formGroup]="validateForm" class="search-form">
+    <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto; padding-left: 14px;">
+                    <label [attr.for]="'devNo'">设备号</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="devNo" name="devNo" [nzId]="'devNo'"></nz-input>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'org'">所属机构</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                        <org-tree formControlName="org" [zjId]="'org'"></org-tree>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'devCatalog'">设备类型</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                        <nz-select [nzSize]="'large'" formControlName="devCatalog" name="devCatalog" nzAllowClear
+                                   [nzPlaceHolder]="'--请选择设备类型--'">
+                            <nz-option *ngFor="let c of devCatalogList" [hidden]="!c" [nzLabel]="c?.name"
+                                       [nzValue]="c?.no"></nz-option>
+                        </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'ip'">ip地址</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                    <nz-input [nzSize]="'large'" formControlName="ip" name="ip" [nzId]="'ip'"></nz-input>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-form-item nz-row >
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'devVendor'">设备品牌</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                        <nz-select [nzSize]="'large'" formControlName="devVendor" name="devVendor" nzAllowClear
+                                   [nzPlaceHolder]="'--请选择设备品牌--'" (ngModelChange)="selectDevType($event)">
+                            <nz-option *ngFor="let c of devVendorList" [hidden]="!c" [nzLabel]="c?.name"
+                                       [nzValue]="c?.no"></nz-option>
+                        </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <div nz-row>
+                <div nz-form-label nz-col [nzSpan]="8" style="width: auto;">
+                    <label [attr.for]="'devType'">设备型号</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                        <nz-select [nzSize]="'large'" formControlName="devType" name="devType" nzAllowClear
+                                   [nzPlaceHolder]="'--请选择设备型号--'">
+                            <nz-option *ngFor="let c of devTypeList" [hidden]="!c" [nzLabel]="c?.name"
+                                       [nzValue]="c?.no"></nz-option>
+                        </nz-select>
+                </div>
+            </div>
+        </div>
+        <div nz-col [nzSpan]="12" style="width: auto;">
+                <button nz-button [nzType]="'primary'" (click)="search()" [nzSize]="'large'"><i class="anticon anticon-search"></i><span>查询</span></button>
+                <button nz-button (click)="reset()" [nzSize]="'large'"><i class="anticon anticon-sync"></i><span>重置</span></button>
+                <button *ngIf="checkBtn('设备管理','增加')" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="addDev('设备管理','增加')"><i class="anticon anticon-plus"></i><span>添加</span>
+                </button>
+        </div>
+    </div>
+</form>
+<div class="search-result-list" style="padding:20px;">
+    <nz-table #nzTable
+              [nzShowSizeChanger]="true"
+              [nzSize]="'small'"
+              [nzLoading]="loading"
+              [nzAjaxData]="dataSet"
+              [(nzPageIndex)]="page.curPage"
+              [(nzPageSize)]="page.pageSize"
+              [nzTotal]="page.totalRow"
+              [nzPageSizeSelectorValues]="[20,50,100,200]"
+              [nzShowQuickJumper] = "true"
+              nzShowTotal
+              (nzPageSizeChange)="refreshData(true)"
+              (nzPageIndexChange)="refreshData()">
+        <thead nz-thead>
+        <tr>
+            <th nz-th><span>设备号</span></th>
+            <th nz-th><span>ip地址</span></th>
+            <th nz-th><span>机构名称</span></th>
+            <th nz-th><span>维护商</span></th>
+            <th nz-th><span>设备类型</span></th>
+            <th nz-th><span>设备品牌</span></th>
+            <th nz-th><span>设备型号</span></th>
+            <th nz-th><span>地址</span></th>
+            <th nz-th><span>是否在行</span></th>
+            <th nz-th><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let item of nzTable.data;let i = index;">
+            <td nz-td>
+                <a (click)="showDetail(item)" style="color: #1ba1e2;">{{item.no}}</a>
+            </td>
+            <td nz-td>{{item.ip}}</td>
+            <td nz-td>{{item.orgName}}</td>
+            <td nz-td>{{item.devServiceName}}</td>
+            <td nz-td>{{item.catalogName}}</td>
+            <td nz-td>{{item.vendorName}}</td>
+            <td nz-td>{{item.typeName}}</td>
+            <td nz-td>{{item.address}}</td>
+            <td nz-td>{{item.awayFlag}}</td>
+            <td nz-td style="text-align: center; width: 160px;">
+                <a *ngIf="checkBtn('设备管理','修改')" (click)="modDev('设备管理','修改',item)" style="color: #1ba1e2;">修改</a>
+                <span *ngIf="checkBtn('设备管理','修改')" nz-table-divider></span>
+                <nz-popconfirm *ngIf="!auditDel" [nzTitle]="'确定要删除该设备吗？'" (nzOnConfirm)="confirmDel(item.no)"
+                               (nzOnCancel)="cancel()">
+                    <a *ngIf="checkBtn('设备管理','删除')" nz-popconfirm [ngStyle]="{'color':'red'}" >删除</a>
+                </nz-popconfirm>
+                <span *ngIf="auditDel">
+                    <a *ngIf="checkBtn('设备管理','删除')"  [ngStyle]="{'color':'red'}" (click)="deleteDevAudit(item.no)"  >删除</a>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

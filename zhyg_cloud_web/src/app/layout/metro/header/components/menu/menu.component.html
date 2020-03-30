@@ -1,0 +1,18 @@
+<!-- 左侧箭头 -->
+<div class="arrow-wrapper left-arrow-wrapper" (click)="leftMove()" *ngIf="leftHidden">
+    <i class="fa fa-angle-left"></i>
+</div>
+<!-- 一级菜单 -->
+<div class="scroll-wrapper">
+    <ul>
+        <li *ngFor="let menu of menuArray;let i=index;" (click)="doShow(i)" [class.active]="menu._selected">
+            <span class="item-icon {{menu.icon}}"></span>
+            <span class="item-label">{{menu.text}}</span>
+        </li>
+        <li class="slide-block"></li>
+    </ul>
+</div>
+<!-- 右侧箭头 -->
+<div class="arrow-wrapper right-arrow-wrapper" (click)="rightMove()"  *ngIf="rightHidden">
+    <i class="fa fa-angle-right"></i>
+</div>

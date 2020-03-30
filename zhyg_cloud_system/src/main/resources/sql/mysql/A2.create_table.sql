@@ -1,0 +1,2385 @@
+﻿SET SQL_MODE = 'ALLOW_INVALID_DATES';
+
+CREATE TABLE SYS_ORG_TYPE
+(
+  NO    VARCHAR(40) NOT NULL COMMENT '机构类型编号',
+  TYPE  VARCHAR(50) NOT NULL COMMENT '机构类型',
+  grade VARCHAR(2) NOT NULL COMMENT '机构级别',
+  CONSTRAINT PK_SYS_ORG_TYPE PRIMARY KEY (NO)
+);
+ALTER TABLE SYS_ORG_TYPE COMMENT '机构类型表';
+
+-- 系统管理相关：
+CREATE TABLE SYS_ORG
+(
+  NO                  VARCHAR(20) NOT NULL COMMENT '机构编号',
+  NAME                VARCHAR(160) NOT NULL COMMENT '机构名称',
+  parent_org          VARCHAR(20) COMMENT '直接上级',
+  left_no             INTEGER COMMENT '预排序左序号',
+  right_no            INTEGER COMMENT '预排序右序号',
+  org_type            VARCHAR(40) COMMENT '机构类型',
+  moneyorg_flag       VARCHAR(1) COMMENT '是否是加钞机构（1：是 2：否)',
+  X                   VARCHAR(20) COMMENT '横坐标（经度）',
+  Y                   VARCHAR(20) COMMENT '纵坐标（纬度)',
+  address             VARCHAR(200) COMMENT '地址',
+  linkman             VARCHAR(30) COMMENT '联系人',
+  telephone           VARCHAR(30) COMMENT '电话',
+  mobile              VARCHAR(30) COMMENT '手机',
+  fax                 VARCHAR(30) COMMENT '传真',
+  email               VARCHAR(40) COMMENT '电子邮件',
+  business_range      VARCHAR(256) COMMENT '业务范围',
+  cup_area_code       VARCHAR(8) COMMENT '银联标准地区代码',
+  address_code        VARCHAR(15) COMMENT '地点代码',
+  area_no_province    VARCHAR(10) COMMENT '所属省级区域编码',
+  area_no_city        VARCHAR(10) COMMENT '所属地市级区域编码',
+  area_no_county      VARCHAR(10) COMMENT '所属县级区域编码',
+  area_type           VARCHAR(3) COMMENT '所处区域类型（1、中央商务区 2、市级商业中心 3、政府机关集中区 4、工业园区 5、区县商业中心 6、休闲购物娱乐区 7、工作区 8、居住区）',
+  org_physics_catalog VARCHAR(3) COMMENT '物理网点类型（1、全面商务型网点 2、全面社区型网点 3、基本商务型网点 4、基本社区型网点 5、财富中心）',
+  note                VARCHAR(100) COMMENT '备注',
+  IS_SELFHELP         INTEGER  comment '是否台行（1是 0不是）',
+  IS_BANKOUTLET       INTEGER  comment '是否网点（1是 0不是）',
+  AREA_NO             VARCHAR(10) COMMENT '区域编码',
+  ORG_STATUS          INTEGER  COMMENT '机构状态',
+  CONSTRAINT PK_SYS_ORG PRIMARY KEY (NO)
+);
+ALTER  TABLE SYS_ORG COMMENT '组织机构表';
+ALTER TABLE SYS_ORG
+  ADD CONSTRAINT FK_SYS_ORG_R_TYPE FOREIGN KEY (ORG_TYPE)
+  REFERENCES SYS_ORG_TYPE (NO);
+
+CREATE TABLE SYS_USER
+(
+  NO                VARCHAR(20) NOT NULL COMMENT '用户账号',
+  passwd            VARCHAR(50) NOT NULL COMMENT '用户密码（MD5加密保存',
+  NAME              VARCHAR(40) NOT NULL COMMENT '人员姓名',
+  STATUS            VARCHAR(1) NOT NULL COMMENT '用户状态(1：启用 0：停用)',
+  online_flag       VARCHAR(1) NOT NULL COMMENT '在线状态(1：在线 ；0：离线)',
+  role_no           VARCHAR(50) NOT NULL COMMENT '用户角色',
+  org_no            VARCHAR(20) NOT NULL COMMENT '所属机构',
+  phone             VARCHAR(20) COMMENT '办公电话',
+  mobile            VARCHAR(20) COMMENT '手机号码',
+  email             VARCHAR(40) COMMENT '电子邮件',
+  login_ip          VARCHAR(30) COMMENT '上次登录IP',
+  login_time        VARCHAR(20) COMMENT '上次登录时间（YYYY-MM-DD HH:MM24:SS）',
+  passwd_expiration VARCHAR(10) COMMENT '密码到期日（YYYY-MM-DD）',
+  passwd_error      INTEGER DEFAULT 0 COMMENT '密码错误次数',
+ CONSTRAINT PK_SYS_USER PRIMARY KEY (NO)
+);
+ALTER  TABLE SYS_USER COMMENT '人员表';
+
+CREATE TABLE SYS_USER_DEVROLE
+(
+   USER_NO              VARCHAR(20) NOT NULL COMMENT '用户ID',
+   DEV_CATALOG          VARCHAR(5)  NOT NULL COMMENT '设备类型编号',
+   CONSTRAINT PK_SYS_USER_DEVROLE PRIMARY KEY (USER_NO,DEV_CATALOG)
+) COMMENT = '系统用户设备权限表';
+
+CREATE TABLE SYS_ROLE
+(
+   NO                   VARCHAR(50) NOT NULL COMMENT '编号',
+   NAME                 VARCHAR(50) NOT NULL COMMENT '名称',
+   ORG_TYPE             VARCHAR(50) COMMENT '角色所属机构类型',
+   NOTE                 VARCHAR(200) COMMENT '备注',
+    CONSTRAINT PK_SYS_ROLE PRIMARY KEY (NO)
+);
+ALTER TABLE SYS_ROLE COMMENT '角色职能表';
+
+CREATE TABLE SYS_MENU (
+  `NO` VARCHAR(5) NOT NULL   COMMENT '编号',
+  NAME VARCHAR(40) NOT NULL  COMMENT '名称',
+  NOTE VARCHAR(30)           COMMENT '备注',
+  BG_COLOR VARCHAR(20)       COMMENT '背景颜色',
+  TILE_IMAGE VARCHAR(100)     COMMENT '二级菜单图片',
+  LINK VARCHAR(30)           COMMENT '菜单路由',
+  ICON VARCHAR(30)           COMMENT '一级菜单图标',
+  MENU_ORDER INTEGER DEFAULT 1  COMMENT '顺序',
+  CONSTRAINT PK_SYS_MENU PRIMARY KEY (NO)
+) COMMENT = '菜单表';
+
+CREATE TABLE SYS_BUTTON
+(
+   NO                   VARCHAR(20) NOT NULL COMMENT '编号',
+   NAME                 VARCHAR(40) COMMENT '名称',
+   MENU                 VARCHAR(5) COMMENT '所属菜单',
+   URL                  VARCHAR(200) COMMENT 'action操作',
+   BUTTON_ORDER         VARCHAR(5) COMMENT '顺序',
+   AUDIT_FLAG           VARCHAR(1) not null comment '是否开启审核 Y:审核 N:不审核',
+   NOTE                 VARCHAR(30) COMMENT '备注',
+   CONSTRAINT PK_SYS_BUTTON PRIMARY KEY (NO)
+);
+ALTER TABLE SYS_BUTTON COMMENT '按钮表';
+ALTER TABLE SYS_BUTTON
+  ADD CONSTRAINT FK_BUTTON_R_MENU FOREIGN KEY (MENU)
+  REFERENCES SYS_MENU (NO);
+
+CREATE TABLE SYS_ROLE_MENU
+(
+  role_no VARCHAR(50) NOT NULL COMMENT '角色编号',
+  menu_no VARCHAR(5) NOT NULL COMMENT '菜单编号',
+  CONSTRAINT PK_SYS_ROLE_MENU PRIMARY KEY (ROLE_NO, MENU_NO)
+);
+ALTER TABLE SYS_ROLE_MENU COMMENT '角色菜单权限表 ';
+ALTER TABLE SYS_ROLE_MENU
+  ADD CONSTRAINT FK_ROLE_MENU_R_MENU FOREIGN KEY (MENU_NO)
+  REFERENCES SYS_MENU (NO);
+ALTER TABLE SYS_ROLE_MENU
+  ADD CONSTRAINT FK_ROLE_MENU_R_ROLE FOREIGN KEY (ROLE_NO)
+  REFERENCES SYS_ROLE (NO);
+
+CREATE TABLE SYS_ROLE_BUTTON
+(
+  role_no   VARCHAR(50) NOT NULL COMMENT '角色编号',
+  button_no VARCHAR(20) NOT NULL COMMENT '按钮编号',
+  CONSTRAINT PK_SYS_ROLE_BUTTON PRIMARY KEY (ROLE_NO, BUTTON_NO)
+);
+ALTER TABLE SYS_ROLE_BUTTON COMMENT '角色按钮权限表 ';
+ALTER TABLE SYS_ROLE_BUTTON
+  ADD CONSTRAINT FK_ROLE_BUTTON_R_BUTTON FOREIGN KEY (BUTTON_NO)
+  REFERENCES SYS_BUTTON (NO);
+ALTER TABLE SYS_ROLE_BUTTON
+  ADD CONSTRAINT FK_ROLE_BUTTON_R_ROLE FOREIGN KEY (ROLE_NO)
+  REFERENCES SYS_ROLE (NO);
+
+
+CREATE TABLE SYS_OPERATE
+(
+  menu_no   VARCHAR(100) NOT NULL COMMENT '菜单编号',
+  btn_no    VARCHAR(30) NOT NULL COMMENT '功能编号',
+  menu_name VARCHAR(60) NOT NULL COMMENT '菜单名称',
+  btn_name  VARCHAR(30) NOT NULL COMMENT '操作名称',
+  CONSTRAINT PK_SYS_OPERATE PRIMARY KEY (menu_no, btn_no)
+);
+ALTER TABLE SYS_OPERATE COMMENT '操作表';
+
+CREATE TABLE SYS_AUDIT (
+  NO varchar(20) NOT NULL COMMENT '操作用户',
+  user_no varchar(20) NOT NULL COMMENT '操作时间 YYYY-MM-DD hh:mi:ss',
+  operate_time varchar(20) NOT NULL COMMENT '功能模块编号 同SYS_OPERATE.MENU_NO',
+  MENU_NO varchar(100) NOT NULL COMMENT '操作编号 同SYS_OPERATE.BTN_NO',
+  BTN_NO varchar(30) NOT NULL COMMENT '记录编号 yyyymmddhhmissSSS',
+  Current_detail blob COMMENT '操作后详细数据',
+  Before_detail blob COMMENT '操作前详细数据',
+  COMMIT_NOTE varchar(100) COMMENT '提交审核备注',
+  COMMIT_ORG varchar(20) COMMENT '提交审核机构编号',
+  COMMIT_ROLE varchar(50) COMMENT '提交审核角色编号',
+  COMMIT_USER varchar(20) COMMENT '提交审核人员编号',
+  COMMIT_STATUS varchar(1) COMMENT '提交状态 1:提交审核 9：撤销，不提交审核（审核拒绝后允许撤销）',
+  AUDIT_USER varchar(20) COMMENT '实际审核人员编号',
+  AUDIT_RESULT varchar(1) COMMENT '审核结果 Y：已审核，通过 N：已审核，拒绝',
+  AUDIT_TIME varchar(20) COMMENT '审核时间',
+  AUDIT_NOTE varchar(100) COMMENT '审核备注',
+  note varchar(100) COMMENT '备注',
+  CONSTRAINT PK_SYS_AUDIT PRIMARY KEY (NO)
+) COMMENT='操作审核表';
+
+CREATE TABLE SYS_LOG
+(
+  NO      VARCHAR(20) NOT NULL COMMENT '记录编号yyyymmddhhmissSSS',
+  user_no VARCHAR(20) NOT NULL COMMENT '操作用户编号',
+  operate_time    VARCHAR(20) NOT NULL COMMENT '操作时间 YYYY-MM-DD hh:mi:ss',
+  menu_no VARCHAR(100)  NOT NULL COMMENT '功能模块编号',
+  btn_no  VARCHAR(30) NOT NULL COMMENT '操作编号',
+  current_detail   BLOB COMMENT '操作后详细数据',
+  before_detail  BLOB COMMENT '操作前详细数据',
+  note      VARCHAR(100) COMMENT '备注',
+  CONSTRAINT PK_SYS_LOG PRIMARY KEY (NO)
+);
+ALTER TABLE SYS_LOG COMMENT '操作日志';
+  
+CREATE TABLE DB_LOCKS (
+  LOCKNAME  VARCHAR(40) NOT NULL COMMENT '锁名',
+  TAKEFLAG   VARCHAR(1) DEFAULT 0 COMMENT '0：未占用；1：占用',
+  TAKEUPTIME TIMESTAMP COMMENT '占用时间',
+  TAKEUSER   VARCHAR(60) COMMENT '占用者',
+   CONSTRAINT PK_DB_LOCKS PRIMARY KEY (LOCKNAME)
+);
+ALTER TABLE DB_LOCKS COMMENT '锁占用表';
+
+CREATE TABLE UNREAD_BULLET_INFO (
+  user_no varchar(20) NOT NULL COMMENT '用户编号',
+  bullet_no varchar(36) NOT NULL COMMENT '公告编号',
+  CONSTRAINT PK_UNREAD_BULLET_INFO PRIMARY KEY (user_no,bullet_no)
+) COMMENT='系统公告用户访问表';
+
+CREATE TABLE DB_SERVERS_STATE
+(
+  SERVERNAME     VARCHAR(200) NOT NULL COMMENT '服务器名',
+  LASTCHECKINTIME INT NOT NULL COMMENT '上一次检测时间',
+  CHECKININTERVAL INT NOT NULL COMMENT '检测时间间隔',
+  SERVERIP       VARCHAR(30) NOT NULL COMMENT '服务器IP',
+  SERVERSTATE     VARCHAR(2) NOT NULL COMMENT '服务器状态：1:正常；-1：异常',
+  CONSTRAINT PK_DB_SERVERS_STATE PRIMARY KEY (SERVERNAME,SERVERIP)
+);
+ALTER TABLE DB_SERVERS_STATE COMMENT '服务器状态表';
+
+CREATE TABLE SYS_BULLETIN_INFO 
+(
+   BULLETIN_ID  VARCHAR(36)  NOT NULL COMMENT '公告编号',
+   TITLE  VARCHAR(300)  NOT NULL COMMENT '公告主题',
+   CONTENT   VARCHAR(900)  NOT NULL COMMENT '公告内容',
+   RELEASE_DATE  VARCHAR(10)  NOT NULL COMMENT '公告发布日期',
+   EXPIRE_DATE  VARCHAR(10)  NOT NULL COMMENT '公告截止日期',
+   PUBLISHER  VARCHAR(30)     NOT NULL COMMENT '发布人',
+   ATTACHMENT1  VARCHAR(100)  COMMENT '系统公告附件路径1',
+   ATTACHMENT2  VARCHAR(100)  COMMENT '系统公告附件路径2',
+   ATTACHMENT3  VARCHAR(100)  COMMENT '系统公告附件路径3',
+   CONSTRAINT PK_SYS_BULLETIN_INFO PRIMARY KEY (BULLETIN_ID)
+);
+ALTER TABLE SYS_BULLETIN_INFO COMMENT '系统公告表';
+
+-- 基础信息相关
+CREATE TABLE DEV_CATALOG_TABLE
+(
+  NO           VARCHAR(5) NOT NULL COMMENT '编号 CRS自动存取款机 ATM自动取款机  CDT发卡机',
+  NAME         VARCHAR(30) NOT NULL COMMENT '设备类型',
+  enname       VARCHAR(30) COMMENT '描述',
+  monitor_type VARCHAR(2) COMMENT '监控类型[1:传统现金自助设备][2:发卡机][3:非现金自助设备] [4:多媒体渠道][5:新型现金自助设备][6:回单机][7:填单机][8:叫号机] [其它 不需要监控的设备]',
+  CHANNEL_TYPE VARCHAR(2) COMMENT '渠道类型[1:自助渠道][2:柜面渠道][3:多媒体渠道] [4:摄像头] [5:叫号机渠道]',
+  CONSTRAINT PK_DEV_CATALOG_TABLE PRIMARY KEY (NO)
+);
+ALTER TABLE DEV_CATALOG_TABLE COMMENT '设备类型表';
+
+CREATE TABLE DEV_VENDOR_TABLE
+(
+   NO                   VARCHAR(5) NOT NULL COMMENT '编号（从10001开始）',
+   NAME                 VARCHAR(80) NOT NULL COMMENT '品牌名称',
+   ADDRESS              VARCHAR(80) COMMENT '生产商地址（未使用）',
+   HOTLINE1             VARCHAR(20) COMMENT '生产商热线1（未使用）',
+   STATUS               VARCHAR(2) COMMENT '生产商状态（未使用）1-设备供应 2-设备服役 3-设备退役',
+   CONSTRAINT PK_DEV_VENDOR_TABLE PRIMARY KEY (NO)
+);
+ALTER TABLE DEV_VENDOR_TABLE COMMENT '设备品牌表';
+
+CREATE TABLE DEV_TYPE_TABLE
+(
+   NO                   VARCHAR(5) NOT NULL COMMENT '编号（从10001开始）',
+   NAME                 VARCHAR(60) NOT NULL COMMENT '设备型号',
+   DEV_VENDOR           VARCHAR(5) NOT NULL COMMENT '所属品牌',
+   DEV_CATALOG          VARCHAR(5) NOT NULL COMMENT '所属类型',
+   SPEC                 VARCHAR(20) COMMENT '设备规格（未使用）',
+   WEIGHT               VARCHAR(10) COMMENT '设备重量（未使用）',
+   WATT                 VARCHAR(10) COMMENT '平均功率（未使用）',
+   CASH_TYPE            VARCHAR(2)  COMMENT '现金非现金 1现金 2非现金',
+   CONSTRAINT PK_DEV_TYPE_TABLE PRIMARY KEY (NO)
+);
+ALTER TABLE DEV_TYPE_TABLE COMMENT '设备型号表';
+
+CREATE TABLE DEV_BASE_INFO
+(
+  NO                  VARCHAR(20) NOT NULL COMMENT '设备号',
+  ip                  VARCHAR(20) NOT NULL COMMENT '设备IP地址',
+  org_no              VARCHAR(20) NOT NULL COMMENT '所属机构（组织机构/管理机构）',
+  account_org_no      VARCHAR(20) COMMENT '账务机构号',
+  away_flag           VARCHAR(2) NOT NULL COMMENT '离行在行标志 1：在行；2：离行',
+  self_bank_no        VARCHAR(40) COMMENT '自助银行号，离行设备设置该字段',
+  dev_catalog         VARCHAR(5) NOT NULL COMMENT '设备类型',
+  dev_vendor          VARCHAR(5) NOT NULL COMMENT '设备品牌',
+  dev_type            VARCHAR(5) NOT NULL COMMENT '设备型号',
+  work_type           VARCHAR(2) NOT NULL COMMENT '经营方式 1—自营  2—联营',
+  STATUS              VARCHAR(2)  COMMENT '（该字段禁止使用）设备状态 1—正常  2—停机',
+  dev_service         VARCHAR(40) NOT NULL COMMENT '设备维护商',
+  terminal_no         VARCHAR(20) COMMENT '终端号',
+  SERIAL              VARCHAR(40) COMMENT '设备序列号 :厂商出厂的序列号',
+  address             VARCHAR(80) COMMENT '设备地址',
+  buy_date            VARCHAR(10) COMMENT '设备购买日期 yyyy-mm-dd',
+  install_date        VARCHAR(10) COMMENT '设备安装日期 yyyy-mm-dd',
+  start_date          VARCHAR(10) COMMENT '设备启用日期 yyyy-mm-dd',
+  stop_date           VARCHAR(10) COMMENT '设备停用日期 yyyy-mm-dd',
+  open_time           VARCHAR(10) COMMENT '每日开机时间 yyyy-mm-dd',
+  close_time          VARCHAR(10) COMMENT '每日关机时间 yyyy-mm-dd',
+  expire_date         VARCHAR(10) COMMENT '保修到期日期 yyyy-mm-dd',
+  patrol_period       VARCHAR(20) COMMENT '设备巡检周期',
+  cashbox_limit       VARCHAR(50) COMMENT '钱箱报警金额',
+  os                  VARCHAR(50) COMMENT '操作系统',
+  atmc_soft           VARCHAR(50) COMMENT 'atmc软件 1:wsap; 2:WSAPPlus; 3:ZJUAP; 9:其他ATMC',
+  anti_virus_soft     VARCHAR(50) COMMENT '防病毒软件',
+  sp                  VARCHAR(50) COMMENT '厂商sp类型',
+  virtual_teller_no   VARCHAR(10) COMMENT '虚拟柜员号',
+  care_level          VARCHAR(2) COMMENT '设备关注程度 1-重点 2-中等 3-一般',
+  last_pm_date        VARCHAR(10) COMMENT '上次巡检日期',
+  expire_pm_date      VARCHAR(10) COMMENT '巡检到期日期',
+  locate_no           VARCHAR(10) COMMENT '地理位置',
+  note1               VARCHAR(30) COMMENT '备用1:设备营运状态 1启用 2停机',
+  note2               VARCHAR(30) COMMENT '备用2:有无盲道 0-无 1-有，默认0',
+  note3               VARCHAR(30) COMMENT '备用3:邮政编码',
+  note4               VARCHAR(30) COMMENT '备用4',
+  note5               VARCHAR(30) COMMENT '备用5',
+  carrier             VARCHAR(20) COMMENT '运营商',
+  money_org           VARCHAR(20) COMMENT '加钞机构',
+  dev_status          VARCHAR(2) COMMENT '设备状态 :1－启用 2－停用 3—审批 4－正常 5－警告 6－故障 7－关机 8－撤销',
+  environment         VARCHAR(256) COMMENT '周边环境',
+  address_code        VARCHAR(20) COMMENT '地点代码',
+  cash_type           VARCHAR(2) COMMENT '非现金标志: 1、现金；2、非现金',
+  setup_type          VARCHAR(2) COMMENT '安装方式:0、大堂；1、穿墙',
+  net_type            VARCHAR(2) COMMENT '有线无线标志:C：cable有线 W：wireless无线',
+  operate_status      VARCHAR(2) COMMENT '（设备停机功能使用）运营状态:1： 启用 2：停机',
+  registration_status VARCHAR(2) COMMENT '注册状态:0：未注册 1：注册',
+  comm_packet         VARCHAR(20) COMMENT '通讯每包传输大小:有线设备初始8000无线设备初始256',
+  zip_type            VARCHAR(2) COMMENT '通讯传输压缩方式:0：不压缩;1：未使用；2：zip压缩；3：gzip压缩;有线设备初始:0 无线设备初始:3 ',
+  dek_encoded         VARCHAR(100) COMMENT 'MAK密钥',
+  atmp_area           VARCHAR(10) COMMENT 'p端区域码',
+  dev_log_path        VARCHAR(200) COMMENT '日志路径',
+  trans_rate          VARCHAR(20) COMMENT '文件传输速度上限',
+  x                   VARCHAR(20)   comment '横坐标（经度）',
+  y                   VARCHAR(20)   comment '纵坐标（纬度）',
+  area_no             VARCHAR(10)   comment '区域编号',
+  term_account_no     VARCHAR(22)   comment '终端账户账号',
+  management_name     VARCHAR(60)   comment '管理员名称',
+  account_type        DECIMAL(5,0)  comment '帐户类型',
+  card_flag           DECIMAL(5,0)  comment '卡折标志',
+  check_org           VARCHAR(20)   comment '核算机构',
+  tradingvolume       DECIMAL(5,0)  comment '业务量目标值',
+  encryptmode         VARCHAR(10)   comment '终端数据加密模式',
+  cycle_flag          DECIMAL(5,0)  comment '是否开通循环（CRS设备）：0-未开通，1-开通',
+  region              VARCHAR(30)   comment '省',
+  city                VARCHAR(30)   comment '市',
+  manage_org_no       VARCHAR(20)   comment '管理机构号',
+  route               VARCHAR(32)   comment '清机加钞线路',
+  comm_cst_no         VARCHAR(100)  comment '村经济合作社客户号',
+  CONSTRAINT PK_DEV_BASE_INFO PRIMARY KEY (NO)
+);
+ALTER TABLE DEV_BASE_INFO COMMENT '设备基本信息表';
+
+create table DEV_OPERATE_INFO
+(
+  no                   VARCHAR(20) not null comment '设备号',
+  quarter_lease_amount VARCHAR(20) comment '季度租赁费用 单位：元',
+  cooperation_number   DECIMAL(10,0) comment '每季合作笔数',
+  selfbank             VARCHAR(1) comment '是否自助银行：0-否；1-是 （未使用）一个点上如果有两台以上的设备，那么这个设备就算是自助银行的设备',
+  investment           VARCHAR(1) comment '投入主体：1-总行；2-分行；3-支行  （未使用）设备的投入方级别',
+  constraint PK_DEV_OPERATE_INFO primary key (NO)
+) comment = '设备运营信息表';
+
+
+CREATE TABLE DEV_SERVICE_COMPANY
+(
+  NO      VARCHAR(40) NOT NULL COMMENT '编号UUID',
+  NAME    VARCHAR(80) NOT NULL COMMENT '服务商名称',
+  linkman VARCHAR(30) COMMENT '联系人',
+  address VARCHAR(80) COMMENT '地址',
+  phone   VARCHAR(30) COMMENT '固定电话',
+  mobile  VARCHAR(30) COMMENT '手机',
+  fax     VARCHAR(30) COMMENT '传真',
+  email   VARCHAR(40) COMMENT '电子邮箱',
+  infofilepath varchar(100) COMMENT '维护商相关信息文件路径，绝对路径',
+  infofilename varchar(50) COMMENT '维护商相关信息文件名称，带后缀',
+   CONSTRAINT PK_DEV_SERVICE_COMPANY PRIMARY KEY (NO)
+);
+ALTER TABLE DEV_SERVICE_COMPANY COMMENT '设备维护商表';
+
+CREATE TABLE DEV_SERVICE_PERSON
+(
+  NO       VARCHAR(40) NOT NULL COMMENT '编号UUID',
+  NAME     VARCHAR(20) NOT NULL COMMENT '姓名',
+  belongto VARCHAR(40) NOT NULL COMMENT '所属维护商UUID',
+  STATUS   VARCHAR(2) NOT NULL COMMENT '状态：1—启用  2—停用',
+  phone    VARCHAR(20) COMMENT '固定电话',
+  mobile   VARCHAR(20) COMMENT '手机',
+  email    VARCHAR(40) COMMENT '电子邮箱',
+  leader   VARCHAR(20) COMMENT '维护员上级',
+  CONSTRAINT PK_DEV_SERVICE_PERSON PRIMARY KEY (NO)
+);
+ALTER TABLE DEV_SERVICE_PERSON COMMENT '设备维护员表';
+
+CREATE TABLE DEV_RESPONSOR_TABLE
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号（UUID）',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   CATALOG              VARCHAR(2) NOT NULL COMMENT '责任人分类（1 ： 管机员；2 ： 维护人员）',
+   GRADE                VARCHAR(2) NOT NULL COMMENT '责任人级别1,2,3,4与case级别对等',
+   RESPONSER_NO          VARCHAR(40) NOT NULL COMMENT '责任人编号',
+   CONSTRAINT PK_DEV_RESPONSOR_TABLE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE DEV_RESPONSOR_TABLE COMMENT '设备责任人表';
+
+CREATE TABLE DEV_SOFTWARE_INFO
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   OPERATING_SYS        VARCHAR(40) COMMENT '操作系统',
+   OPERATING_VERSION    VARCHAR(40) COMMENT '操作系统版本号',
+   OPERATING_PATCH_VERSION VARCHAR(40) COMMENT '操作系统补丁版本',
+   ANTIVIRUS_SYSTEM     VARCHAR(100) COMMENT '病毒软件',
+   ANTIVIRUS_VERSION    VARCHAR(40) COMMENT '病毒软件版本',
+   ANTIVIRUS_DEFINITION VARCHAR(100) COMMENT '病毒定义',
+   SP_VERSION           VARCHAR(40) COMMENT '硬件SP',
+   APP_VERSION          VARCHAR(40) COMMENT '应用版本',
+   CHK_CASH_DATA        VARCHAR(40) COMMENT '验钞数据版本',
+   SOFTWARE_LIST        VARCHAR(2000) COMMENT '安装软件列表',
+   SP_IDC               VARCHAR(60) COMMENT 'SP_IDC',
+   SP_CDM               VARCHAR(60) COMMENT 'SP_CDM',
+   SP_CIM               VARCHAR(60) COMMENT 'SP_CIM',
+   SP_PIN               VARCHAR(60) COMMENT 'SP_PIN',
+   SP_JPR               VARCHAR(60) COMMENT 'SP_JPR',
+   SP_RPR               VARCHAR(60) COMMENT 'SP_RPR',
+   SP_SIU               VARCHAR(60) COMMENT 'SP_SIU',
+   SP_TTU               VARCHAR(60) COMMENT 'SP_TTU',
+   SP_VDM               VARCHAR(60) COMMENT 'SP_VDM',
+   SETUPFLAG            VARCHAR(10) COMMENT '安装标志 TRUE：安装，FALSE，未安装',
+   TAKEEFFECTFLAG       VARCHAR(10) COMMENT '使用标志TRUE：使用，FALSE，未使用',
+   VERSION              VARCHAR(10) COMMENT '无纸化版本号',
+   SP_ICC               VARCHAR(60) COMMENT 'SP_ICC',
+   SP_ISC               VARCHAR(60) COMMENT 'SP_ISC',
+   SP_IRC               VARCHAR(60) COMMENT 'SP_IRC',
+   SP_FPI               VARCHAR(60) COMMENT 'SP_FPI',
+   SP_CRD               VARCHAR(60) COMMENT 'SP_CRD',
+   SP_CCD               VARCHAR(60) COMMENT 'SP_CCD',
+   SP_DPR               VARCHAR(60) COMMENT 'SP_DPR(盖章模块)',
+   SP_BCR               VARCHAR(60) COMMENT 'SP_BCR(二维码扫描仪模块)',
+   SP_CAM          VARCHAR(60) COMMENT 'SP_CAM（照相机）',
+   SP_CHK           VARCHAR(60) COMMENT 'SP_CHK（支票读扫描）',
+   SP_DEP          VARCHAR(60) COMMENT 'SP_DEP（信封）',
+   SP_NET          VARCHAR(60) COMMENT 'SP_NET（网络通讯）',
+   SP_SPR          VARCHAR(60) COMMENT 'SP_SPR（结单打印）',
+   SERIAL_NO_INFO_STATUS VARCHAR(2) COMMENT '冠字号缓存开关状态（1:开启，0:关闭，  其它：未知）',
+   TXT_INFO_STATUS      VARCHAR(2) COMMENT '现金缓存开关状态（1:开启，0:关闭，  其它：未知）',
+   CIMSRP_FLAG          VARCHAR(2) COMMENT '存款冠字号凭条打印开关状态（1:开启，0:关闭， 其它：未知）',
+   CDMSRP_FLAG          VARCHAR(2) COMMENT '取款冠字号凭条打印开关状态（1:开启，0:关闭，其它：未知）',
+   NTS_SUPPORT_SNR      VARCHAR(2) COMMENT '是否支持冠字号功能 1:支持 0: 不支持',
+   NTS_SNR_FLAG         VARCHAR(2) COMMENT '冠字号功能是否已开通 1:已开通 0:未开通',
+   NTS_SUPPORT_SERIAL_NUMBERS VARCHAR(2) COMMENT '应用是否支持冠字号 1:支持 0:不支持',
+   NTS_OPEN_SERIAL_NUMBERS_JP VARCHAR(2) COMMENT '应用是否开放冠字号日志打印功能，2-只打印真钞，1-真钞拒钞全部打印,0：不开通',
+   NTS_OPEN_SERIAL_NUMBERS_RP VARCHAR(2) COMMENT '应用是否开通冠字号凭条打印，2-只打印真钞，1-真钞拒钞全部打印,0：不开通',
+   CONSTRAINT PK_DEV_SOFTWARE_INFO PRIMARY KEY (DEV_NO)
+);
+ALTER TABLE DEV_SOFTWARE_INFO COMMENT '设备软件信息表 ';
+
+CREATE TABLE DEV_ATTRIBUTE_TABLE
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   ATTRIBUTE_LAST_TIME  VARCHAR(20) COMMENT '上次更新属性表时间',
+   IDC_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   CIM_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   CDM_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   DEP_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   UPS_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   SPR_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   CHK_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   RPR_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   JPR_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   TTU_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   PBK_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   PIN_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   SIU_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   CAM_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   CRD_EXIST            CHAR(1) COMMENT 'CRD_EXIST',
+   CCD_EXIST            CHAR(1) COMMENT 'CCD_EXIST',
+   IDC_VARIANT          VARCHAR(20) COMMENT 'MOTORISED CHIPIO',
+   IDC_CAN_EJECT        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   IDC_CAN_CAPTURE      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   IDC_BIN_CAPACITY     VARCHAR(20) COMMENT '回收匣容量',
+   IDC_CAN_DISPENSE     VARCHAR(20) COMMENT 'TRUE/FALSE',
+   IDC_SECURITY         VARCHAR(50) COMMENT '安全类型',
+   IDC_TRACK_1_READ     VARCHAR(20) COMMENT '1磁道读能力',
+   IDC_TRACK_1_WRITE    VARCHAR(20) COMMENT '1磁道写能力',
+   IDC_TRACK_2_READ     VARCHAR(20) COMMENT '2磁道读能力',
+   IDC_TRACK_2_WRITE    VARCHAR(20) COMMENT '2磁道写能力',
+   IDC_TRACK_3_READ     VARCHAR(20) COMMENT '3磁道读能力',
+   IDC_TRACK_3_WRITE    VARCHAR(20) COMMENT '3磁道写能力',
+   IDC_TRACK_JISII_READ VARCHAR(20) COMMENT 'jisII磁道读能力',
+   IDC_TRACK_JISII_WRITE VARCHAR(20) COMMENT 'jisii磁道写能力',
+   CIM_CAN_ESCROW       VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CIM_SHUTTER_CONTROL_SUPPORT VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CIM_MAX_ACCEPT_ITEMS VARCHAR(20) COMMENT '一次最大收钞张数',
+   CIM_CAN_DETECT_CASH_INSERTED VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CIM_CAN_DETECT_CASH_TAKEN VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CIM_RETRACT_AREA     VARCHAR(50) COMMENT '回收区名称',
+   CDM_HAS_STACKER      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CDM_HAS_SHUTTER      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CDM_CAN_RETRACT      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CDM_CAN_DETECT_CASH_TAKEN VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CDM_CAN_TEST_PHSICAL_UNITS VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CDM_MAX_DISPENSE_BILLS VARCHAR(20) COMMENT '一次最大出钞张数',
+   CDM_NUM_OF_LOGICAL_CASH_UNITS VARCHAR(20) COMMENT '逻辑钞箱数',
+   CDM_NUM_OF_PHYSICAL_CASH_UNITS VARCHAR(20) COMMENT '物理钞箱数',
+   CDM_NUM_OF_CURRENCIES VARCHAR(20) COMMENT '支持币种数',
+   CDM_CURRENCIES       VARCHAR(2000) COMMENT '币种名称',
+   CDM_EXPONENTS        VARCHAR(1000) COMMENT '指数',
+   DEP_DEPOSIT_TYPE     VARCHAR(50) COMMENT '类型',
+   DEP_CAN_DISPENSE     VARCHAR(20) COMMENT 'TRUE/FALSE',
+   DEP_CAN_PRINT        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   DEP_CAN_PRINT_ON_RETRACTS VARCHAR(20) COMMENT 'TRUE/FALSE',
+   DEP_CAN_RETRACT      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   DEP_MAX_PRINT_LENGTH VARCHAR(20) COMMENT '最大打印长度',
+   UPS_CAN_DETECT_LOW   VARCHAR(20) COMMENT 'TRUE/FALSE',
+   UPS_CAN_BE_ENGAGED   VARCHAR(20) COMMENT 'TRUE/FALSE',
+   UPS_CAN_DETECT_POWING VARCHAR(20) COMMENT 'TRUE/FALSE',
+   UPS_CAN_DETECT_RECOVERED VARCHAR(20) COMMENT 'TRUE/FALSE',
+   UPS_CAN_POWER_OFF    VARCHAR(20) COMMENT 'TRUE/FALSE',
+   UPS_CAN_POWER_CYCLE  VARCHAR(20) COMMENT 'TRUE/FALSE',
+   SPR_VARIANT          VARCHAR(50) COMMENT 'SPR型别',
+   SPR_CAN_EJECT        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   SPR_CAN_CAPTURE      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   SPR_CAN_STACK        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   SPR_MAX_RETRACT      VARCHAR(20) COMMENT 'SPR最大回收数',
+   SPR_MAX_STRACK       VARCHAR(20) COMMENT 'SPR最大暂存数',
+   CHK_CAN_RAW_PRINT    VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CAN_EJECT        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CAN_STACK        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CAN_CAPTURE      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CAN_STAMP        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CAN_DETECT_MEDIA_TAKEN VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CAN_READ_FRONT_IMAGE VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CAN_READ_BACK_IMAGE VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CAN_READ_CODE_LINE VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CHK_CODE_LINE_FORMATS VARCHAR(60) COMMENT '打码行格式',
+   CHK_MAX_RETRACT      VARCHAR(20) COMMENT 'CHK最大回收数',
+   CHK_MAX_ACCEPT_ITEMS VARCHAR(20) COMMENT '一次最大收取支票数',
+   CHK_SUPPORTED_IMAGE_FORMATS VARCHAR(60) COMMENT '支持的图象格式',
+   RPR_VARIANT          VARCHAR(50) COMMENT 'RPR型别',
+   RPR_CAN_EJECT        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   RPR_CAN_CAPTURE      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   RPR_CAN_STACK        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   RPR_MAX_RETRACT      VARCHAR(20) COMMENT 'RPR最大回收张数',
+   JPR_VARIANT          VARCHAR(50) COMMENT 'JPR型别',
+   JPR_CAN_EJECT        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   JPR_CAN_CAPTURE      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   JPR_CAN_STACK        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   TTU_ALPHA_NUMERIC_KEYS_PRESENT VARCHAR(20) COMMENT 'TRUE/FALSE',
+   TTU_HEXADECIMAL_KEYS_PRESENT VARCHAR(20) COMMENT 'TRUE/FALSE',
+   TTU_NUMERIC_KEYS_PRESENT VARCHAR(20) COMMENT 'TRUE/FALSE',
+   TTU_KEYBOARD_LOCK_PRESENT VARCHAR(20) COMMENT 'TRUE/FALSE',
+   TTU_DISPLAY_LIGHT_PRESENT VARCHAR(20) COMMENT 'TRUE/FALSE',
+   TTU_number_OF_RESOLUTIONS VARCHAR(50) COMMENT '分辨率',
+   TTU_CURSOR_SUPPORTED VARCHAR(20) COMMENT 'TRUE/FALSE',
+   TTU_FORMS_SUPPORTED  VARCHAR(20) COMMENT 'TRUE/FALSE',
+   TTU_RESOLUTION_X     VARCHAR(20) COMMENT 'TTU_RESOLUTION_X',
+   TTU_RESOLUTION_Y     VARCHAR(20) COMMENT 'TTU_RESOLUTION_Y',
+   PBK_VARIANT          VARCHAR(50) COMMENT 'PBK型别',
+   PBK_CAN_EJECT        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PBK_CAN_CAPTURE      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PBK_CAN_STACK        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PBK_MAX_RETRACT      VARCHAR(20) COMMENT 'PBK最大回收数',
+   PIN_CAN_EBC          VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_CBC          VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_MAC          VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_RSA          VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_VERIFY_DES   VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_VERIFY_EC    VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_VERIFY_VISA  VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_DES_OFFSET   VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_TRIPLE_EBC   VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_TRIPLE_CBC   VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_TRIPLE_MAC   VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_CAN_TRIPLE_CFB   VARCHAR(20) COMMENT 'TRUE/FALSE',
+   PIN_FUNCTION_KEYS_SUPPORTED VARCHAR(150) COMMENT 'TRUE/FALSE',
+   SIU_CABINET_CAN_BOLT VARCHAR(20) COMMENT 'TRUE/FALSE',
+   SIU_SAFE_CAN_BOLT    VARCHAR(20) COMMENT 'TRUE/FALSE',
+   SIU_SHIELD_CAN_KEYBOARD VARCHAR(50) COMMENT 'TRUE/FALSE',
+   SIU_SHIELD_CAN_OPEN  VARCHAR(20) COMMENT 'TRUE/FALSE',
+   SIU_SHIELD_CAN_CLOSE VARCHAR(20) COMMENT 'TRUE/FALSE',
+   SIU_SHIELD_CAN_SERVICE VARCHAR(20) COMMENT 'TRUE/FALSE',
+   CAM_MAX_PICTURES     VARCHAR(20) COMMENT '一次最大图片数',
+   CAM_PICTURE_INFO     VARCHAR(20) COMMENT '图片信息',
+   CAM_MAX_PICTURE_INFO_SIZE VARCHAR(20) COMMENT '最大图片信息尺寸',
+   ICC_VARIANT          VARCHAR(20) COMMENT 'ICC_VARIANT',
+   ICC_CAN_EJECT        VARCHAR(20) COMMENT 'ICC_CAN_EJECT',
+   ICC_CAN_CAPTURE      VARCHAR(20) COMMENT 'ICC_CAN_CAPTURE',
+   ICC_BIN_CAPACITY     VARCHAR(20) COMMENT 'ICC_BIN_CAPACITY',
+   ICC_CAN_DISPENSE     VARCHAR(20) COMMENT 'ICC_CAN_DISPENSE',
+   ICC_SECURITY         VARCHAR(50) COMMENT 'ICC_SECURITY',
+   ICC_TRACK_1_READ     VARCHAR(20) COMMENT 'ICC_TRACK_1_READ',
+   ICC_TRACK_1_WRITE    VARCHAR(20) COMMENT 'ICC_TRACK_1_WRITE',
+   ICC_TRACK_2_READ     VARCHAR(20) COMMENT 'ICC_TRACK_2_READ',
+   ICC_TRACK_2_WRITE    VARCHAR(20) COMMENT 'ICC_TRACK_2_WRITE',
+   ICC_TRACK_3_READ     VARCHAR(20) COMMENT 'ICC_TRACK_3_READ',
+   ICC_TRACK_3_WRITE    VARCHAR(20) COMMENT 'ICC_TRACK_3_WRITE',
+   ICC_TRACK_JISII_READ VARCHAR(20) COMMENT 'ICC_TRACK_JISII_READ',
+   ICC_TRACK_JISII_WRITE VARCHAR(20) COMMENT 'ICC_TRACK_JISII_WRITE',
+   ICC_EXIST            CHAR(1) COMMENT 'ICC_EXIST',
+   ISC_VARIANT          VARCHAR(20) COMMENT 'ISC_VARIANT',
+   ISC_CAN_EJECT        VARCHAR(20) COMMENT 'ISC_CAN_EJECT',
+   ISC_CAN_CAPTURE      VARCHAR(20) COMMENT 'ISC_CAN_CAPTURE',
+   ISC_BIN_CAPACITY     VARCHAR(20) COMMENT 'ISC_BIN_CAPACITY',
+   ISC_CAN_DISPENSE     VARCHAR(20) COMMENT 'ISC_CAN_DISPENSE',
+   ISC_SECURITY         VARCHAR(50) COMMENT 'ISC_SECURITY',
+   ISC_TRACK_1_READ     VARCHAR(20) COMMENT 'ISC_TRACK_1_READ',
+   ISC_TRACK_1_WRITE    VARCHAR(20) COMMENT 'ISC_TRACK_1_WRITE',
+   ISC_TRACK_2_READ     VARCHAR(20) COMMENT 'ISC_TRACK_2_READ',
+   ISC_TRACK_2_WRITE    VARCHAR(20) COMMENT 'ISC_TRACK_2_WRITE',
+   ISC_TRACK_3_READ     VARCHAR(20) COMMENT 'ISC_TRACK_3_READ',
+   ISC_TRACK_3_WRITE    VARCHAR(20) COMMENT 'ISC_TRACK_3_WRITE',
+   ISC_TRACK_JISII_READ VARCHAR(20) COMMENT 'ISC_TRACK_JISII_READ',
+   ISC_TRACK_JISII_WRITE VARCHAR(20) COMMENT 'ISC_TRACK_JISII_WRITE',
+   ISC_EXIST            CHAR(1) COMMENT 'ISC_EXIST',
+   IRC_VARIANT          VARCHAR(20) COMMENT 'IRC_VARIANT',
+   IRC_CAN_EJECT        VARCHAR(20) COMMENT 'IRC_CAN_EJECT',
+   IRC_CAN_CAPTURE      VARCHAR(20) COMMENT 'IRC_CAN_CAPTURE',
+   IRC_BIN_CAPACITY     VARCHAR(20) COMMENT 'IRC_BIN_CAPACITY',
+   IRC_CAN_DISPENSE     VARCHAR(20) COMMENT 'IRC_CAN_DISPENSE',
+   IRC_SECURITY         VARCHAR(50) COMMENT 'IRC_SECURITY',
+   IRC_TRACK_1_READ     VARCHAR(20) COMMENT 'IRC_TRACK_1_READ',
+   IRC_TRACK_1_WRITE    VARCHAR(20) COMMENT 'IRC_TRACK_1_WRITE',
+   IRC_TRACK_2_READ     VARCHAR(20) COMMENT 'IRC_TRACK_2_READ',
+   IRC_TRACK_2_WRITE    VARCHAR(20) COMMENT 'IRC_TRACK_2_WRITE',
+   IRC_TRACK_3_READ     VARCHAR(20) COMMENT 'IRC_TRACK_3_READ',
+   IRC_TRACK_3_WRITE    VARCHAR(20) COMMENT 'IRC_TRACK_3_WRITE',
+   IRC_TRACK_JISII_READ VARCHAR(20) COMMENT 'IRC_TRACK_JISII_READ',
+   IRC_TRACK_JISII_WRITE VARCHAR(20) COMMENT 'IRC_TRACK_JISII_WRITE',
+   IRC_EXIST            CHAR(1) COMMENT 'IRC_EXIST',
+   FPI_LOAD_STATUS      VARCHAR(20) COMMENT 'FPI_LOAD_STATUS',
+   FPI_EXIST            CHAR(1) COMMENT 'FPI_EXIST',
+   CRD_DISPENSETO       VARCHAR(20) COMMENT 'CRD_DISPENSETO',
+   CCD_DISPENSETO       VARCHAR(20) COMMENT 'CCD_DISPENSETO',
+   DPR_EXIST            CHAR(1) COMMENT '盖章模块是否存在',
+   DPR_VARIANT          VARCHAR(20) COMMENT '盖章模块型别',
+   DPR_CAN_EJECT        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   DPR_CAN_CAPTURE      VARCHAR(20) COMMENT 'TRUE/FALSE',
+   DPR_CAN_STACK        VARCHAR(20) COMMENT 'TRUE/FALSE',
+   DPR_MAX_RETRACT      VARCHAR(20) COMMENT '盖章模块最大回收数',
+   BCR_EXIST            CHAR(1) COMMENT '二维码扫描仪模块是否存在',
+   BCR_VARIANT          VARCHAR(20) COMMENT '二维码扫描仪模块型别',
+   PJC_EXIST            CHAR(1) COMMENT 'Y – 存在 N – 不存在',
+   PJC_DATASOURCE       VARCHAR(20) COMMENT 'sp-SP拦截方式，wsap-跨平台转发方式',
+   PJC_VDEV             VARCHAR(1) COMMENT '0-不适用（DataSource= wsap），1-虚拟模式，2-兼容模式',
+   PJC_REALJPR          VARCHAR(20) COMMENT 'PJC是否返回物理打印机真是状态',
+   PJC_MAC              VARCHAR(1) COMMENT 'PJC流水MAC校验是否开启0-未打开，1-已打开',
+   PJC_IP               VARCHAR(20) COMMENT 'PJC配置的服务端IP地址',
+   PJC_PKT              VARCHAR(1) COMMENT 'PJC使用的报文类型0-域报文，2-Json报文',
+   PJC_EJFILE           VARCHAR(50) COMMENT '电子流水缓存路径',
+   PJC_SPACESIZE        VARCHAR(20) COMMENT '无纸化缓存流水所在盘符剩余空间大小，单位：M',
+   PJC_VERSION          VARCHAR(50) COMMENT 'PJC版本号',
+   CONSTRAINT PK_DEV_ATTRIBUTE_TABLE PRIMARY KEY (DEV_NO)
+);
+ALTER TABLE DEV_ATTRIBUTE_TABLE COMMENT '设备模块属性表';
+
+
+CREATE TABLE DEV_CASENO_TABLE
+(
+  dev_no      VARCHAR(20) NOT NULL COMMENT '设备号',
+  idc_case_no VARCHAR(36) COMMENT '读卡器模块对应的CASE号',
+  cim_case_no VARCHAR(36) COMMENT '存款模块对应的CASE号',
+  cdm_case_no VARCHAR(36) COMMENT '取款模块对应的CASE号',
+  dep_case_no VARCHAR(36) COMMENT '信封模块对应的CASE号',
+  ups_case_no VARCHAR(36) COMMENT '不间断电源模块对应的CASE号',
+  spr_case_no VARCHAR(36) COMMENT '结单打印模块对应的CASE号',
+  rpr_case_no VARCHAR(36) COMMENT '凭条打印机模块对应的CASE号',
+  jpr_case_no VARCHAR(36) COMMENT '日志打印机模块对应的CASE号',
+  chk_case_no VARCHAR(36) COMMENT '支票读扫描模块对应的CASE号',
+  ttu_case_no VARCHAR(36) COMMENT '文本终端单元模块对应的CASE号',
+  pbk_case_no VARCHAR(36) COMMENT '存折打印机模块对应的CASE号',
+  pin_case_no VARCHAR(36) COMMENT '密码键盘模块对应的CASE号',
+  siu_case_no VARCHAR(36) COMMENT '传感器模块对应的CASE号',
+  cam_case_no VARCHAR(36) COMMENT '照相机模块对应的CASE号',
+  net_case_no VARCHAR(36) COMMENT '网络故障对应的CASE号',
+  cny_case_no VARCHAR(36) COMMENT '人民币取款模块对应的CASE号（多币种情况下使用）',
+  hkd_case_no VARCHAR(36) COMMENT '港币取款模块对应CASE号（多币种情况下使用）',
+  icc_case_no VARCHAR(36) COMMENT '', 
+  isc_case_no VARCHAR(36) COMMENT '',
+  irc_case_no VARCHAR(36) COMMENT '',
+  fpi_case_no VARCHAR(36) COMMENT '',
+  crd_case_no VARCHAR(36) COMMENT '',
+  ccd_case_no VARCHAR(36) COMMENT '',
+  dpr_case_no VARCHAR(36) COMMENT '盖章模块对应的CASE号',
+  bcr_case_no VARCHAR(36) COMMENT '二维码扫描仪模块对应的CASE号',
+  CONSTRAINT PK_DEV_CASENO_TABLE PRIMARY KEY (DEV_NO)
+);
+ALTER TABLE DEV_CASENO_TABLE COMMENT '设备当前CASE表';
+
+CREATE TABLE BANK_MANAGER_PERSION
+(
+  NO     VARCHAR(20) NOT NULL COMMENT '用户ID',
+  NAME   VARCHAR(40) NOT NULL COMMENT '用户姓名',
+  org_no VARCHAR(20) NOT NULL COMMENT '所属机构',
+  phone  VARCHAR(20) COMMENT '办公电话',
+  mobile VARCHAR(20) COMMENT '手机号码',
+  email  VARCHAR(40) COMMENT '电子邮件', 
+  is_leader VARCHAR(1) COMMENT '是否是网点经理（1：是 0：不是)', 
+  is_lobbymanager VARCHAR(1) COMMENT '是否是大堂经理（1：是 0：不是)', 
+  is_devmanager VARCHAR(1) COMMENT '是否是设备管机员（1：是 0：不是)', 
+  is_deskmanager VARCHAR(1) COMMENT '是否是柜台人员（1：是 0：不是)',
+  CONSTRAINT PK_BANK_MANAGER_PERSION PRIMARY KEY (NO)
+);
+ALTER TABLE BANK_MANAGER_PERSION COMMENT  '银行网点人员表';
+
+CREATE TABLE MOD_CATALOG_TABLE
+(
+   NO    VARCHAR(5) NOT NULL COMMENT '编号',
+   NAME    VARCHAR(50) NOT NULL COMMENT '模块名称',
+   CONSTRAINT PK_MOD_CATALOG_TABLE PRIMARY KEY (NO)
+);
+ALTER TABLE MOD_CATALOG_TABLE COMMENT '硬件模块信息表：如果在本表中增加模块，需要同步在DEV_SOFTWARE_INFO中增加该模块SP版本信息字段';
+
+CREATE TABLE TRANS_INFO
+(
+   TRANSSERIALNUM       VARCHAR(10) NOT NULL COMMENT '交易序号',
+   TRANSTIME            VARCHAR(14) NOT NULL COMMENT '交易时间YYYYMMDDhhmmss',
+   DEVNO                VARCHAR(20) NOT NULL COMMENT '设备号',
+   TRANSTYPE            VARCHAR(10) NOT NULL COMMENT '交易类型',
+   TRANSAMOUNT          DECIMAL(38) COMMENT '交易金额 单位：分',
+   TRANSCURRENT         VARCHAR(3) COMMENT '交易币种',
+   CARDNO               VARCHAR(25) COMMENT '卡号',
+   CARDTYPE             VARCHAR(2) COMMENT '卡种',
+   PAYINTOACCOUNT       VARCHAR(20) COMMENT '转入目标卡号',
+   PAYINTOACCOUNTTYPE   VARCHAR(2) COMMENT '转入目标卡种',
+   HOSTSERIALNO         VARCHAR(12) COMMENT '主机流水号',
+   ADDITIONALINF        VARCHAR(20) COMMENT '代缴费附加信息',
+   RETCODE              VARCHAR(6) COMMENT '返回码',
+   TRANSSTATUS          VARCHAR(4) COMMENT '交易状态（成功，失败，超时）',
+   CARDFLAG             INT COMMENT '1-磁条卡；2-IC卡',
+   ORIGINAL_LOCAL_SERIALNO VARCHAR(6) COMMENT '原交易流水号',
+   CHARGE               VARCHAR(12) COMMENT '手续费(单位:分)',
+   EXAMINE_TELLER_NO    VARCHAR(10) COMMENT '审核柜员号',
+   USHIELD_CERTIFICATE_NO VARCHAR(50) COMMENT 'U盾证书编号',
+   TOKEN_NO             VARCHAR(50) COMMENT '令牌编号',
+   CARD_BUSINESS_TYPE   VARCHAR(10) COMMENT '卡片业务种类',
+   SIGNING_INFO         VARCHAR(20) COMMENT '签约信息',
+   HOSTINFO             VARCHAR(200) COMMENT '主机响应信息',
+   COST_TIME            decimal(38,0) COMMENT '交易耗时',
+   CONSTRAINT PK_TRANS_INFO PRIMARY KEY (TRANSTIME,DEVNO,TRANSSERIALNUM)
+);
+ALTER TABLE TRANS_INFO COMMENT '交易信息表';
+
+CREATE TABLE TRANS_RET_CODE
+(
+  ret_code        VARCHAR(10) NOT NULL COMMENT '本地拒绝码',
+  detail_explain  VARCHAR(300) NOT NULL COMMENT '说明',
+  briefly_explain VARCHAR(150) COMMENT '简要说明',
+  trans_status    CHAR(1) COMMENT '1：成功；2：失败；3：超时',
+  CONSTRAINT PK_TRANS_RET_CODE PRIMARY KEY (RET_CODE)
+);
+ALTER TABLE TRANS_RET_CODE COMMENT '本地错误码对照表';
+
+CREATE TABLE TRANS_TYPE
+(
+  NO                  VARCHAR(20) NOT NULL COMMENT '交易类型号',
+  NAME                VARCHAR(50) NOT NULL COMMENT '交易名称',
+  note                VARCHAR(80) COMMENT '备注说明',
+  accounts_check_flag INTEGER DEFAULT 0 COMMENT '对账标志',
+  cashflag            INTEGER COMMENT '现金标识 1:现金 0:非现金',
+  trans_value         INTEGER DEFAULT 0 NOT NULL COMMENT '交易价值',
+  category            VARCHAR(2) COMMENT '交易所属类别',
+  CONSTRAINT PK_TRANS_TYPE PRIMARY KEY (NO)
+);
+ALTER TABLE TRANS_TYPE COMMENT '交易类型表';
+
+CREATE TABLE USR_MONITOR_SELECT
+(
+   USER_NO              VARCHAR(20) NOT NULL COMMENT '人员编号',
+   MONITOR_TYPE         VARCHAR(2) NOT NULL COMMENT '监控类型',
+   ORG_NO               VARCHAR(20) NOT NULL COMMENT '选择监控机构',
+   MONITOR_STATUS       VARCHAR(30) NOT NULL COMMENT '8位—运行状态 5位－模块状态 5位－钞箱状态 5位－网络状态',
+   SORT                 VARCHAR(2) NOT NULL COMMENT '0－升序 1－降序',
+   DEV_NO               VARCHAR(20) COMMENT '机构号查询条件，单条件模糊查询，可以多条件查询(条件为设备号,设备号,...),有个数限制',
+   DEV_CATALOG          VARCHAR(5) NOT NULL COMMENT '0－全部',
+   DEV_VENDOR           VARCHAR(5) NOT NULL COMMENT '0－全部',
+   DEV_WORK_TYPE        DECIMAL(38) NOT NULL COMMENT '0－全部',
+   DEV_AWAY_FLAG        DECIMAL(38) NOT NULL COMMENT '0－全部',
+   DEV_ATMC             VARCHAR(50) NOT NULL COMMENT '0－全部',
+   DEV_OS               VARCHAR(50) NOT NULL COMMENT '0－全部',
+   CARE_LEVEL           CHAR(1) COMMENT '1-重点2-中等3-一般',
+   DEV_LOCATION         VARCHAR(10) COMMENT '设备位置',
+   MONITOR_INTERVAL     VARCHAR(3) COMMENT '刷新频率',
+   ROW_SELECT           VARCHAR(200) COMMENT '显示的列',
+   ROW_UNSELECT         VARCHAR(200) COMMENT '不显示的列',
+   NOTE                 VARCHAR(10) COMMENT '|分割现在存放0全部1现金2非现金设备',
+   GROUP_METHOD         DECIMAL(38) COMMENT '分组方式',
+   STATUS_RELATIONSHIP  DECIMAL(38) COMMENT '运行状态、模块状态、钞箱状态、网络状态之间的关系  0-全部满足 1-满足其一',
+   MONITOR_STATUS_TYPE  DECIMAL(38) COMMENT '监控状态类型 0-自定义模式 1-标准模式',
+   DEFINED_MONITOR_STATUS VARCHAR(30) COMMENT '自定义监控状态 前0-8位为监控状态9-17位为不监控状态',
+   DEV_CASH_FLAG        VARCHAR(10) COMMENT 'DEV_CASH_FLAG',
+  CONSTRAINT PK_USR_MONITOR_SELECT PRIMARY KEY (USER_NO, MONITOR_TYPE)
+);
+ALTER TABLE USR_MONITOR_SELECT COMMENT '远程监控条件表';
+
+CREATE TABLE RUN_STATUS_TABLE
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   DATE_TIME            TIMESTAMP NOT NULL COMMENT '状态改变时间',
+   RUN_STATUS           VARCHAR(2) COMMENT '运行状态',
+   ACTION_NOTE          VARCHAR(2) COMMENT '运行子状态',
+   CONSTRAINT PK_RUN_STATUS_TABLE PRIMARY KEY (DATE_TIME,LOGIC_ID)
+)ENGINE=INNODB
+PARTITION BY RANGE (UNIX_TIMESTAMP(DATE_TIME))
+(
+  PARTITION RUN_STATUS_PART19 VALUES LESS THAN (UNIX_TIMESTAMP('2019-12-31 00:00:00')),
+  PARTITION RUN_STATUS_PART20 VALUES LESS THAN (UNIX_TIMESTAMP('2020-12-31 00:00:00')),
+  PARTITION RUN_STATUS_MAXPART VALUES LESS THAN (MAXVALUE)
+);
+ALTER TABLE RUN_STATUS_TABLE COMMENT '运行状态记录表';
+
+CREATE TABLE DEV_STATUS_TABLE
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   DEV_STATUS           VARCHAR(20) NOT NULL COMMENT '设备总状态HEALTHY(正常) FATAL（故障） WARNING（警告） UNKNOWN（未知）',
+   DEV_TX_STATUS        VARCHAR(20) NOT NULL COMMENT '设备交易状态HEALTHY（正常） PARTSERVICE（部分服务） NOSERVICE（停止服务） UNKNOWN（未知）',
+   DEV_NET_STATUS       VARCHAR(20) NOT NULL COMMENT '设备网络状态（C-V）HEALTHY（正常） FATAL（故障，即离线） WARNING（警告） UNKNOW（未知）',
+   DEV_RUN_STATUS       VARCHAR(20) NOT NULL COMMENT '设备运行状态HEALTHY(正常) CLOSE（关机） MAINTAIN（维护） NETFATAL（P通讯故障） PARTSERVICE（部分服务） NOSERVICE（停止服务） STOP（停用） UNKNOWN（未知）',
+   DEV_CASH_STATUS      CHAR(1) COMMENT '设备现金状态0：正常1：无法取款2：无法存款3：无法存取款',
+   DEV_CRS_STATUS       CHAR(1) COMMENT '存取款状态0：正常1：无法取款2：无法存款3：无法存取款',
+   ACTION_TYPE          VARCHAR(2) COMMENT '运行状态',
+   ACTION_NOTE          VARCHAR(2) COMMENT '运行子状态',
+   DEV_CASHBOX_STATUS   VARCHAR(20) NOT NULL COMMENT '设备钱箱状态OK（充足） LOW（不足） EMPTY（缺炒） FULL（钞满） UNKNOWN（未知）',
+   DEV_MOD_STATUS       VARCHAR(20) NOT NULL COMMENT '设备模块综合状态HEALTHY(正常) FATAL（故障） WARNING（警告） UNKNOWN（未知）',
+   DEV_POTENTIAL_FAULT  VARCHAR(20) COMMENT '设备是否存在潜在故障YES/NO（未使用）',
+   STATUS_LAST_TIME     CHAR(14) COMMENT '上次更新时间（yyyymmddhhmmss）',
+   STATUS_EXPIRE_TIME   CHAR(14) COMMENT '状态超时时间（yyyymmddhhmmss）',
+   TX_TYPE              VARCHAR(15) COMMENT '交易类型CWD-取款 DET-存款',
+   TX_TIME              CHAR(14) COMMENT '交易时间（yyyymmddhhmmss）',
+   ATM_TYPE             CHAR(1) COMMENT '设备类型1 --自动取款机(ATM) 2 --自动存款机(CDM) 3 --自动存取款机(CRS) 4 --多媒体查询机(BSM)',
+   CASH_UNIT_TYPE       CHAR(1) COMMENT '钞箱类型P--Physical,L--Logical',
+   STATUS_INFO_TYPE     CHAR(1) COMMENT '状态报文类型1--定时状态报文 2--强制发送状态报文',
+   COMBIN_UNIT_TYPE     CHAR(1) COMMENT '钞箱合并方案0--按默认方式合并 1--按PUPosName合并 2--按DevCdmCUID合并 3--按PUPosName和DevCdmCUID合并',
+   IDC_DEVICE_STATUS    VARCHAR(15) COMMENT 'IDC模块状态HEALTHY FATAL WARNING NODEVICE UNKNOWN',
+   CIM_DEVICE_STATUS    VARCHAR(15) COMMENT 'CIM模块状态',
+   CDM_DEVICE_STATUS    VARCHAR(15) COMMENT 'CMD模块状态',
+   DEP_DEVICE_STATUS    VARCHAR(15) COMMENT 'DEP模块状态',
+   UPS_DEVICE_STATUS    VARCHAR(15) COMMENT 'UPS模块状态',
+   SPR_DEVICE_STATUS    VARCHAR(15) COMMENT 'SPR模块状态',
+   RPR_DEVICE_STATUS    VARCHAR(15) COMMENT 'RPR模块状态',
+   JPR_DEVICE_STATUS    VARCHAR(15) COMMENT 'JPR模块状态',
+   CHK_DEVICE_STATUS    VARCHAR(15) COMMENT 'CHK模块状态',
+   TTU_DEVICE_STATUS    VARCHAR(15) COMMENT 'TTU模块状态',
+   PBK_DEVICE_STATUS    VARCHAR(15) COMMENT 'PBK模块状态',
+   PIN_DEVICE_STATUS    VARCHAR(15) COMMENT 'PIN模块状态',
+   SIU_DEVICE_STATUS    VARCHAR(15) COMMENT 'SIU模块状态',
+   CAM_DEVICE_STATUS    VARCHAR(15) COMMENT 'CAM模块状态',
+   CRD_DEVICE_STATUS    VARCHAR(15) COMMENT 'CRD_DEVICE_STATUS',
+   CCD_DEVICE_STATUS    VARCHAR(15) COMMENT 'CCD_DEVICE_STATUS',
+   IDC_MEDIA_STATUS     VARCHAR(20) COMMENT '媒体状态PRESENT NOTPRESENT INJAWS JAMMED',
+   IDC_CAPTURE_BIN_STATUS VARCHAR(20) COMMENT '回收箱状态NOBIN BINOK BINHIGH BINFULL',
+   IDC_CAPTURE_BIN_COUNT VARCHAR(10) COMMENT '回收箱数量',
+   CIM_ACCEPT_OR_STATUS VARCHAR(20) COMMENT '接收器状态HEALTHY FATAL UNKNOWN',
+   CIM_ESCROW_STATUS    VARCHAR(20) COMMENT '暂存器状态EMPTY NOEMPTY FULL NOESCROW UNKNOWN',
+   CIM_CASH_UNITS       VARCHAR(20) COMMENT 'Cim钞箱单元状态OK, Warning, Fatal, Unknown',
+   CIM_SHUTTER_STATUS   VARCHAR(40) COMMENT 'CIM挡板集合Closed, Open, Jammed, Unknown, NotSupported',
+   CIM_TRANSPORT_STATUS VARCHAR(40) COMMENT 'CIM通道集合OK, Inoperable, Unknown, NotSupported',
+   CIM_INOUT_POSITION   VARCHAR(40) COMMENT '输入输出位置集合InLeft,InRight,InCenter,InTop,InBottom,InFront,InRear,OutLeft,OutRight, OutCenter, OutTop, OutBottom, OutFront, OutRear',
+   CIM_INPUT_OUTPUT_STATUS VARCHAR(100) COMMENT '输入输出状态EMPTY NOEMPTY UNKNOWN',
+   CIM_PU_ID            VARCHAR(100) COMMENT '物理单元标识（数组）',
+   CIM_PU_COUNT         VARCHAR(100) COMMENT '当前物理单元纸币数（数组）',
+   CIM_PU_CASH_IN_COUNT VARCHAR(100) COMMENT '物理单元废钞数（数组）',
+   CIM_PU_STATUS        VARCHAR(100) COMMENT '逻辑单元状态',
+   CIM_PUPOS_NAME       VARCHAR(200) COMMENT 'CIM物理钞箱物理位置名集合',
+   CIM_CU_ID            VARCHAR(100) COMMENT '逻辑单元标识（数组）',
+   CIM_PCU_ID           VARCHAR(100) COMMENT '物理单元与逻辑单元对应关系（数组）',
+   CIM_CU_NOTE_VALUE    VARCHAR(100) COMMENT '逻辑单元纸币面值（数组）',
+   CIM_CU_CURRENCY      VARCHAR(100) COMMENT '逻辑单元币种（数组）',
+   CIM_CU_COUNT         VARCHAR(100) COMMENT '当前逻辑单元纸币数（数组）',
+   CIM_CU_CASH_IN_COUNT VARCHAR(100) COMMENT '逻辑单元废钞数（数组）',
+   CIM_CU_TYPE          VARCHAR(500) COMMENT '逻辑单元类型',
+   CIM_CU_STATUS        VARCHAR(100) COMMENT 'CIM逻辑单元状态',
+   CDM_SHUTTER_STATUS   VARCHAR(20) COMMENT 'Closed, Open, Jammed, Unknown, NotSupported',
+   CDM_DISPENSER_STATUS VARCHAR(20) COMMENT '退钞状态',
+   CDM_SAFE_DOOR_STATUS VARCHAR(20) COMMENT 'OPEN FATAL CLOSED LOCKED NOTSUPPORTED',
+   CDM_STACKER_STATUS   VARCHAR(20) COMMENT 'CDM暂存器状态',
+   CDM_CASH_UNITS       VARCHAR(20) COMMENT 'OK, Warning, Fatal, Unknown',
+   CDM_TRANSPORT_STATUS VARCHAR(40) COMMENT 'OK, Inoperable, Unknown, NotSupported',
+   CDM_OUT_POSITION     VARCHAR(40) COMMENT 'Left,Right,Center,Top,Bottom,Front,Rear',
+   CDM_INPUT_OUTPUT_STATUS VARCHAR(20) COMMENT 'EMPTY NOTEMPTY UNKNOWN NOTSUPPORTED',
+   CDM_PU_STATUS        VARCHAR(100) COMMENT '物理单元状态(数组)',
+   CDM_PU_ID            VARCHAR(100) COMMENT 'CDM物理单元标识（数组）',
+   CDM_PU_INITIAL_COUNT VARCHAR(100) COMMENT 'CDM当前物理单元纸币数（数组）',
+   CDM_PU_CURRENT_COUNT VARCHAR(100) COMMENT '当前物理单元初始币数',
+   CDM_PU_REJECT_COUNT  VARCHAR(100) COMMENT 'CDM物理单元废钞数（数组）',
+   CDM_PUPOS_NAME       VARCHAR(200) COMMENT 'CDM物理钞箱物理位置名集合',
+   CDM_CU_ID            VARCHAR(100) COMMENT 'CDM逻辑单元标识（数组）',
+   CDM_PCU_ID           VARCHAR(100) COMMENT 'CDM物理单元与逻辑单元对应关系（数组）',
+   CDM_CU_NOTE_VALUE    VARCHAR(100) COMMENT 'CDM逻辑单元纸币面值（数组）',
+   CDM_CU_CURRENCY      VARCHAR(100) COMMENT 'CDM逻辑单元币种（数组）',
+   CDM_CU_CURRENT_COUNT VARCHAR(100) COMMENT 'CDM当前逻辑单元纸币数（数组）',
+   CDM_CU_INITIAL_COUNT VARCHAR(100) COMMENT '当前逻辑单元初始币数',
+   CDM_CU_REJECT_COUNT  VARCHAR(100) COMMENT 'CDM逻辑单元废钞数（数组）',
+   CDM_CU_TYPE          VARCHAR(500) COMMENT 'CDM逻辑单元类型',
+   CDM_CU_STATUS        VARCHAR(100) COMMENT 'CDM逻辑单元状态',
+   DEP_DEPOSIT_STATUS   VARCHAR(20) COMMENT 'OK NOTPRESENT DEPOSITJAMMED SHUTTERJAMMED',
+   DEP_DEPOSIT_CONTAINER_STATUS VARCHAR(20) COMMENT 'OK HIGH FULL NOTPRESENT',
+   DEP_ENVELOPE_SUPPLY_STATUS VARCHAR(20) COMMENT 'OK LOW EMPTY',
+   DEP_ENVELOPE_STATUS  VARCHAR(20) COMMENT 'READY NOTREADY',
+   DEP_PRINTER_STATUS   VARCHAR(20) COMMENT 'READY NOTREADY',
+   DEP_PRINTER_INK      VARCHAR(20) COMMENT 'OK LOW EMPTY',
+   DEP_DEPOSITED_ITEMS  VARCHAR(10) COMMENT '已存信封数量',
+   DEP_TRANSPORT_STATUS VARCHAR(20) COMMENT '传送部件状态',
+   DEP_SHUTTER_STATUS   VARCHAR(20) COMMENT '挡板状态',
+   UPS_LOW              VARCHAR(20) COMMENT 'TRUE FALSE',
+   UPS_ENGAGED          VARCHAR(20) COMMENT 'TRUE FALSE',
+   UPS_POWERING         VARCHAR(20) COMMENT 'TRUE FALSE',
+   UPS_RECOVERED        VARCHAR(20) COMMENT 'TRUE FALSE',
+   SPR_MEDIA_STATUS     VARCHAR(20) COMMENT 'NOPRESENT PRESENT INJAMS JAMMED',
+   SPR_PAPER_STATUS     VARCHAR(20) COMMENT 'FULL LOW OUT UNKNOWN',
+   SPR_RETRACT_BIN_STATUS VARCHAR(20) COMMENT 'NOBIN OK BINHIGH BINFULL BINUNKNOWN',
+   SPR_INK_STATUS       VARCHAR(20) COMMENT '墨水状态',
+   SPR_TONER_STATUS     VARCHAR(20) COMMENT '色带状态',
+   SPR_STACK_COUNT      VARCHAR(10) COMMENT '暂存数量',
+   CHK_MEDIA_STATUS     VARCHAR(20) COMMENT 'NOPRESENT PRESENT INJAMS JAMMED',
+   CHK_INK_STATUS       VARCHAR(20) COMMENT 'NOBIN OK BINHIGH BINFULL BINUNKNOWN',
+   RPR_MEDIA_STATUS     VARCHAR(20) COMMENT 'NOPRESENT PRESENT INJAMS JAMMED',
+   RPR_PAPER_STATUS     VARCHAR(20) COMMENT 'FULL LOW OUT UNKNOWN',
+   RPR_RETRACT_BIN_STATUS VARCHAR(20) COMMENT 'NOBIN OK  BINHIGH BINFULL BINUNKNOWN',
+   RPR_INK_STATUS       VARCHAR(20) COMMENT 'RPR墨水状态',
+   RPR_TONER_STATUS     VARCHAR(20) COMMENT 'RPR色带状态',
+   JPR_MEDIA_STATUS     VARCHAR(20) COMMENT 'NOPRESENT PRESENT INJAMS JAMMED',
+   JPR_PAPER_STATUS     VARCHAR(20) COMMENT 'FULL LOW OUT UNKNOWN',
+   JPR_INK_STATUS       VARCHAR(20) COMMENT 'JPR墨水状态',
+   JPR_TONER_STATUS     VARCHAR(20) COMMENT 'JPR色带状态',
+   PBK_MEDIA_STATUS     VARCHAR(20) COMMENT 'NOPRESENT  PRESENT INJAMS JAMMED',
+   PBK_INK_STATUS       VARCHAR(20) COMMENT 'FULL LOW OUT UNKNOWN',
+   PBK_TONER_STATUS     VARCHAR(20) COMMENT 'FULL LOW OUT UNKNOWN',
+   PBK_RETRACT_BIN_STATUS VARCHAR(20) COMMENT 'NOBIN OK BINHIGH BINFULL  BINUNKNOWN',
+   PBK_RETRACT_BIN_COUNT VARCHAR(10) COMMENT 'PBK回收单元数量',
+   SIU_OPERATOR_SWITCH  VARCHAR(20) COMMENT 'NOSENSOR ERROR RUN MAINTENANCE SUPERVISOR',
+   SIU_TERMINAL_TAMPER  VARCHAR(20) COMMENT 'NOSENSOR ERROR ON OFF',
+   SIU_ALARM_TAMPER     VARCHAR(20) COMMENT 'NOSENSOR ERROR ON OFF',
+   SIU_SEISMIC          VARCHAR(20) COMMENT 'NOSENSOR ERROR ON OFF',
+   SIU_PROXIMITY_DETECTOR VARCHAR(20) COMMENT 'NOSENSOR ERROR ON OFF',
+   SIU_HEAT             VARCHAR(20) COMMENT 'NOSENSOR  ERROR ON OFF',
+   SIU_AMBIENT_LIGHT    VARCHAR(20) COMMENT 'NOSENSOR ERROR VERYLIGHT LIGHT MEDIUMLIGHT DARK VERYDARK',
+   SIU_CABINET_STATE    VARCHAR(20) COMMENT '机箱状态',
+   SIU_SAFE_STATE       VARCHAR(20) COMMENT 'SIU安全门状态',
+   SIU_SHIELD_STATE     VARCHAR(20) COMMENT 'SIU档板状态',
+   SIU_BILL_ACCEPTOR_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   SIU_CARD_READER_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   SIU_CHEQUE_UNIT_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   SIU_COIN_DISPENSER_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   SIU_NOTE_DISPENSER_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   SIU_ENVELOPE_DEPOSITORY_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   SIU_PASSBOOK_PRINTER_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL  NODEVICE',
+   SIU_PINPAD_LIGHT     VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   SIU_RECEIPT_PRINTER_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   SIU_ENVELOPE_DISPENSER_LIGHT VARCHAR(20) COMMENT 'HEALTHY FATAL NODEVICE',
+   CAM_CAMERA_AREA      VARCHAR(40) COMMENT 'room,person,exit_slot',
+   CAM_CAMERA_AREA_STATUS VARCHAR(40) COMMENT 'HEALTHY FATAL NODEVICE',
+   CAM_MEDIA_STATUS     VARCHAR(40) COMMENT 'LOW HIGH FULL',
+   CAM_PICTURE_STAKEN   VARCHAR(10) COMMENT '已获取图像',
+   ICC_DEVICE_STATUS    VARCHAR(15) COMMENT 'ICC_DEVICE_STATUS',
+   ICC_MEDIA_STATUS     VARCHAR(20) COMMENT 'ICC_MEDIA_STATUS',
+   ISC_DEVICE_STATUS    VARCHAR(15) COMMENT 'ISC_DEVICE_STATUS',
+   ISC_MEDIA_STATUS     VARCHAR(20) COMMENT 'ISC_MEDIA_STATUS',
+   IRC_DEVICE_STATUS    VARCHAR(15) COMMENT 'IRC_DEVICE_STATUS',
+   IRC_MEDIA_STATUS     VARCHAR(20) COMMENT 'IRC_MEDIA_STATUS',
+   FPI_DEVICE_STATUS    VARCHAR(15) COMMENT 'FPI_DEVICE_STATUS',
+   DPR_DEVICE_STATUS    VARCHAR(15) COMMENT '盖章模块状态',
+   BCR_DEVICE_STATUS    VARCHAR(15) COMMENT '二维码扫描仪模块状态',
+   PJC_RET_CODE         VARCHAR(20) COMMENT 'PJC故障码',
+   PJC_CRU_STATUS       VARCHAR(20) COMMENT 'PJC模块主状态，Healthy-正常（进程存在），Fatal-失败',
+   PJC_EJ_SENDTIME      VARCHAR(20) COMMENT 'PJC流水上传时间',
+   PJC_EJ_DATE          VARCHAR(20) COMMENT 'PJC上传流水日期',
+   PJC_EJ_NSEND         VARCHAR(20) COMMENT '剩余未发送缓存流水情况，Without-未采集到流水，Ok-未发送流水数据为0，High-未发送流水数据未达到阀值，Full-未发送流水数据大于等于阀值',
+   CDM_CU_number        VARCHAR(100) COMMENT '取款箱逻辑钞箱索引号',
+   CIM_CU_number        VARCHAR(100) COMMENT '存款箱逻辑钞箱索引号',
+   CONSTRAINT PK_DEV_STATUS_TABLE PRIMARY KEY (DEV_NO)
+);
+ALTER TABLE DEV_STATUS_TABLE COMMENT '设备模块状态表 ';
+
+CREATE TABLE DEV_STATUS_TABLE_EXPAND
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   CRD_DISPENSER        VARCHAR(20) COMMENT 'OK State Stop Unknown',
+   CRD_TRANSPORT        VARCHAR(20) COMMENT 'OK Inop Unknown NotSupported',
+   CRD_MEDIA            VARCHAR(20) COMMENT 'Present NotPresent Jammed NotSupported Unknown Exiting',
+   CRD_SHUTTER          VARCHAR(20) COMMENT 'Closed Open Jammed  Unknown NotSupported',
+   CRD_SUPPLYBIN_STATUS VARCHAR(20) COMMENT '0-ok;1-low;2-empty;3-inoperable 不可用;4-missing;5-unknown',
+   CRD_RETAINBIN_STATUS VARCHAR(20) COMMENT '0-ok;1-high;2-full;3-inoperable 不可用;4-missing;5-unknown',
+   CRD_CU_ID            VARCHAR(100) COMMENT '卡单元ID集合',
+   CRD_CU_NAME          VARCHAR(200) COMMENT '卡单元名集合',
+   CRD_CU_STATUS        VARCHAR(200) COMMENT 'OK Low Empty Inop Missing High Full Unknown',
+   CRD_CU_TYPE          VARCHAR(200) COMMENT 'SupplyBin RetainBin',
+   CRD_CU_COUNT         VARCHAR(100) COMMENT '卡单元当前消耗卡张数集合',
+   CRD_CU_INITIAL_COUNT VARCHAR(100) COMMENT '卡单元初始张数集合',
+   CRD_CU_RETAIN_COUNT  VARCHAR(100) COMMENT '回收匣卡张数的集合',
+   CCD_DISPENSER        VARCHAR(20) COMMENT 'CCD_DISPENSER',
+   CCD_TRANSPORT        VARCHAR(20) COMMENT 'CCD_TRANSPORT',
+   CCD_MEDIA            VARCHAR(20) COMMENT 'CCD_MEDIA',
+   CCD_SHUTTER          VARCHAR(20) COMMENT 'CCD_SHUTTER',
+   CCD_SUPPLYBIN_STATUS VARCHAR(20) COMMENT 'CCD_SUPPLYBIN_STATUS',
+   CCD_RETAINBIN_STATUS VARCHAR(20) COMMENT 'CCD_RETAINBIN_STATUS',
+   CCD_CU_ID            VARCHAR(100) COMMENT 'CCD_CU_ID',
+   CCD_CU_NAME          VARCHAR(200) COMMENT 'CCD_CU_NAME',
+   CCD_CU_STATUS        VARCHAR(200) COMMENT 'CCD_CU_STATUS',
+   CCD_CU_TYPE          VARCHAR(200) COMMENT 'CCD_CU_TYPE',
+   CCD_CU_COUNT         VARCHAR(100) COMMENT 'CCD_CU_COUNT',
+   CCD_CU_INITIAL_COUNT VARCHAR(100) COMMENT 'CCD_CU_INITIAL_COUNT',
+   CCD_CU_RETAIN_COUNT  VARCHAR(100) COMMENT 'CCD_CU_RETAIN_COUNT',
+   DPR_MEDIA_STATUS     VARCHAR(15) COMMENT '盖章模块media状态',
+   DPR_SUPPLY_LEVEL_STATUS VARCHAR(15) COMMENT '上位纸张供应的状态',
+   DPR_SUPPLY_LOWER_STATUS VARCHAR(15) COMMENT '下位纸张供应量状态',
+   DPR_SUPPLY_EXTERNAL_STATUS VARCHAR(15) COMMENT '外部纸张供应的状态',
+   DPR_SUPPLY_AUX_STATUS VARCHAR(15) COMMENT '备用纸张供应状态',
+   DPR_RETRACT_BIN_STATUS VARCHAR(15) COMMENT '回收箱状态',
+   DPR_TONER_STATUS     VARCHAR(15) COMMENT '色带状态',
+   DPR_INK_STATUS       VARCHAR(15) COMMENT '墨水状态',
+   BCR_SCANNER_STATUS   VARCHAR(15) COMMENT '二维码扫描仪的media状态',
+   NTS_CACHE_COUNT      VARCHAR(10) COMMENT '冠字号缓存记录数',
+   NTS_LAST_BUILD_TIME  VARCHAR(20) COMMENT 'Agent收到的最近一条冠字号报文的时间',
+   CONSTRAINT PK_DEV_STATUS_TABLE_EXPAND PRIMARY KEY (DEV_NO)
+);
+ALTER TABLE DEV_STATUS_TABLE_EXPAND COMMENT '设备模块状态扩展表';
+
+CREATE TABLE DEV_FAULTNO_TABLE
+(
+  dev_no       VARCHAR(20) NOT NULL COMMENT '设备号',
+  idc_fault_no VARCHAR(36) COMMENT '读卡器模块对应的故障号',
+  cim_fault_no VARCHAR(36) COMMENT '存款模块对应的故障号',
+  cdm_fault_no VARCHAR(36) COMMENT '取款模块对应的故障号',
+  dep_fault_no VARCHAR(36) COMMENT '信封模块对应的故障号',
+  ups_fault_no VARCHAR(36) COMMENT '不间断电源模块对应的故障号',
+  spr_fault_no VARCHAR(36) COMMENT '结单打印模块对应的故障号',
+  rpr_fault_no VARCHAR(36) COMMENT '凭条打印机模块对应的故障号',
+  jpr_fault_no VARCHAR(36) COMMENT '日志打印机模块对应的故障号',
+  chk_fault_no VARCHAR(36) COMMENT '支票读扫描模块对应的故障号',
+  ttu_fault_no VARCHAR(36) COMMENT '文本终端单元模块对应的故障号',
+  pbk_fault_no VARCHAR(36) COMMENT '存折打印模块对应的故障号',
+  pin_fault_no VARCHAR(36) COMMENT '密码键盘模块对应的故障号',
+  siu_fault_no VARCHAR(36) COMMENT '传感器模块对应的故障号',
+  cam_fault_no VARCHAR(36) COMMENT '照相机模块对应的故障号',
+  icc_fault_no VARCHAR(36) COMMENT '', 
+  isc_fault_no VARCHAR(36) COMMENT '',
+  irc_fault_no VARCHAR(36) COMMENT '',
+  fpi_fault_no VARCHAR(36) COMMENT '',
+  crd_fault_no VARCHAR(36) COMMENT '',
+  ccd_fault_no VARCHAR(36) COMMENT '',
+  dpr_fault_no VARCHAR(36) COMMENT '盖章模块对应的故障号',
+  bcr_fault_no VARCHAR(36) COMMENT '二维码扫描仪模块对应的故障号',
+ CONSTRAINT PK_DEV_FAULTNO_TABLE PRIMARY KEY (DEV_NO)
+);
+ALTER TABLE DEV_FAULTNO_TABLE COMMENT  '设备当前故障表';
+
+CREATE TABLE DEV_STATUS_CODE
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   IDC_CODE             VARCHAR(15) COMMENT '读卡器模块对应故障码',
+   CIM_CODE             VARCHAR(15) COMMENT '存款模块对应故障码',
+   CDM_CODE             VARCHAR(15) COMMENT '取款模块对应故障码',
+   DEP_CODE             VARCHAR(15) COMMENT '信封模块对应故障码',
+   UPS_CODE             VARCHAR(15) COMMENT '不间断电源模块对应故障码',
+   SPR_CODE             VARCHAR(15) COMMENT '结单打印模块对应故障码',
+   RPR_CODE             VARCHAR(15) COMMENT '凭条打印机模块对应故障码',
+   JPR_CODE             VARCHAR(15) COMMENT '日志打印机模块对应故障码',
+   CHK_CODE             VARCHAR(15) COMMENT '支票读扫描模块对应故障码',
+   TTU_CODE             VARCHAR(15) COMMENT '文本终端单元模块对应故障码',
+   PBK_CODE             VARCHAR(15) COMMENT '存折打印机模块对应故障码',
+   PIN_CODE             VARCHAR(15) COMMENT '密码键盘模块对应故障码',
+   SIU_CODE             VARCHAR(15) COMMENT '传感器模块对应故障码',
+   CAM_CODE             VARCHAR(15) COMMENT '照相机模块对应故障码',
+   ICC_CODE             VARCHAR(15) COMMENT 'ICC_CODE',
+   ISC_CODE             VARCHAR(15) COMMENT 'ISC_CODE',
+   IRC_CODE             VARCHAR(15) COMMENT 'IRC_CODE',
+   FPI_CODE             VARCHAR(15) COMMENT 'FPI_CODE',
+   CRD_CODE             VARCHAR(15) COMMENT 'CRD_CODE',
+   CCD_CODE             VARCHAR(15) COMMENT 'CCD_CODE',
+   DPR_CODE             VARCHAR(15) COMMENT '盖章模块对应故障码',
+   BCR_CODE             VARCHAR(15) COMMENT '二维码扫描仪模块对应故障码',
+   CONSTRAINT PK_DEV_STATUS_CODE PRIMARY KEY (DEV_NO)
+);
+ALTER TABLE DEV_STATUS_CODE COMMENT '模块当前故障码表';
+
+CREATE TABLE CARD_TYPE_TABLE
+(
+  NO        VARCHAR(20) NOT NULL COMMENT '卡序号',
+  card_type VARCHAR(20) COMMENT '卡类型',
+ CONSTRAINT PK_CARD_TYPE_TABLE PRIMARY KEY (NO)
+);
+ALTER TABLE CARD_TYPE_TABLE COMMENT '卡类型表';
+
+CREATE TABLE DEV_HARDWARE_INFO
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   BIOS_VERSION         VARCHAR(120) COMMENT 'BIOS版本号',
+   HARDWARE_CPU         VARCHAR(50) COMMENT '处理器',
+   HARDWARE_MEMORY      VARCHAR(40) COMMENT '内存',
+   HARDWARE_HARDISK     VARCHAR(40) COMMENT '硬盘',
+   FIRMWARE_IDC         VARCHAR(60) COMMENT 'FIRMWARE_IDC',
+   FIRMWARE_CDM         VARCHAR(60) COMMENT 'FIRMWARE_CDM',
+   FIRMWARE_CIM         VARCHAR(60) COMMENT 'FIRMWARE_CIM',
+   FIRMWARE_PIN         VARCHAR(60) COMMENT 'FIRMWARE_PIN',
+   FIRMWARE_JPR         VARCHAR(60) COMMENT 'FIRMWARE_JPR',
+   FIRMWARE_RPR         VARCHAR(60) COMMENT 'FIRMWARE_RPR',
+   FIRMWARE_SIU         VARCHAR(60) COMMENT 'FIRMWARE_SIU',
+   FIRMWARE_TTU         VARCHAR(60) COMMENT 'FIRMWARE_TTU',
+   FIRMWARE_VDM         VARCHAR(60) COMMENT 'FIRMWARE_VDM',
+   FIRMWARE_BV          VARCHAR(60) COMMENT 'FIRMWARE_BV',
+   FIRMWARE_ICC         VARCHAR(60) COMMENT 'FIRMWARE_ICC',
+   FIRMWARE_ISC         VARCHAR(60) COMMENT 'FIRMWARE_ISC',
+   FIRMWARE_IRC         VARCHAR(60) COMMENT 'FIRMWARE_IRC',
+   FIRMWARE_FPI         VARCHAR(60) COMMENT 'FIRMWARE_FPI',
+   FIRMWARE_CRD         VARCHAR(60) COMMENT 'FIRMWARE_CRD',
+   FIRMWARE_CCD         VARCHAR(60) COMMENT 'FIRMWARE_CCD',
+   FIRMWARE_DPR         VARCHAR(60) COMMENT 'FIRMWARE_DPR(盖章模块)',
+   FIRMWARE_BCR         VARCHAR(60) COMMENT 'FIRMWARE_BCR(二维码扫描仪模块)',
+   CONSTRAINT PK_DEV_HARDWARE_INFO PRIMARY KEY (DEV_NO)
+);
+ALTER TABLE DEV_HARDWARE_INFO COMMENT '设备硬件信息表';
+
+CREATE TABLE DEV_WORK_TIME_TABLE
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号（UUID）',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   DATES_TYPE           VARCHAR(20) NOT NULL COMMENT '日期类型：Special Monday Tuesday Wednesday Thursday Friday Staturday Sunday',
+   DATES_TYPE_STATEMENT VARCHAR(80) COMMENT '日期类型说明 Special – 特殊日期（需要特别指定工作日的，包括假日） Monday 星期一 Tuesday 星期二 Wednesday 星期三 Thursday 星期四 Friday 星期五 Staturday 星期六 Sunday 星期天',
+   DATES                VARCHAR(8) COMMENT '如果为空，则为日期类型为周末或者工作日',
+   businessflag         VARCHAR(1) COMMENT '是否营业标志 Y:营业 N:不营业',
+   START_TIME           VARCHAR(24) COMMENT '工作开始时间,以|分割，精确到分，最多五个时间点',
+   END_TIME             VARCHAR(24) COMMENT '工作结束时间，以|分割，精确到分，最多五个时间点',
+   CONSTRAINT PK_DEV_WORK_TIME_TABLE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE DEV_WORK_TIME_TABLE COMMENT '设备工作时间表';
+
+CREATE TABLE DEV_STOP_TABLE
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '逻辑主键',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   SET_TIME             CHAR(19) NOT NULL COMMENT '设置停机时间',
+   STOPDEV_START_TIME   CHAR(16) NOT NULL COMMENT '停机开始时间(yyyy-mm-dd HH:MM）',
+   STOPDEV_END_TIME     CHAR(16) NOT NULL COMMENT '停机结束时间(YYYY-MM-DD HH:MM)',
+   STOPDEV_TYPE         INT NOT NULL COMMENT '停机原因种类 (0:放假 1:装修 2:停电 3:设备故障未修复 4:其他 )',
+   STOPDEV_REASON       VARCHAR(200) NOT NULL COMMENT '停机原因',
+   STATUS               INT NOT NULL COMMENT '停机状态(0：停机未开始 1：正在停机 2：停机结束)',
+   OP_NO                VARCHAR(20) COMMENT '操作员',
+   ISAFTER              INT NOT NULL DEFAULT 0 COMMENT '事前或事后停机(0：事前停机  1：事后停机)',
+   CONSTRAINT PK_DEV_STOP_TABLE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE DEV_STOP_TABLE COMMENT '设备停机表';
+
+-- 版本管理相关
+CREATE TABLE APPS_INFO_TABLE
+(
+  apps_id       VARCHAR(40) NOT NULL COMMENT '应用标识',
+  apps_name     VARCHAR(50) NOT NULL COMMENT '应用名称',
+  apps_type     CHAR(1) NOT NULL COMMENT '应用类型（1：全渠道统一平台  ，2：应用APP（客户端），3：应用APP（服务端），4：WSAP应用工程）',
+  apps_catalog  VARCHAR(5) NOT NULL COMMENT '业务分类(与APPS_CATALOG_TABLE中的LOGIC_ID相同)',
+  apps_status   CHAR(1) NOT NULL COMMENT '应用状态1：可用 2：禁用 3：删除',
+  logo_path     VARCHAR(400) COMMENT 'logo路径',
+  add_user      VARCHAR(20) COMMENT '添加人员',
+  add_time      VARCHAR(20) COMMENT '添加时间',
+  description   VARCHAR(1000) COMMENT '应用描述',
+  CONSTRAINT PK_APPS_INFO_TABLE PRIMARY KEY (APPS_ID)
+ );
+ALTER TABLE APPS_INFO_TABLE COMMENT  '应用市场信息表';
+
+CREATE TABLE APPS_CATALOG_TABLE
+(
+  logic_id     VARCHAR(5) NOT NULL COMMENT '业务编号(从10001开始)',
+  apps_catalog VARCHAR(50) NOT NULL COMMENT '业务名称',
+  CONSTRAINT PK_APPS_CATALOG_TABLE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE APPS_CATALOG_TABLE COMMENT '业务分类表';
+
+CREATE TABLE APPS_VERSION_TABLE
+(
+  logic_id              VARCHAR(40) NOT NULL COMMENT '编号',
+  apps_id               VARCHAR(40) NOT NULL COMMENT '应用标识',
+  version_bus_no        VARCHAR(20) NOT NULL COMMENT '业务版本号',
+  version_app_no        VARCHAR(20) NOT NULL COMMENT '应用版本号',
+  version_status        CHAR(1) NOT NULL COMMENT '版本状态（1:可用  ，2:不可用， 3:已作废)',
+  version_client_path   VARCHAR(400) COMMENT '版本更新到客户端路径',
+  add_user              VARCHAR(20) COMMENT '版本制作人',
+  add_time              VARCHAR(20) COMMENT '版本制作时间',
+  version_description   VARCHAR(500) COMMENT '版本描述',
+  version_file_md5      VARCHAR(64) COMMENT '文件md5值',
+  version_seq_no        VARCHAR(20) COMMENT '应用版本序列号',
+  versionfilepath       VARCHAR(500) COMMENT '绝对路径形式存储版本对应文件的存放位置',
+  VERSIONNOTIFYFLAG     CHAR(1) DEFAULT '0' NOT NULL COMMENT '版本通知标志 0：未通知/未加载;1：正在通知/已加载;2：已通知成功;3：已通知，版本包非法',
+  TAKETIME              VARCHAR(20) COMMENT '通知任务加载时间 YYYY-MM-DD hh:mm:ss',
+  CONSTRAINT PK_APPS_VERSION_TABLE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE APPS_VERSION_TABLE COMMENT '应用版本表';
+
+CREATE TABLE APPS_MODEL_TABLE
+(
+  logic_id    VARCHAR(40) NOT NULL COMMENT '标杆编号',
+  model_name  VARCHAR(20) NOT NULL COMMENT '标杆名称',
+  model_upper VARCHAR(40) COMMENT '上级标杆',
+  model_type  CHAR(1) NOT NULL COMMENT '标杆类型',
+  org_no      VARCHAR(40) NOT NULL COMMENT '机构号',
+  model_user  VARCHAR(20) COMMENT '标杆制作人',
+  model_time  VARCHAR(20) COMMENT '标杆制作时间',
+  description VARCHAR(500) COMMENT '标杆描述',
+  CONSTRAINT PK_APPS_MODEL_TABLE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE APPS_MODEL_TABLE COMMENT '标杆基础信息表';
+
+
+CREATE TABLE APPS_MODEL_RANGE_INFO
+(
+  logicid VARCHAR(40) NOT NULL COMMENT '编号',
+  modelid VARCHAR(40) NOT NULL COMMENT '标杆编号',
+  orgno   VARCHAR(40) COMMENT '机构号',
+  catalog VARCHAR(5) COMMENT '设备类型',
+  vendor  VARCHAR(5) COMMENT '设备品牌',
+  TYPE    VARCHAR(5) COMMENT '设备型号',
+  devno   VARCHAR(40) COMMENT '设备号',
+ CONSTRAINT PK_APPS_MODEL_RANGE_INFO PRIMARY KEY (LOGICID)
+);
+ALTER TABLE APPS_MODEL_RANGE_INFO COMMENT '标杆设备范围表';
+
+CREATE TABLE APPS_MODEL_VERSION_TABLE
+(
+  logic_id      VARCHAR(40) NOT NULL COMMENT '编号',
+  model_id      VARCHAR(40) NOT NULL COMMENT '标杆标识',
+  apps_id       VARCHAR(40) NOT NULL COMMENT '应用标识',
+  version_no    VARCHAR(20) NOT NULL COMMENT '应用版本号',
+  update_mode   CHAR(1) NOT NULL COMMENT '生效方式（1：立即生效，2：指定时间生效，3：重启生效）',
+  update_time   VARCHAR(20) COMMENT '生效时间',
+  syn_mode      CHAR(1) NOT NULL COMMENT '同步方式（1：立即同步 ，2：开机同步，3：闲时同步）',
+  syn_starttime VARCHAR(20) COMMENT '同步开始时间',
+  CONSTRAINT PK_APPS_MODEL_VERSION_TABLE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE APPS_MODEL_VERSION_TABLE COMMENT '标杆版本信息表';
+
+CREATE TABLE APPS_REMOTEVERSIONINFO
+(
+  devno        VARCHAR(20) NOT NULL COMMENT '设备号',
+  appsid       VARCHAR(40) NOT NULL COMMENT '应用标识',
+  versionappno VARCHAR(20) NOT NULL COMMENT '当前应用版本号',
+  notifystatus CHAR(1) COMMENT '通知APPServer状态(1:通知 0：未通知)',
+  notifytime   VARCHAR(20) COMMENT '通知APPServer记录修改时间(yyyy-MM-dd HH:mm:ss)',
+  effectstatus CHAR(1) COMMENT '生效状态(0:未生效 1：已生效)',
+  effecttime   VARCHAR(20) COMMENT '生效状态记录修改时间(yyyy-MM-dd HH:mm:ss',
+  CONSTRAINT PK_APPS_REMOTEVERSIONINFO PRIMARY KEY (DEVNO, APPSID, VERSIONAPPNO)
+);
+ALTER TABLE APPS_REMOTEVERSIONINFO COMMENT '版本同步结果表';
+
+CREATE TABLE APPS_MODEL_SYNC_TASK
+(
+  logicid  VARCHAR(40) NOT NULL COMMENT '编号',
+  tasktype VARCHAR(2) NOT NULL COMMENT '任务类型（1：设备版本 9：广告）',
+  syncunit VARCHAR(20) COMMENT '同步设备号',
+  TASKSTARTTIME VARCHAR(20) COMMENT '作业启动时间YYYY-MM-DD hh:mm:ss',
+  adduser  VARCHAR(20) COMMENT '添加人员',
+  ADDTIME  VARCHAR(20) COMMENT '添加时间',
+  taskflag CHAR(1) NOT NULL COMMENT '任务标识',
+  TAKEFLAG  CHAR(1) DEFAULT '0' COMMENT '默认为0,0：未加载,1：已加载',
+  TAKETIME  VARCHAR(20) COMMENT 'YYYY-MM-DD hh:mm:ss',
+  SYNCOUNT  INTEGER DEFAULT  0 COMMENT '默认0',
+  FINISHTIME  VARCHAR(20) COMMENT 'YYYY-MM-DD hh:mm:ss',
+   CONSTRAINT PK_APPS_MODEL_SYNC_TASK PRIMARY KEY (logicid)
+);
+ALTER TABLE APPS_MODEL_SYNC_TASK COMMENT  '信息同步任务表';
+
+-- 广告撤销表
+CREATE TABLE ADS_CANCEL_INFO
+(
+  ads_id    VARCHAR(40) NOT NULL COMMENT '广告编号',
+  devno     VARCHAR(20) NOT NULL COMMENT '设备号',
+  adduser   VARCHAR(20) COMMENT '添加人员',
+  addtime   VARCHAR(20) COMMENT '添加时间YYYY-MM-DD hh:mm:ss',
+  taskflag  CHAR(1) COMMENT '任务标志 0未通知 1已通知',
+  CONSTRAINT PK_ADS_CANCEL_INFO PRIMARY KEY (ads_id, devno)
+);
+ALTER TABLE ADS_CANCEL_INFO COMMENT '广告撤销表';
+
+-- 广告管理相关
+CREATE TABLE ADS_SPACE_TABLE
+(
+  id      VARCHAR(40) NOT NULL COMMENT '广告位编号',
+  NAME    VARCHAR(300) NOT NULL COMMENT '广告位名称',
+  TYPE    VARCHAR(2) NOT NULL COMMENT '广告类型（1：图片 2：视频 3：文字）',
+  Play_order VARCHAR(8) COMMENT '播放序号',
+  STATUS  CHAR(1) NOT NULL COMMENT '广告位状态（1：可用 2：禁用 3：删除）',
+  adduser VARCHAR(20) COMMENT '广告位添加人员',
+  ADDTIME VARCHAR(20) COMMENT '广告位添加时间（yyyy-MM-dd hh:mm:ss）',
+  adstypeurl VARCHAR(60) COMMENT '终端广告配置节点名',
+  CONSTRAINT PK_ADS_SPACE_TABLE PRIMARY KEY (ID)
+);
+ALTER  TABLE ADS_SPACE_TABLE COMMENT '广告位信息表';
+
+CREATE TABLE ADS_CLICK_DETAIL
+(
+  dev_no    VARCHAR(20) NOT NULL COMMENT '设备号',
+  TIME      VARCHAR(19) NOT NULL COMMENT '时间',
+  adv_no    VARCHAR(36) NOT NULL COMMENT '广告编号',
+  card_no   VARCHAR(30) NOT NULL COMMENT '卡号',
+  card_type CHAR(1) NOT NULL COMMENT '卡类型编号',
+  user_sex  CHAR(1) COMMENT '用户性别',
+  user_age  VARCHAR(3) COMMENT '用户年龄',
+  CONSTRAINT PK_ADS_CLICK_DETAIL PRIMARY KEY (DEV_NO, TIME, ADV_NO)
+);
+ALTER TABLE ADS_CLICK_DETAIL COMMENT '广告点击详情表';
+
+CREATE TABLE ADS_RESOURCE
+(
+  NO          VARCHAR(36) NOT NULL COMMENT '资源编号',
+  NAME        VARCHAR(50) COMMENT '资源名称',
+  TYPE        VARCHAR(10) NOT NULL COMMENT '资源类型（1：图片，2：视频，3：文字）',
+  path        VARCHAR(200) COMMENT '资源路径',
+  description VARCHAR(100) COMMENT '资源描述',
+  width       INTEGER COMMENT '宽',
+  height      INTEGER COMMENT '高',
+  duration    INTEGER COMMENT '(视频广告）时长，单位秒',
+  TEXT        VARCHAR(1024) COMMENT '(文字广告）内容',
+  ADDUSER     VARCHAR(20) COMMENT '添加人',
+  ADDTIME     VARCHAR(20) COMMENT '添加时间yyyy-MM-dd hh:mm:ss',
+   CONSTRAINT PK_ADS_RESOURCE PRIMARY KEY (NO)
+);
+ALTER TABLE ADS_RESOURCE COMMENT '广告资源表';
+
+CREATE TABLE ADS_INFO_TABLE
+(
+  ads_id          VARCHAR(40) NOT NULL COMMENT '广告编号，格式为1.0.1',
+  ads_space_id    VARCHAR(40) NOT NULL COMMENT '广告位编号',
+  NAME        VARCHAR(50) NOT NULL COMMENT '广告名称',
+  resource_id VARCHAR(36) NOT NULL COMMENT '资源编号',
+  play_start_time VARCHAR(20) COMMENT '播放开始时间',
+  play_end_time VARCHAR(20) COMMENT '播放结束时间',
+  play_time VARCHAR(20) COMMENT '播放时长',
+  adsfilepath VARCHAR(500) COMMENT '广告包文件路径（绝对路径）',
+  description VARCHAR(500) COMMENT '广告描述',
+  ADDUSER VARCHAR(20) COMMENT '添加人员',
+  ADDTIME VARCHAR(20) COMMENT '添加时间yyyy-MM-dd hh:mm:ss',
+  VERSIONNOTIFYFLAG     CHAR(1) DEFAULT '0' NOT NULL COMMENT '版本通知标志 0：未通知/未加载;1：正在通知/已加载;2：已通知成功;3：已通知，版本包非法',
+  TAKETIME              VARCHAR(20) COMMENT '通知任务加载时间 YYYY-MM-DD hh:mm:ss',
+  ads_seq_no varchar(9) not null comment '广告版本序号',
+  ADS_STATUS char(1) NOT NULL DEFAULT '1' COMMENT '广告状态 1可用 2已暂停 3已作废 4已删除',
+  CONSTRAINT PK_ADS_INFO_TABLE PRIMARY KEY (ads_id)
+);
+ALTER TABLE ADS_INFO_TABLE COMMENT '广告信息表';
+
+CREATE TABLE ADS_REMOTE_TABLE
+(
+  ads_id       VARCHAR(40) NOT NULL COMMENT '广告编号',
+  remote_range        CHAR(1) COMMENT '投放范围（1：投放试运行设备 2：投放所有设备 3：取消投放）',
+  method       CHAR(1) COMMENT '生效方式（1：立即生效 2：指定时间生效）',
+  valid_time   VARCHAR(20) COMMENT '生效时间（立即生效则记录当前时间）',
+  CONSTRAINT PK_ADS_REMOTE_TABLE PRIMARY KEY (ADS_ID)
+);
+ALTER TABLE ADS_REMOTE_TABLE COMMENT '广告投放表';
+
+CREATE TABLE ADS_REMOTEVERSIONINFO
+(
+  devno        VARCHAR(20) NOT NULL COMMENT '设备号',
+  ADS_ID       VARCHAR(40) NOT NULL COMMENT '广告标识',
+  notifystatus CHAR(1) NOT NULL COMMENT '通知APPServer状态 0未通知，1已通知',
+  notifytime   VARCHAR(20) COMMENT '通知APPServer记录修改时间yyyy-MM-dd HH:mm:ss',
+  effectstatus CHAR(1) NOT NULL COMMENT '生效状态 0未生效，1已生效',
+  effecttime   VARCHAR(20) COMMENT '生效状态记录修改时间yyyy-MM-dd HH:mm:ss',
+  CONSTRAINT PK_ADS_REMOTEVERSIONINFO PRIMARY KEY (devno,ads_id)
+);
+ALTER TABLE ADS_REMOTEVERSIONINFO COMMENT '广告同步结果表';
+
+-- 系统维护表
+CREATE TABLE FAULT_CODE
+(
+   CODE                 VARCHAR(10) NOT NULL COMMENT '故障简码',
+   FAULT_LEVEL          INT NOT NULL COMMENT '故障级别',
+   DESCRIPTION          VARCHAR(100) NOT NULL COMMENT '故障描述',
+   SOLUTION             VARCHAR(100) COMMENT '解决办法',
+   CONSTRAINT PK_FAULT_CODE PRIMARY KEY (CODE)
+);
+ALTER TABLE FAULT_CODE COMMENT '故障代码表';
+
+CREATE TABLE FAULT_CODE_USED
+(
+   CODE                 VARCHAR(30) NOT NULL COMMENT '故障码',
+   FAULT_LEVEL          INT NOT NULL COMMENT '故障级别',
+   DESCRIPTION          VARCHAR(1024) DEFAULT NULL COMMENT '故障描述',
+   SOLUTION             VARCHAR(1024) DEFAULT NULL COMMENT '解决方法',
+   FILTER_FLAG          CHAR(1) DEFAULT NULL COMMENT '过滤标志',
+   NOTE1                VARCHAR(100) DEFAULT NULL COMMENT '备注1',
+   NOTE2                VARCHAR(100) DEFAULT NULL COMMENT '备注2',
+    CONSTRAINT PK_FAULT_CODE_USED PRIMARY KEY (CODE)
+);
+ALTER TABLE FAULT_CODE_USED COMMENT '已使用故障码表 ';
+
+CREATE TABLE FAULT_TABLE
+(
+   FAULT_NO             VARCHAR(36) NOT NULL COMMENT '故障号',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   DEV_MODULE           VARCHAR(10) NOT NULL COMMENT '设备模块',
+   FAULT_LEVEL          INT NOT NULL COMMENT '故障级别',
+   FAULT_CODE           VARCHAR(20) COMMENT '故障代码',
+   VENDOR_CODE          VARCHAR(2048) COMMENT '厂商故障码',
+   FAULT_TIME           VARCHAR(20) NOT NULL COMMENT '故障时间（YYYY-MM-DD HH:mm24:ss）',
+   DESCRIPTION          VARCHAR(500) COMMENT '故障描述',
+   SOLUTION             VARCHAR(500) COMMENT '解决方法',
+   CONSTRAINT PK_FAULT_TABLE PRIMARY KEY (FAULT_NO)
+);
+ALTER TABLE FAULT_TABLE COMMENT '故障表';
+
+CREATE TABLE FAULT_FILTER
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号（UUID）',
+   FAULT_CODE           VARCHAR(20) NOT NULL COMMENT '故障代码',
+   DEV_TYPE_NAME        VARCHAR(60) COMMENT '设备类型名',
+   DEV_TYPE             INT COMMENT '设备类型',
+   DEV_NO               VARCHAR(20) COMMENT '设备号',
+   FILTER_BY            CHAR(1) NOT NULL COMMENT '过滤范围（0 全部(all)  ；1 按机型(dev_type) ；2 按设备号(dev_no)）',
+   FILTER_FLAG          CHAR(1) NOT NULL DEFAULT '0' COMMENT '过滤方式（0:按错误码 ;1：按模块）',
+   OP_NO                VARCHAR(20) COMMENT 'OP_NO',
+   OP_TIME              VARCHAR(20) COMMENT 'OP_TIME',
+   CONSTRAINT PK_FAULT_FILTER PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE FAULT_FILTER COMMENT '故障过滤表';
+
+CREATE TABLE CASE_TABLE
+(
+  case_no         VARCHAR(36) NOT NULL COMMENT 'CASE编号',
+  dev_no          VARCHAR(20) NOT NULL COMMENT '设备号',
+  org_no          VARCHAR(20) NOT NULL COMMENT '机构号',
+  vendor_no       DECIMAL(38) COMMENT '厂商号',
+  dev_module      VARCHAR(3) NOT NULL COMMENT '设备模块',
+  catalog_no      DECIMAL(38) COMMENT 'CASE分类即故障级别',
+  create_type     CHAR(1) NOT NULL COMMENT '生成方式（A：自动；M：手动）',
+  creator         VARCHAR(20) COMMENT '生成人员（手动生成CASE使用）',
+  task_sheet_flag VARCHAR(1)  COMMENT '工单标志 0：非工单 1：工单',
+  upgrade_type    CHAR(1) NOT NULL COMMENT '升级方式（A：自动  M：手动）',
+  fault_code      VARCHAR(20) COMMENT '故障代码',
+  max_grade       DECIMAL(38) NOT NULL COMMENT '最高升级级别(CASE_CATALOG_TABLE. MAX_GRADE)',
+  grade           DECIMAL(38) NOT NULL COMMENT 'CASE当前级别值域：1一 CASE_CATALOG_TABLE. MAX_GRADE',
+  STATUS          CHAR(1) NOT NULL COMMENT 'CASE主状态（O：Open；C：Close；W: wait)',
+  current_status  DECIMAL(38) COMMENT '1：已创建,2：已通知,3：通知升级(未使用),4：已确认,5：未响应升级,6：已响应,7：故障升级,8:未关闭升级,9:已关闭',
+  vendor_code     VARCHAR(2048) COMMENT '厂商故障码',
+  description     VARCHAR(500) COMMENT 'CASE描述',
+  solution        VARCHAR(500) COMMENT '解决办法',
+  open_time       TIMESTAMP COMMENT '生成时间点',
+  notify_time     TIMESTAMP COMMENT '通知时间点',
+  onsite_time     TIMESTAMP COMMENT '到场时间点',
+  close_time      TIMESTAMP COMMENT '关闭时间点',
+  expire_time     TIMESTAMP COMMENT '关闭时间点',
+  update_time     TIMESTAMP COMMENT '升级时间点',
+  pre_reply_time  TIMESTAMP COMMENT '预期回复时间点',
+  pre_onsite_time TIMESTAMP COMMENT '预期关闭时间点',
+  pre_close_time  TIMESTAMP COMMENT '预期挂起时间点',
+  pre_expire_time TIMESTAMP COMMENT '预期挂起时间点',
+  use_reply_time  DECIMAL(38) COMMENT '实际回复时长(单位分钟)',
+  use_onsite_time DECIMAL(38) COMMENT '实际到场时长(单位分钟)',
+  use_close_time  DECIMAL(38) COMMENT '实际关闭时长（单位分钟',
+  CONSTRAINT PK_CASE_TABLE PRIMARY KEY (CASE_NO,open_time)
+)ENGINE=INNODB
+PARTITION BY RANGE (UNIX_TIMESTAMP(OPEN_TIME))
+(
+  PARTITION CASE_TABLE_PART1912 VALUES LESS THAN (UNIX_TIMESTAMP('2019-12-31 00:00:00')),
+  PARTITION CASE_TABLE_PART2012 VALUES LESS THAN (UNIX_TIMESTAMP(TIMESTAMP'2020-12-31 00:00:00')),
+  PARTITION CASE_TABLE_MAXPART VALUES LESS THAN (MAXVALUE)
+);
+ALTER TABLE CASE_TABLE COMMENT  'CASE表';
+
+CREATE TABLE CASE_CATALOG_TABLE
+(
+  org_no            VARCHAR(20) NOT NULL COMMENT '机构号',
+  catalog_no        INTEGER NOT NULL COMMENT 'CASE故障类型号',
+  catalog_name      VARCHAR(50) NOT NULL COMMENT '分类名称',
+  responsor_catalog INTEGER NOT NULL COMMENT '负责人类型(1:管机员 2 :维护人员 3 :维护人员、管机员)',
+  reply_interval    INTEGER COMMENT '要求回复时间(在行）单位：分钟',
+  onsite_interval   INTEGER COMMENT '要求到场时间(在行）单位：分钟',
+  onsite_interval1  INTEGER COMMENT '要求到场时间(离行)',
+  close_interval    INTEGER COMMENT '要求关闭时间（在行）',
+  close_interval1   INTEGER COMMENT '要求关闭时间（离行）',
+  expire_interval   INTEGER COMMENT '要求挂起时间',
+  max_grade         INTEGER COMMENT '最高升级级别即case升级短信通知最大次数',
+  respond_grade     INTEGER COMMENT '响应级别(1-工作时间相应,2-7 x24小时响应)',
+  notify_way        INTEGER COMMENT '通知方式(1:短信；2：邮件；3：短信和邮件)',
+  sendmsgmethod     INTEGER COMMENT 'CASE发送短信方式( 1.全部发送; 0.逐级发送)',
+  task_sheet_flag   VARCHAR(1) COMMENT '是否生成工单 0：不生成工单 1：生成工单',
+  CONSTRAINT PK_CASE_CATALOG_TABLE PRIMARY KEY (ORG_NO, CATALOG_NO)
+);
+ALTER TABLE CASE_CATALOG_TABLE COMMENT 'CASE分类表';
+
+CREATE TABLE CASE_GRADE
+(
+  grade         INTEGER NOT NULL COMMENT 'CASE级别',
+  notify_way    INTEGER DEFAULT 1 NOT NULL COMMENT '通知方式',
+  notify_times  INTEGER DEFAULT 1 NOT NULL COMMENT '重复通知次数',
+  send_interval INTEGER DEFAULT 0 NOT NULL COMMENT '重复时间间隔',
+ CONSTRAINT PK_CASE_GRADE PRIMARY KEY (GRADE)
+);
+ALTER TABLE CASE_GRADE COMMENT 'CASE升级表';
+
+CREATE TABLE CASE_TRACE
+(
+  trace_id    VARCHAR(36) NOT NULL COMMENT '编号（UUID）',
+  case_no     VARCHAR(36) NOT NULL COMMENT 'CASE编号',
+  trace_time  VARCHAR(26) NOT NULL COMMENT '记录时间',
+  trace_by    VARCHAR(20) COMMENT '记录者',
+  case_status VARCHAR(36) COMMENT 'CASE当前状态',
+  content     VARCHAR(512) COMMENT '跟踪信息',
+  fault_code  VARCHAR(20) COMMENT 'FAULT_CODE',
+  catalog_no  INTEGER COMMENT 'CATALOG_NO',
+  CONSTRAINT PK_CASE_TRACE PRIMARY KEY (trace_time,TRACE_ID)
+);
+ALTER TABLE CASE_TRACE COMMENT 'CASE跟踪表';
+
+CREATE TABLE CASE_NOTIFY
+(
+  notify_id     VARCHAR(36) NOT NULL COMMENT '编号（UUID',
+  case_no       VARCHAR(36) NOT NULL COMMENT 'CASE编号',
+  create_time   TIMESTAMP NOT NULL COMMENT '生成时间',
+  notify_type   INTEGER NOT NULL COMMENT '通知类型（1:创建；2：升级；3：关闭； 4：挂起）',
+  notify_way    INTEGER NOT NULL COMMENT '通知方式（1：短信；2：邮件）',
+  receiver      VARCHAR(20) NOT NULL COMMENT '通知对象',
+  mobile        VARCHAR(20) NOT NULL COMMENT '通知手机',
+  email         VARCHAR(40) COMMENT '通知邮箱',
+  content       VARCHAR(1024) NOT NULL COMMENT '通知内容',
+  notify_times  INTEGER DEFAULT 1 NOT NULL COMMENT '重复通知次数',
+  send_times    INTEGER DEFAULT 0 NOT NULL COMMENT '已通知次数',
+  send_time     TIMESTAMP COMMENT '最近通知时间',  
+  send_interval INTEGER COMMENT '通知间隔时间', 
+  is_reply      INTEGER DEFAULT 0 NOT NULL COMMENT '是否回复',
+  utno          VARCHAR(8) COMMENT '付费机构',
+  CONSTRAINT PK_CASE_NOTIFY PRIMARY KEY (create_time,NOTIFY_ID)
+)ENGINE=INNODB
+PARTITION BY RANGE (UNIX_TIMESTAMP(create_time))
+(
+  PARTITION CASE_NOTIFY_PART1912 VALUES LESS THAN (UNIX_TIMESTAMP('2019-12-31 00:00:00')),
+  PARTITION CASE_NOTIFY_PART2012 VALUES LESS THAN (UNIX_TIMESTAMP('2020-12-31 00:00:00')),
+  PARTITION CASE_NOTIFY_MAXPART VALUES LESS THAN (MAXVALUE)
+);
+ALTER TABLE CASE_NOTIFY  COMMENT 'CASE通知表';
+
+CREATE TABLE NOTIFY_MODEL
+(
+  model_id    DECIMAL(38) NOT NULL COMMENT '编号（UUID）',
+  notify_type DECIMAL(38) NOT NULL COMMENT '通知类型 1CASE生成通知 2CASE升级通知 3CASE关闭通知 4CASE挂起通知',
+  notify_way  DECIMAL(38) NOT NULL COMMENT '通知方式（未使用）',
+  model_by    DECIMAL(38) NOT NULL COMMENT '模板来源（0：默认；1：定制）',
+  info_set    VARCHAR(1024) NOT NULL COMMENT '短信格式',
+  CONSTRAINT PK_NOTIFY_MODEL PRIMARY KEY (MODEL_ID)
+);
+ALTER TABLE NOTIFY_MODEL COMMENT 'CASE通知内容模板表';
+
+CREATE TABLE SHORTEN_TABLE
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   LACK_TYPE            INT NOT NULL COMMENT '1 – 缺钞（少钞） 2 – 凭条打印机缺纸（少纸） 3 – 日志打印机缺纸（少纸）',
+   LACK_DATE            VARCHAR(10) NOT NULL COMMENT '发生日期',
+   LACK_TIME            VARCHAR(10) NOT NULL COMMENT '发生时间',
+   PERIOD               VARCHAR(10) COMMENT '会计周期号',
+   UNLACK_DATE          VARCHAR(10) COMMENT '结束日期',
+   UNLACK_TIME          VARCHAR(10) COMMENT '结束时间',
+   STATUS               VARCHAR(1) COMMENT '状态',
+   CONSTRAINT PK_SHORTEN_TABLE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE SHORTEN_TABLE COMMENT '缺钞缺纸流水表';
+
+CREATE TABLE CLEAR_TABLE
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   CLEAR_TIME           TIMESTAMP NOT NULL COMMENT '清机时间',
+   DEPOSIT_COUNT        INT COMMENT '存款笔数',
+   DEPOSIT_AMOUNT       DECIMAL(20,2) COMMENT '存款金额',
+   WITHDRAW_COUNT       INT COMMENT '取款笔数',
+   WITHDRAW_AMOUNT      DECIMAL(20,2) COMMENT '取款金额',
+   TRANSFER_COUNT       INT COMMENT '转帐笔数',
+   TRANSFER_AMOUNT      DECIMAL(20,2) COMMENT '转帐金额',
+  CONSTRAINT PK_CLEAR_TABLE PRIMARY KEY (CLEAR_TIME,LOGIC_ID)
+)ENGINE=INNODB
+PARTITION BY RANGE (UNIX_TIMESTAMP(CLEAR_TIME)) (
+PARTITION CLEAR_TABLE_PART1912 VALUES LESS THAN (UNIX_TIMESTAMP('2019-12-31')),
+PARTITION CLEAR_TABLE_PART2012 VALUES LESS THAN (UNIX_TIMESTAMP('2020-12-31')),
+PARTITION CLEAR_TABLE_MAXPART VALUES LESS THAN (MAXVALUE)
+);
+ALTER TABLE CLEAR_TABLE COMMENT '清机报文表';
+
+CREATE TABLE RETAIN_CARD_TRACE
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   STATUS_CHANGE_DATE   VARCHAR(10) NOT NULL COMMENT '状态改变日期',
+   STATUS_CHANGE_TIME   VARCHAR(10) NOT NULL COMMENT '状态改变时间',
+   ACCOUNT              VARCHAR(25) COMMENT '卡号',
+   STATUS               VARCHAR(2)  COMMENT '0 留机
+    1 待领
+    3 已移交，待领
+    20 领取
+    21 销毁',
+   NOTE                 VARCHAR(200) COMMENT '备注',
+   CARD_INFO_LOGIC_ID   VARCHAR(36) NOT NULL COMMENT '吞卡信息ID',
+  CONSTRAINT PK_RETAIN_CARD_TRACE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE RETAIN_CARD_TRACE COMMENT '吞卡处理过程表';
+
+CREATE TABLE DEV_CASH_CLEAR
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   ADDCASH_ID           CHAR(10) NOT NULL COMMENT '加钞标识（当前日期+编号，编号为两位，从00~99）',
+   ADDCASH_DATETIME     CHAR(19) COMMENT '加钞时间',
+   ADDCASH_AMOUNT       INT COMMENT '加钞金额',
+   ADDCASH_TYPE         VARCHAR(60) COMMENT '加钞面值集合 如50,100多种面值以逗号分割',
+   ADDCASH_COUNT        VARCHAR(60) COMMENT '加钞张数 如 1000,2000 多种面值与AddCashType的面值对应，同样以逗号分割',
+   CLEAR_DATETIME       CHAR(19) COMMENT '清机时间',
+   ADDCASH_LEFT         INT COMMENT '主机尾箱余额',
+   ADDCASH_LASTAMOUNT   INT COMMENT '钞箱剩余金额（不包括回收箱）',
+   ADDCASH_RETRACTCOUNT INT COMMENT '回收箱张数',
+   DEPOSIT_COUNT        INT COMMENT '存款总笔数',
+   DEPOSIT_AMOUNT       INT COMMENT '存款总金额',
+   WITHDRAW_COUNT       INT COMMENT '取款总笔数',
+   WITHDRAW_AMOUNT      INT COMMENT '取款总金额',
+   CLEAR_ID             VARCHAR(30) COMMENT 'CLEAR_ID',
+   CASHUTIL_AMOUNT      VARCHAR(100) COMMENT 'CASHUTIL_AMOUNT',
+   CASHBY_HANDCOUNT     VARCHAR(100) COMMENT 'CASHBY_HANDCOUNT',
+   ADD_ID               VARCHAR(30) COMMENT 'ADD_ID',
+   ADD_CASH_METHOD      VARCHAR(2) COMMENT '加钞方式（0-本地加钞，1-联动加钞）',
+   CONSTRAINT PK_DEV_CASH_CLEAR PRIMARY KEY (DEV_NO, ADDCASH_ID)
+);
+ALTER TABLE DEV_CASH_CLEAR COMMENT '设备清加钞信息表';
+
+CREATE TABLE DOUBTFUL_TABLE (
+  LOGIC_ID varchar(36) NOT NULL COMMENT '记录流水号',
+  DEV_NO varchar(20) NOT NULL COMMENT '设备号',
+  DATETIME char(19) NOT NULL COMMENT '交易时间(YYYY-MM-DD HH:mm:ss)',
+  CARDINFO varchar(25) NOT NULL COMMENT '卡号',
+  TRANSACCOUNT varchar(21) COMMENT '转账账号',
+  AMOUNT decimal(20,2) COMMENT '金额',
+  TXTYPE varchar(20) NOT NULL COMMENT '交易类型',
+  TRNS varchar(25) NOT NULL COMMENT '交易流水号',
+  RTPOS varchar(14) COMMENT '回收位置',
+  HOSTCODE varchar(10) COMMENT '主机返回码',
+  LOCALCODE varchar(6) COMMENT '本地拒绝码',
+  CONSTRAINT PK_DOUBTFUL_TABLE PRIMARY KEY (LOGIC_ID)
+) COMMENT='可疑交易记录表';
+
+CREATE TABLE RUN_STATUS_DEV_TABLE
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   DATE_TIME            VARCHAR(20) NOT NULL COMMENT '日期时间',
+   RUN_STATUS           VARCHAR(2) COMMENT '状态',
+   STATUS_NO            VARCHAR(10) COMMENT '状态序号',
+   DATE_YMD             VARCHAR(10) NOT NULL COMMENT '日期yyyy-MM-dd',
+   CONSTRAINT PK_RUN_STATUS_DEV_TABLE PRIMARY KEY (DEV_NO, DATE_TIME)
+);
+ALTER TABLE RUN_STATUS_DEV_TABLE COMMENT '开机率报文设备运行状态表';
+
+-- 批量处理表
+CREATE TABLE RPT_DEV_TRANS
+(
+  dev_no         VARCHAR(20) NOT NULL COMMENT '设备号',
+  date_time      VARCHAR(10) COMMENT '交易时间',
+  trans_type     VARCHAR(10) COMMENT '交易类型',
+  trans_amount   INTEGER COMMENT '交易金额',
+  trans_count    INTEGER COMMENT '交易总数',
+  trans_value    INTEGER DEFAULT 0 NOT NULL COMMENT '总交易价值',
+  trans_year     VARCHAR(4) COMMENT '交易年份',
+  trans_month    VARCHAR(2) COMMENT '交易月份',
+  trans_day      VARCHAR(2) COMMENT '交易日',
+  org_no         VARCHAR(20) COMMENT '机构号',
+  aver_cost_time INTEGER COMMENT '平均交易耗时',
+  max_cost_time  INTEGER COMMENT '最大交易耗时',
+  CONSTRAINT PK_RPT_DEV_TRANS PRIMARY KEY (DATE_TIME, DEV_NO, TRANS_TYPE)
+);
+ALTER TABLE RPT_DEV_TRANS COMMENT '设备交易统计表';
+
+-- 设备开机率统计表（每台每天）
+CREATE TABLE RPT_OPEN_RATE_DEV_DATE
+(
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   DATE_TIME            VARCHAR(10) NOT NULL COMMENT '日期',
+   OPEN_RATE_YEAR       varchar(4) COMMENT '记录年份',
+   OPEN_RATE_MONTH      varchar(2) COMMENT '记录月份',
+   OPEN_RATE_DAY        varchar(2) COMMENT '记录日期',
+   FULL_FUN_TIME        DECIMAL(20,2) COMMENT '全功能开机时间',
+   FULL_RATE            DECIMAL(20,2) COMMENT '全功能开机率',
+   HALF_FUN_TIME        DECIMAL(20,2) COMMENT '半功能开机时间',
+   HALF_RATE            DECIMAL(20,2) COMMENT '半功能开机率',
+   HARD_FAULT_TIME      DECIMAL(20,2) COMMENT '硬故障停机时间',
+   SOFT_FAULT_TIME      DECIMAL(20,2) COMMENT '软故障停机时间',
+   MAINTENANCE_TIME     DECIMAL(20,2) COMMENT '维护时间',
+   COMM_FAILURE_TIME    DECIMAL(20,2) COMMENT 'P通讯中断时间',
+   CLOSE_TIME           DECIMAL(20,2) COMMENT '关机时间',
+   OTHER_REASON_TIME    DECIMAL(20,2) COMMENT '其他原因时间',
+   WORK_TIME            DECIMAL(20,2) COMMENT '规定工作时间',
+   PERFECT_RATE         DECIMAL(20,2) COMMENT '设备完好率(未使用）',
+   SERVICE_RATE         DECIMAL(20,2) COMMENT '正常服务率（未使用）',
+   COMM_RATE            DECIMAL(20,2) COMMENT '通讯完好率（未使用）',
+   STOP_TIME            DECIMAL(20,2) COMMENT '停机时间',
+   VCOMM_FAILURE_TIME   DECIMAL(20,2) COMMENT 'V通讯故障时间',
+   SUSPECTED_CRASH_TIME DECIMAL(20,2) COMMENT '疑似死机时间',
+   CONSTRAINT PK_RPT_OPEN_RATE_DEV_DATE PRIMARY KEY (DATE_TIME,DEV_NO)
+);
+ALTER TABLE RPT_OPEN_RATE_DEV_DATE COMMENT '开机率日统计表（每台每天）';
+
+create table RPT_OPEN_RATE_DEV_MONTH
+(
+  dev_no               VARCHAR(20) not null  comment '设备号',
+  date_time            VARCHAR(10) not null  comment '日期 yyyyMM',
+  OPEN_RATE_YEAR       varchar(4) COMMENT '记录年份',
+  OPEN_RATE_MONTH      varchar(2) COMMENT '记录月份',
+  full_fun_time        DECIMAL(20,2)         comment '全功能开机时间',
+  full_rate            DECIMAL(20,2)         comment '全功能开机率',
+  half_fun_time        DECIMAL(20,2)         comment '半功能开机时间',
+  half_rate            DECIMAL(20,2)         comment '半功能开机率',
+  hard_fault_time      DECIMAL(20,2)         comment '硬故障停机时间',
+  soft_fault_time      DECIMAL(20,2)         comment '软故障停机时间',
+  maintenance_time     DECIMAL(20,2)         comment '维护时间',
+  comm_failure_time    DECIMAL(20,2)         comment 'P通讯中断时间',
+  close_time           DECIMAL(20,2)         comment '关机时间',
+  other_reason_time    DECIMAL(20,2)         comment '其他原因时间',
+  work_time            DECIMAL(20,2)         comment '规定工作时间',
+  perfect_rate         DECIMAL(20,2)         comment '设备完好率(未使用）',
+  service_rate         DECIMAL(20,2)         comment '正常服务率（未使用）',
+  comm_rate            DECIMAL(20,2)         comment '通讯完好率（未使用）',
+  stop_time            DECIMAL(20,2)         comment '停机时间',
+  vcomm_failure_time   DECIMAL(20,2)         comment 'V通讯故障时间',
+  suspected_crash_time DECIMAL(20,2)         comment '疑似死机时间',
+  constraint PK_RPT_OPEN_RATE_DEV_MONTH primary key (date_time,dev_no)
+);
+ALTER TABLE RPT_OPEN_RATE_DEV_MONTH COMMENT '开机率月统计表（每台每月）';
+
+create table RPT_OPEN_RATE_DEV_YEAR
+(
+  dev_no               VARCHAR(20) not null comment '设备号',
+  date_time            VARCHAR(10) not null comment '日期 yyyy',
+  OPEN_RATE_YEAR       varchar(4) COMMENT '记录年份',
+  full_fun_time        DECIMAL(20,2)         comment '全功能开机时间',
+  full_rate            DECIMAL(20,2)         comment '全功能开机率',
+  half_fun_time        DECIMAL(20,2)         comment '半功能开机时间',
+  half_rate            DECIMAL(20,2)         comment '半功能开机率',
+  hard_fault_time      DECIMAL(20,2)         comment '硬故障停机时间',
+  soft_fault_time      DECIMAL(20,2)         comment '软故障停机时间',
+  maintenance_time     DECIMAL(20,2)         comment '维护时间',
+  comm_failure_time    DECIMAL(20,2)         comment 'P通讯中断时间',
+  close_time           DECIMAL(20,2)         comment '关机时间',
+  other_reason_time    DECIMAL(20,2)         comment '其他原因时间',
+  work_time            DECIMAL(20,2)         comment '规定工作时间',
+  perfect_rate         DECIMAL(20,2)         comment '设备完好率(未使用）',
+  service_rate         DECIMAL(20,2)         comment '正常服务率（未使用）',
+  comm_rate            DECIMAL(20,2)         comment '通讯完好率（未使用）',
+  stop_time            DECIMAL(20,2)         comment '停机时间',
+  vcomm_failure_time   DECIMAL(20,2)         comment 'V通讯故障时间',
+  suspected_crash_time DECIMAL(20,2)         comment '疑似死机时间',
+  constraint PK_RPT_OPEN_RATE_DEV_YEAR primary key (date_time,dev_no)
+);
+ALTER TABLE RPT_OPEN_RATE_DEV_YEAR COMMENT '开机率年统计表（每台每年）';
+
+CREATE TABLE RPT_FAULT_DEV_DATE
+(
+  dev_no          VARCHAR(20) NOT NULL COMMENT '设备号',
+  date_time       VARCHAR(10) NOT NULL COMMENT '日期yyyyMMdd',
+  FAULT_YEAR      varchar(4) COMMENT '记录年份',
+  FAULT_MONTH     varchar(2) COMMENT '记录月份',
+  FAULT_DAY       varchar(2) COMMENT '记录日期',
+  fault_times     DECIMAL(20) COMMENT '故障次数',
+  idc_fault_times DECIMAL(20) COMMENT '读卡器故障次数',
+  pin_fault_times DECIMAL(20) COMMENT '密码键盘故障次数',
+  cdm_fault_times DECIMAL(20) COMMENT '取款模块故障次数',
+  cim_fault_times DECIMAL(20) COMMENT '存款模块故障次数',
+  jpr_fault_times DECIMAL(20) COMMENT '日志打印机故障次数',
+  rpr_fault_times DECIMAL(20) COMMENT '凭票打印机故障次数',
+  siu_fault_times DECIMAL(20) COMMENT '传感器故障次数',
+  dep_fault_times DECIMAL(20) COMMENT '信封故障次数',
+  ups_fault_times DECIMAL(20) COMMENT '不间断电源故障次数',
+  spr_fault_times DECIMAL(20) COMMENT '结单打印故障次数',
+  chk_fault_times DECIMAL(20) COMMENT '支票读扫描故障次数',
+  ttu_fault_times DECIMAL(20) COMMENT '文本终端单元故障次数',
+  pbk_fault_times DECIMAL(20) COMMENT '存在打印故障模块',
+  cam_fault_times DECIMAL(20) COMMENT '照相机故障次数',
+  fault_time      DECIMAL(20) COMMENT '故障总时长',
+  idc_fault_time  DECIMAL(20) COMMENT '读卡器故障总时间',
+  pin_fault_time  DECIMAL(20) COMMENT '密码键盘故障总时间',
+  cdm_fault_time  DECIMAL(20) COMMENT '取款模块故障总时间',
+  cim_fault_time  DECIMAL(20) COMMENT '存款模块故障总时间',
+  jpr_fault_time  DECIMAL(20) COMMENT '日志打印机故障总时间',
+  rpr_fault_time  DECIMAL(20) COMMENT '凭票打印机故障总时间',
+  siu_fault_time  DECIMAL(20) COMMENT '传感器故障总时间',
+  dep_fault_time  DECIMAL(20) COMMENT '信封故障总时间',
+  ups_fault_time  DECIMAL(20) COMMENT '不间断电源故障总时间',
+  spr_fault_time  DECIMAL(20) COMMENT '结单打印故障总时间',
+  chk_fault_time  DECIMAL(20) COMMENT '支票读扫描故障总时间',
+  ttu_fault_time  DECIMAL(20) COMMENT '文本终端单元故障总时间',
+  pbk_fault_time  DECIMAL(20) COMMENT '存在打印故障模块总时间',
+  cam_fault_time  DECIMAL(20) COMMENT '照相机故障总时间',
+  CONSTRAINT PK_RPT_FAULT_DEV_DATE PRIMARY KEY (date_time,dev_no)
+);
+ALTER TABLE RPT_FAULT_DEV_DATE COMMENT '故障统计表（每台每天）';
+
+CREATE TABLE RPT_FAULT_DEV_MONTH
+(
+  dev_no          VARCHAR(20) NOT NULL COMMENT '设备号',
+  date_time       VARCHAR(10) NOT NULL COMMENT '日期yyyyMM',
+  FAULT_YEAR      varchar(4) COMMENT '记录年份',
+  FAULT_MONTH     varchar(2) COMMENT '记录月份',
+  fault_times     DECIMAL(20) COMMENT '故障次数',
+  idc_fault_times DECIMAL(20) COMMENT '读卡器故障次数',
+  pin_fault_times DECIMAL(20) COMMENT '密码键盘故障次数',
+  cdm_fault_times DECIMAL(20) COMMENT '取款模块故障次数',
+  cim_fault_times DECIMAL(20) COMMENT '存款模块故障次数',
+  jpr_fault_times DECIMAL(20) COMMENT '日志打印机故障次数',
+  rpr_fault_times DECIMAL(20) COMMENT '凭票打印机故障次数',
+  siu_fault_times DECIMAL(20) COMMENT '传感器故障次数',
+  dep_fault_times DECIMAL(20) COMMENT '信封故障次数',
+  ups_fault_times DECIMAL(20) COMMENT '不间断电源故障次数',
+  spr_fault_times DECIMAL(20) COMMENT '结单打印故障次数',
+  chk_fault_times DECIMAL(20) COMMENT '支票读扫描故障次数',
+  ttu_fault_times DECIMAL(20) COMMENT '文本终端单元故障次数',
+  pbk_fault_times DECIMAL(20) COMMENT '存在打印故障模块',
+  cam_fault_times DECIMAL(20) COMMENT '照相机故障次数',
+  fault_time      DECIMAL(20) COMMENT '故障总时长',
+  idc_fault_time  DECIMAL(20) COMMENT '读卡器故障总时间',
+  pin_fault_time  DECIMAL(20) COMMENT '密码键盘故障总时间',
+  cdm_fault_time  DECIMAL(20) COMMENT '取款模块故障总时间',
+  cim_fault_time  DECIMAL(20) COMMENT '存款模块故障总时间',
+  jpr_fault_time  DECIMAL(20) COMMENT '日志打印机故障总时间',
+  rpr_fault_time  DECIMAL(20) COMMENT '凭票打印机故障总时间',
+  siu_fault_time  DECIMAL(20) COMMENT '传感器故障总时间',
+  dep_fault_time  DECIMAL(20) COMMENT '信封故障总时间',
+  ups_fault_time  DECIMAL(20) COMMENT '不间断电源故障总时间',
+  spr_fault_time  DECIMAL(20) COMMENT '结单打印故障总时间',
+  chk_fault_time  DECIMAL(20) COMMENT '支票读扫描故障总时间',
+  ttu_fault_time  DECIMAL(20) COMMENT '文本终端单元故障总时间',
+  pbk_fault_time  DECIMAL(20) COMMENT '存在打印故障模块总时间',
+  cam_fault_time  DECIMAL(20) COMMENT '照相机故障总时间',
+  CONSTRAINT PK_RPT_FAULT_DEV_MONTH PRIMARY KEY (date_time,dev_no)
+);
+ALTER TABLE RPT_FAULT_DEV_MONTH COMMENT '故障统计表（每台每月）';
+
+CREATE TABLE RPT_FAULT_DEV_YEAR
+(
+  dev_no          VARCHAR(20) NOT NULL COMMENT '设备号',
+  date_time       VARCHAR(10) NOT NULL COMMENT '日期yyyy',
+  FAULT_YEAR      varchar(4) COMMENT '记录年份',
+  fault_times     DECIMAL(20) COMMENT '故障次数',
+  idc_fault_times DECIMAL(20) COMMENT '读卡器故障次数',
+  pin_fault_times DECIMAL(20) COMMENT '密码键盘故障次数',
+  cdm_fault_times DECIMAL(20) COMMENT '取款模块故障次数',
+  cim_fault_times DECIMAL(20) COMMENT '存款模块故障次数',
+  jpr_fault_times DECIMAL(20) COMMENT '日志打印机故障次数',
+  rpr_fault_times DECIMAL(20) COMMENT '凭票打印机故障次数',
+  siu_fault_times DECIMAL(20) COMMENT '传感器故障次数',
+  dep_fault_times DECIMAL(20) COMMENT '信封故障次数',
+  ups_fault_times DECIMAL(20) COMMENT '不间断电源故障次数',
+  spr_fault_times DECIMAL(20) COMMENT '结单打印故障次数',
+  chk_fault_times DECIMAL(20) COMMENT '支票读扫描故障次数',
+  ttu_fault_times DECIMAL(20) COMMENT '文本终端单元故障次数',
+  pbk_fault_times DECIMAL(20) COMMENT '存在打印故障模块',
+  cam_fault_times DECIMAL(20) COMMENT '照相机故障次数',
+  fault_time      DECIMAL(20) COMMENT '故障总时长',
+  idc_fault_time  DECIMAL(20) COMMENT '读卡器故障总时间',
+  pin_fault_time  DECIMAL(20) COMMENT '密码键盘故障总时间',
+  cdm_fault_time  DECIMAL(20) COMMENT '取款模块故障总时间',
+  cim_fault_time  DECIMAL(20) COMMENT '存款模块故障总时间',
+  jpr_fault_time  DECIMAL(20) COMMENT '日志打印机故障总时间',
+  rpr_fault_time  DECIMAL(20) COMMENT '凭票打印机故障总时间',
+  siu_fault_time  DECIMAL(20) COMMENT '传感器故障总时间',
+  dep_fault_time  DECIMAL(20) COMMENT '信封故障总时间',
+  ups_fault_time  DECIMAL(20) COMMENT '不间断电源故障总时间',
+  spr_fault_time  DECIMAL(20) COMMENT '结单打印故障总时间',
+  chk_fault_time  DECIMAL(20) COMMENT '支票读扫描故障总时间',
+  ttu_fault_time  DECIMAL(20) COMMENT '文本终端单元故障总时间',
+  pbk_fault_time  DECIMAL(20) COMMENT '存在打印故障模块总时间',
+  cam_fault_time  DECIMAL(20) COMMENT '照相机故障总时间',
+  CONSTRAINT PK_RPT_FAULT_DEV_YEAR PRIMARY KEY (date_time,dev_no)
+);
+ALTER TABLE RPT_FAULT_DEV_YEAR COMMENT '故障统计表（每台每年）';
+
+-- 远程控制管理
+CREATE TABLE REMOTE_TRACE
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号',
+   COMMAND_ID           VARCHAR(10) NOT NULL COMMENT '命令ID',
+   DEV_NO               VARCHAR(20) NOT NULL COMMENT '设备号',
+   OP_NO                VARCHAR(20) NOT NULL COMMENT '操作员编号',
+   OP_TIME              VARCHAR(20) NOT NULL COMMENT '操作时间',
+   STATUS               VARCHAR(50) NOT NULL COMMENT '操作状态',
+   CONTENT              VARCHAR(800) NOT NULL COMMENT '操作内容',
+   CHECK_TYPE           VARCHAR(2) COMMENT '精查方式，0-立即执行（默认），1-定时执行',
+   CACHE_FALG           VARCHAR(2) COMMENT '是否需要C端进行缓存处理',
+   COUNT_ALL_FLAG       VARCHAR(2) COMMENT '是否精查所有钞箱',
+   CASHUNIT_COUNT       INT COMMENT '需要精查的钞箱数目',
+   CASHUNIT_LIST        VARCHAR(100) COMMENT '逻辑钞箱索引号列表',
+   CONSTRAINT PK_REMOTE_TRACE PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE REMOTE_TRACE COMMENT '远程控制结果记录表 ';
+
+CREATE TABLE REMOTE_FILE_DOWN_INFO
+(
+   LOGIC_ID             VARCHAR(36) NOT NULL COMMENT '编号',
+   TRACE_LOGIC_ID       VARCHAR(36) NOT NULL COMMENT '远程控制结果编号',
+   REMOTE_FILE          VARCHAR(800) NOT NULL COMMENT '远程文件路径及文件名',
+   LOCAL_FILE           VARCHAR(800) NOT NULL COMMENT '本地文件路径及文件名',
+   REMOTE_HANDLE_FILE   VARCHAR(800) COMMENT '处理后的远程文件路径及文件名（压缩下载）',
+   PROGRESS             DECIMAL(20,2) NOT NULL COMMENT '文件下载进度',
+   CONSTRAINT PK_REMOTE_FILE_DOWN_INFO PRIMARY KEY (LOGIC_ID)
+);
+ALTER TABLE REMOTE_FILE_DOWN_INFO COMMENT '文件下载信息表';
+
+
+-- 系统服务配置
+-- content服务需要：SERVICE_PROP_CONTENT
+CREATE TABLE SERVICE_PROP_BANKINTERFACE
+(
+  key_id   VARCHAR(30) NOT NULL,
+  VALUE VARCHAR(100),
+  NOTE VARCHAR(500),
+  CONSTRAINT SERVICE_PROP_BANKINTERFACE_PK PRIMARY KEY (key_id)
+) COMMENT = '银行特色服务配置项';
+
+-- 系统服务配置
+-- content服务需要：SERVICE_PROP_CONTENT
+CREATE TABLE SERVICE_PROP_CONTENT
+(
+  key_id   VARCHAR(30) NOT NULL,
+  VALUE VARCHAR(100),
+  NOTE VARCHAR(500),
+  CONSTRAINT SERVICE_PROP_CONTENT_PK PRIMARY KEY (key_id)
+);
+ALTER TABLE SERVICE_PROP_CONTENT COMMENT '内容管理服务配置项';
+
+-- control服务需要：SERVICE_PROP_CONTROL
+CREATE TABLE SERVICE_PROP_CONTROL
+(
+  key_id   VARCHAR(30) NOT NULL,
+  VALUE VARCHAR(100) NOT NULL,
+  NOTE VARCHAR(500),
+  CONSTRAINT SERVICE_PROP_CONTROL_PK PRIMARY KEY (key_id)
+);
+ALTER TABLE SERVICE_PROP_CONTROL COMMENT '远程控制服务配置';
+
+
+-- devrmtserver服务需要：SERVICE_PROP_DEVRMTSERVER
+CREATE TABLE SERVICE_PROP_DEVRMTSERVER
+(
+  key_id   VARCHAR(30) NOT NULL,
+  VALUE VARCHAR(300),
+  NOTE VARCHAR(500),
+  CONSTRAINT SERVICE_PROP_DEVRMTSERVER_PK PRIMARY KEY (key_id)
+);
+ALTER TABLE SERVICE_PROP_DEVRMTSERVER COMMENT '报文服务参数配置';
+
+CREATE TABLE SERVICE_PROP_RVCSERVER
+(
+  key_id   VARCHAR(30) NOT NULL,
+  VALUE VARCHAR(100),
+  NOTE VARCHAR(500),
+  CONSTRAINT SERVICE_PROP_RVCSERVER_PK PRIMARY KEY (key_id)
+);
+ALTER TABLE SERVICE_PROP_RVCSERVER COMMENT '内容管理后台服务配置表';
+
+CREATE TABLE SERVICE_PROP_MONITOR
+(
+  key_id   VARCHAR(30) NOT NULL,
+  VALUE VARCHAR(100),
+  NOTE VARCHAR(500),
+  CONSTRAINT SERVICE_PROP_MONITOR_PK PRIMARY KEY (key_id)
+);
+ALTER TABLE SERVICE_PROP_MONITOR COMMENT '监控服务配置表';
+
+create table SERVICE_PROP_REPORTS
+(
+  key_id  VARCHAR(30) not null,
+  value   VARCHAR(100),
+  note    VARCHAR(500),
+  constraint SERVICE_PROP_REPORTS_PK primary key (key_id)
+);
+ALTER TABLE SERVICE_PROP_REPORTS COMMENT '报表服务配置表';
+
+create table SERVICE_PROP_SYSTEM
+(
+  key_id  VARCHAR(30) not null,
+  value   VARCHAR(100),
+  note    VARCHAR(500),
+  constraint SERVICE_PROP_SYSTEM_PK primary key (key_id)
+);
+ALTER TABLE SERVICE_PROP_SYSTEM COMMENT '系统管理服务配置表';
+
+create table SERVICE_PROP_BUSINESS
+(
+  key_id  VARCHAR(30) not null,
+  value   VARCHAR(100),
+  note    VARCHAR(500),
+  constraint SERVICE_PROP_BUSINESS_PK primary key (key_id)
+);
+ALTER TABLE SERVICE_PROP_BUSINESS COMMENT '监控服务配置表';
+  
+create table RPT_BATCH_TASK
+(
+  logicid  VARCHAR(40) not null,
+  tasktype VARCHAR(2) not null                       comment '任务类型（
+1:每台每小时各交易类型交易量（V端Trans_info为数据源）
+2:每台每天各交易类型交易量
+3:每台每天交易量
+4:网点每天交易量
+5:网点每月交易量
+6:网点每年交易量
+7:各渠道各交易类型每天的交易金额
+8:每台每天开机率
+9:每台每月开机率
+10:每台每年开机率
+11:网点台均日均（每天）开机率
+12:每天每个品牌设备的数量，工单数及新增吞卡张数（全行）
+13.故障每台每天统计
+14.交易每台每天各交易类型各卡种交易量统计
+15.交易每台每小时各交易类型交易量统计（P端ATM联机流水表为数据源）
+16. 叫号机每台每天每小时统计
+17.叫号机每台每天统计
+18.叫号机每台每月统计
+19.故障每台每月统计
+20.故障每台每年统计
+21.故障每台每月各模块统计）',
+  task_year     VARCHAR(4)                           comment '交易年份',
+  task_month    VARCHAR(2)                           comment '交易月份',
+  task_day      VARCHAR(2)                           comment '交易日',
+  task_hour     VARCHAR(2)                           comment '交易小时，00~23',
+  addtime  VARCHAR(20)                               comment '添加时间YYYY-MM-DD hh:mm:ss',
+  taskflag CHAR(1) not null                           comment '任务标志 0：未完成 1：已成功 2：已结束（未成功）',
+  TAKEFLAG  CHAR(1)                                   comment '加载标志 默认为0,0：未加载,1：已加载',
+  TAKETIME  VARCHAR(20)                              comment 'YYYY-MM-DD hh:mm:ss',
+  SYNCOUNT  INTEGER                                   comment '默认0',
+  FINISHTIME  VARCHAR(20)                            comment 'YYYY-MM-DD hh:mm:ss',
+  constraint PK_RPT_BATCH_TASK primary key (logicid)
+);
+ALTER  TABLE RPT_BATCH_TASK comment '报表统计任务表';
+
+create table RPT_TRANS_DEV_HOUR_TYPE
+(
+  dev_no         VARCHAR(20) not null  comment '设备号',
+  date_time      VARCHAR(10)           comment '交易时间yyyyMMdd',
+  trans_hour     VARCHAR(2)            comment '交易小时，00~23',
+  trans_type     VARCHAR(20)           comment '交易类型',
+  trans_amount   DECIMAL(20,2)         comment '交易金额',
+  trans_count    DECIMAL(38)           comment '交易总数',
+  trans_year     VARCHAR(4)            comment '交易年份',
+  trans_month    VARCHAR(2)            comment '交易月份',
+  trans_day      VARCHAR(2)            comment '交易日',
+  org_no         VARCHAR(20)           comment '机构号',
+  constraint PK_RPT_TRANS_DEV_HOUR_TYPE primary key (DEV_NO, DATE_TIME,trans_hour, TRANS_TYPE)
+);
+ALTER  TABLE RPT_TRANS_DEV_HOUR_TYPE comment  '交易统计表（每台每小时各交易类型）';
+
+create table RPT_TRANS_DEV_DAY_TYPE
+(
+  dev_no         VARCHAR(20) not null  comment '设备号',
+  date_time      VARCHAR(10)           comment '交易时间yyyyMMdd',
+  trans_type     VARCHAR(20)           comment '交易类型',
+  trans_amount   DECIMAL(20,2)         comment '交易金额',
+  trans_count    DECIMAL(38)           comment '交易总数',
+  trans_year     VARCHAR(4)            comment '交易年份',
+  trans_month    VARCHAR(2)            comment '交易月份',
+  trans_day      VARCHAR(2)            comment '交易日',
+  org_no         VARCHAR(20)           comment '机构号',
+  constraint PK_RPT_TRANS_DEV_DAY_TYPE primary key (DATE_TIME, DEV_NO, TRANS_TYPE)
+);
+ALTER TABLE RPT_TRANS_DEV_DAY_TYPE comment  '交易统计表（每台每天各交易类型）';
+
+create table RPT_TRANS_DEV_DAY
+(
+  dev_no         VARCHAR(20) not null comment '设备号',
+  date_time      VARCHAR(10)          comment '交易时间yyyyMMdd',
+  trans_amount   DECIMAL(20,2)        comment '交易金额',
+  trans_count    DECIMAL(38)          comment '交易总数',
+  trans_year     VARCHAR(4)           comment '交易年份',
+  trans_month    VARCHAR(2)           comment '交易月份',
+  trans_day      VARCHAR(2)           comment '交易日',
+  org_no         VARCHAR(20)          comment '机构号',
+  constraint PK_RPT_TRANS_DEV_DAY primary key (DATE_TIME,DEV_NO)
+);
+ALTER TABLE RPT_TRANS_DEV_DAY comment '交易统计表（每台每天）';
+
+create table RPT_TRANS_ORG_DAY
+(
+  org_no         VARCHAR(20) not null comment '机构号',
+  date_time      VARCHAR(10)          comment '交易时间yyyyMMdd',
+  trans_amount   DECIMAL(20,2)        comment '交易金额',
+  trans_count    DECIMAL(38)          comment '交易总数',
+  trans_year     VARCHAR(4)           comment '交易年份',
+  trans_month    VARCHAR(2)           comment '交易月份',
+  trans_day      VARCHAR(2)           comment '交易日',
+  constraint PK_RPT_TRANS_ORG_DAY primary key (DATE_TIME,org_no)
+);
+ALTER TABLE RPT_TRANS_DEV_DAY comment '交易统计表（机构每天）';
+
+create table RPT_TRANS_ORG_MONTH
+(
+  org_no         VARCHAR(20) not null comment '机构号',
+  date_time      VARCHAR(10) comment '交易时间yyyyMM',
+  trans_amount   DECIMAL(20,2) comment '交易金额',
+  trans_count    DECIMAL(38)   comment '交易总数',
+  trans_year     VARCHAR(4)  comment '交易年份',
+  trans_month    VARCHAR(2)  comment '交易月份',
+  constraint PK_RPT_TRANS_ORG_MONTH primary key (DATE_TIME,org_no)
+);
+
+ALTER TABLE RPT_TRANS_ORG_MONTH comment '交易统计表（机构每月）';
+
+create table RPT_TRANS_ORG_YEAR
+(
+  org_no         VARCHAR(20) not null comment '机构号',
+  date_time      VARCHAR(10) comment '交易时间yyyy',
+  trans_amount   DECIMAL(20,2) comment '交易金额',
+  trans_count    DECIMAL(38)   comment '交易总数',
+  trans_year     VARCHAR(4)  comment '交易年份',
+  constraint PK_RPT_TRANS_ORG_YEAR primary key (DATE_TIME,org_no)
+);
+
+ALTER TABLE RPT_TRANS_ORG_YEAR comment '交易统计表（机构每年）';
+
+create table RETAIN_CARD_TABLE 
+(
+   LOGIC_ID             VARCHAR(36)         not null          comment '编号',
+   DEV_NO               VARCHAR(20)         not null          comment '设备号',
+   RETAIN_DATE          VARCHAR(10)         not null          comment '吞卡日期',
+   RETAIN_TIME          VARCHAR(10)         not null          comment '吞卡时间',
+   ACCOUNT              VARCHAR(25)         not null          comment '卡号',
+   REASON               VARCHAR(200)                          comment '原因',
+   PERIOD               VARCHAR(10)                           comment '会计周期号',
+   CARD_STUCK_ORG       VARCHAR(20)                           comment '吞卡机构',
+   CARD_HANDLE_ORG      VARCHAR(20)                           comment '处理机构',
+   AUTO_FLAG            CHAR(1)          default '1'           comment '自动录入标志，1表示自动，0表示手动',
+   CHECK_OP             VARCHAR(20)                           comment '登记人',
+   CHECK_DATE           VARCHAR(10)                           comment '登记日期',
+   CHECK_TIME           VARCHAR(10)                           comment '登记时间',
+   OP_NO                VARCHAR(20)                           comment '处理人',
+   OP_DATE              VARCHAR(10)                           comment '处理日期',
+   OP_TIME              VARCHAR(10)                           comment '处理时间',
+   OP_ADDRESS           VARCHAR(200)                          comment '处理地点',
+   ACCOUNT_NAME         VARCHAR(20)                           comment '客户姓名',
+   ACCOUNT_ID           VARCHAR(20)                           comment '客户证件号',
+   ACCOUNT_PHONE        VARCHAR(15)                           comment '客户电话',
+   CERT_TYPE            VARCHAR(2)                            comment '证件类型',
+   TYPE_FLAG            VARCHAR(1)      default '0' not null  comment '新吞类型（0——吞卡，1——吞钞）',
+   STATUS               VARCHAR(2)      not null comment '0 留机
+    1 待领
+    3 已移交，待领
+    20 领取
+    21 销毁',
+   CARD_RETAIN_TYPE    VARCHAR(1) comment  '吞卡类型，1-已吞卡到回收箱；2-已吞卡到退卡器；3-吞卡被取走（读卡器）；4-吞卡被取走（退卡器）',
+   constraint PK_RETAIN_CARD_TABLE primary key (LOGIC_ID)
+);
+ALTER TABLE RETAIN_CARD_TABLE COMMENT '吞卡信息表';
+
+create table UNIONPAY_AREACODE_TABLE 
+(
+   code_id             Varchar(30)         not null comment  '银联地区码编号',
+   Area_name           Varchar(50)         not null comment  '地区名称',
+   constraint PK_UNIONPAY_AREACODE_TABLE primary key (code_id)
+);
+ALTER TABLE UNIONPAY_AREACODE_TABLE COMMENT '银联地区码表';
+
+create table SELFHELP_BANK_TABLE 
+(
+   logic_id          Varchar(40) not null,
+   bank_name         Varchar(50) not null comment  '自助银行名称',
+   Bank_area         Varchar(80) comment '所属地址',
+   x                 VARCHAR(20) comment '横坐标（经度）',
+   y                 VARCHAR(20) comment '纵坐标（纬度）',
+   FHorgno           Varchar(20) comment '所属分行（2级机构）编号',
+   AREA_NO_PROVINCE  Varchar(10) comment '所属省级区域编码',
+   AREA_NO_CITY      Varchar(10) comment '所属地市级区域编码',
+   AREA_NO_COUNTY    Varchar(10) comment '所属县级区域编码',
+   constraint PK_SELFHELP_BANK_TABLE primary key (logic_id)
+);
+ALTER TABLE SELFHELP_BANK_TABLE COMMENT '离行设备自助银行表';
+
+create table PROVINCE_CITY_CODE 
+(
+   code            Varchar(40)  not null  comment '编号',
+   Code_name       Varchar(50)  not null  comment '名称',
+   GRADE           Varchar(1)             comment '级别 1：省级2：地市级3：县级',
+   Province_code   Varchar(10)            comment '所属省级区域编码',
+   City_code       Varchar(10)            comment '所属地市级区域编码',
+   constraint PK_PROVINCE_CITY_CODE primary key (code)
+);
+ALTER TABLE PROVINCE_CITY_CODE COMMENT '标准省市县编码表';
+
+create table APPS_PROJ_APPLY_RANGE
+(
+  LOGICID        VARCHAR(40) not null,
+  APPSID         VARCHAR(40)          comment  '工程，广告编号',
+  LIMIT_CATALOG  VARCHAR(5)           comment  '适用设备类型',
+  constraint PK_APPS_PROJ_APPLY_RANGE primary key (LOGICID)
+);
+ALTER TABLE APPS_PROJ_APPLY_RANGE COMMENT '工程广告适用范围表';
+
+create table APPS_VER_APPLY_DEPEND
+(
+  LOGICID       VARCHAR(40) not null,
+  APPSID        VARCHAR(40)               comment  '工程标识 工程，广告编号',
+  VERSIONAPPNO        VARCHAR(12)         comment  '应用版本号',
+  RANGETYPE       VARCHAR(1)              comment  '范围类型 1:依赖自身版本号；2:依赖其他工程和版本号',
+  PERVERAPPNO        VARCHAR(12)          comment  '依赖自身工程版本号',
+  PERVERSEQNO        VARCHAR(12)          comment  '依赖自身工程版本序列号',
+  PEROTHERAPPSID        VARCHAR(40)       comment  '依赖其他工程标识',
+  PERMINOTHERVERAPPNO        VARCHAR(12)  comment  '依赖其他工程最小版本号',
+  PERMINOTHERVERSEQNO        VARCHAR(12)  comment  '依赖其他工程最小版本序列号',
+  constraint PK_APPS_VER_APPLY_DEPEND primary key (LOGICID)
+);
+ALTER TABLE APPS_VER_APPLY_DEPEND COMMENT '工程广告适用范围表';
+
+create table ORG_WORK_TIME_TABLE 
+(
+   LOGIC_ID             VARCHAR(36)    not null comment '编号（UUID）',
+   org_no               VARCHAR(20)    not null comment '机构号',
+   DATES_TYPE           VARCHAR(20)    not null comment '日期类型
+Special
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Staturday
+Sunday',
+   DATES_TYPE_STATEMENT VARCHAR(80)  comment '日期类型说明
+Special – 特殊日期（需要特别指定工作日的，包括假日）
+Monday 星期一
+Tuesday 星期二
+Wednesday 星期三
+Thursday 星期四
+Friday 星期五
+Staturday 星期六
+Sunday 星期天',
+   DATES                VARCHAR(8)   comment '如果为空，则为日期类型为周末或者工作日',
+   businessflag         VARCHAR(1)   comment '是否营业标志 Y:营业 N:不营业',
+   START_TIME           VARCHAR(24)  comment '工作开始时间,以|分割，精确到分，最多五个时间点',
+   END_TIME             VARCHAR(24)  comment '工作结束时间，以|分割，精确到分，最多五个时间点',
+   constraint PK_ORG_WORK_TIME_TABLE primary key (LOGIC_ID)
+);
+alter table ORG_WORK_TIME_TABLE COMMENT '机构工作时间表';
+
+create table ADS_RANGE_INFO
+(
+  LOGICID   VARCHAR(40) not null,
+  ADS_ID    VARCHAR(40) not null comment '广告标识',
+  ORGNO     VARCHAR(20) comment '机构号',
+  CATALOG   VARCHAR(5)  comment '设备类型',
+  DEVNO     VARCHAR(20) comment '设备号',
+  constraint PK_ADS_RANGE_INFO primary key (LOGICID)
+);
+alter table ADS_RANGE_INFO COMMENT '广告适用范围表';
+
+create table RPT_TRANS_DEV_DAY_TYPE_CFLAG
+(
+  dev_no         VARCHAR(20) not null comment '设备号',
+  date_time      VARCHAR(10)          comment '交易时间yyyyMMdd',
+  trans_type     VARCHAR(20)          comment '交易类型',
+  cardflag       VARCHAR(3)           comment '卡种',
+  trans_amount   DECIMAL(20,2)        comment '交易金额',
+  trans_count    DECIMAL(38)          comment '交易总数',
+  trans_year     VARCHAR(4)           comment '交易年份',
+  trans_month    VARCHAR(2)           comment '交易月份',
+  trans_day      VARCHAR(2)           comment '交易日',
+  org_no         VARCHAR(20)          comment '机构号',
+  constraint PK_TRANS_DEV_DAY_TYPE_CFLAG primary key (DEV_NO, DATE_TIME, TRANS_TYPE,cardflag)
+) COMMENT ='交易统计表（每台每天各交易类型各卡种）';
+
+create table TASK_LABEL_CATALOG
+(
+  no         varchar(5) not null  comment '标签编号',
+  catalog    varchar(2)           comment '标签类型 1：问题原因（工单） 2：解决方案（工单） 3：评价（工单）',
+  Label_Name  varchar(40)         comment '标签描述',
+  constraint PK_TASK_LABEL_CATALOG primary key (no)
+);
+alter table TASK_LABEL_CATALOG COMMENT '运维标签类别表';
+
+create table TASK_SHEET_TRACE
+(
+  trace_id         varchar(36) not null,
+  case_no    varchar(36)                comment '对应的CASE编号',
+  case_trace_id  varchar(36)            comment '对应case trace编号',
+  Trace_time  varchar(26)               comment '记录时间 Yyyy-mm-dd hh:mi:ss',
+  trace_by  varchar(20)                 comment '记录者',
+  SERVICE_COMPANY  varchar(40)          comment '服务维护商编号',
+  SERVICE_PERSON  varchar(40)           comment '服务维护员编号',
+  otherReason  varchar(100)             comment '其他原因描述',
+  otherSolution  varchar(100)           comment '其他解决方案描述',
+  replacemod  varchar(20)               comment '替换模块',
+  Service_score  varchar(1)             comment '服务评分',
+  Service_remark  varchar(100)          comment '其他服务评语',
+  constraint PK_TASK_SHEET_TRACE primary key (trace_id)
+);
+alter table TASK_SHEET_TRACE COMMENT '工单处理明细表';
+
+create table TASK_SHEET_LABEL
+(
+  trace_id    varchar(36) not null      comment '编号 同TASK_SHEET_TRACE.trace_id',
+  Label_no    varchar(5) not null       comment '标签编号',
+  Label_catalog  varchar(2)             comment '标签类型 1：问题原因（工单）2：解决方案（工单）3：评价（工单）',
+  constraint PK_TASK_SHEET_LABEL primary key (Label_no,trace_id)
+);
+alter table TASK_SHEET_LABEL COMMENT '工单处理标签表';
+
+create table PARAM_BUSINESS_TEMPLATE
+(
+  PARAMKEY    varchar(50) not null comment '参数唯一英文标识',
+  PARAMNAME   varchar(100) not null    comment '参数中文名称',
+  PARAMVALUE  varchar(500)              comment '参数默认值',
+  REMARK      varchar(500)                  comment '参数描述',
+  REGEX       varchar(500)                   comment '正则表达式，用于校验设置是否合法',
+  constraint PK_PARAM_BUSINESS_TEMPLATE primary key (PARAMKEY)
+);
+alter table PARAM_BUSINESS_TEMPLATE COMMENT '业务参数模板表';
+
+create table PARAM_BUSINESS_CONFIG
+(
+  DEVNO     varchar(20) not null           comment '设备号',
+  PARAMKEY   varchar(50) not null          comment '参数唯一英文标识',
+  PARAMVALUE varchar(500)                  comment '参数值',
+  ADDUSER   varchar(20)                    comment '添加人员',
+  ADDTIME   varchar(20)                    comment '该记录增加的时间，YYYY-MM-DD hh:mm:ss',
+  TASKFLAG  CHAR(1)                       comment '任务标志 0：未完成 1：已成功 2：已结束（未成功）',
+  TAKEFLAG  CHAR(1)                       comment '加载标志 默认为0  0：未加载  1：已加载',
+  TAKETIME  varchar(20)                   comment '加载时间 YYYY-MM-DD hh:mm:ss',
+  constraint PK_PARAM_BUSINESS_CONFIG primary key (DEVNO,PARAMKEY)
+);
+
+alter table PARAM_BUSINESS_CONFIG COMMENT '业务参数模板表';
+
+create table ATMC_FUNCTION_TABLE 
+(
+   DEV_NO               varchar(20)    not null  comment '设备号',
+   TRANS_LIST           varchar(500)             comment '功能列表',
+   ATM_LOG              varchar(7)               comment '日志补打池缓存大小（100至200000）',
+   NOTE1                varchar(32)              comment '预留1（未使用）',
+   NOTE2                varchar(32)              comment '预留2（未使用）',
+   NOTE3                varchar(32)              comment '预留3（未使用）',
+   constraint PK_ATMC_FUNCTION_TABLE primary key (DEV_NO)
+);
+alter table ATMC_FUNCTION_TABLE COMMENT 'ATMC功能定义表';
+
+
+create table ATMC_FUNCTION_DEF 
+(
+  ID               varchar(36)      not null comment '编号(UUID)',
+  TRANS_NO      varchar(5)        not null comment '交易编号(对应于ATMC上的交易编码位数)',
+  TRANS_NAME          varchar(20)          comment '交易中文名称',
+  TRANS_CODE      varchar(100)             comment '交易英文名称(用于WSAPPlusWSAP时不能为空)',
+  TRANS_TYPE      varchar(50)              comment '交易类别名称(如：基础交易类、IC卡交易类等等)',
+  TRANS_TYPE_LEVEL  varchar(5)              comment '交易类别(从0开始，0排在最前面)',
+  DEV_CATALOG      varchar(5)               comment '设备类型(同DEV_CATALOG_TABLE.NO)',
+  constraint PK_ATMC_FUNCTION_DEF primary key (ID)
+);
+alter table ATMC_FUNCTION_DEF COMMENT 'ATMC功能定义默认表';
+
+create table RPT_FAULT_DEV_MONTH_MOD
+(
+  DEV_NO          VARCHAR(20) not null   comment '设备号',
+  DATE_TIME    VARCHAR(10) not null      comment '日期 yyyyMM',
+  fault_year     VARCHAR(4)              comment '记录年份',
+  fault_month    VARCHAR(2)              comment '记录月份',
+  MOD_NO        VARCHAR(5) not null      comment '模块编号',   
+  lv3_NUMBER  decimal(38)                comment '资源预警次数',
+  lv3_onsite_time  decimal(38)           comment '资源预警响应时长',
+  lv3_close_time  decimal(38)            comment '资源预警关闭时长',
+  lv4_NUMBER  decimal(38)                comment '资源耗尽次数',
+  lv4_onsite_time  decimal(38)           comment '资源耗尽响应时长',
+  lv4_close_time  decimal(38)            comment '资源耗尽关闭时长',
+  lv5_NUMBER  decimal(38)                comment '清机通知次数',
+  lv5_onsite_time  decimal(38)           comment '清机通知响应时长',
+  lv5_close_time  decimal(38)            comment '清机通知关闭时长',
+  lv6_NUMBER  decimal(38)                comment '营业故障次数',
+  lv6_onsite_time  decimal(38)           comment '营业故障响应时长',
+  lv6_close_time  decimal(38)            comment '营业故障关闭时长',
+  lv7_NUMBER  decimal(38)                comment '纸少次数',
+  lv7_onsite_time  decimal(38)           comment '纸少响应时长',
+  lv7_close_time  decimal(38)            comment '纸少关闭时长',
+  lv8_NUMBER  decimal(38)                comment '纸空次数',
+  lv8_onsite_time  decimal(38)           comment '纸空响应时长',
+  lv8_close_time  decimal(38)            comment '纸空关闭时长',
+  lv9_NUMBER  decimal(38)                comment '钞少次数',
+  lv9_onsite_time  decimal(38)           comment '钞少响应时长',
+  lv9_close_time  decimal(38)            comment '钞少关闭时长',
+  lv10_NUMBER  decimal(38)               comment '钞空次数',
+  lv10_onsite_time  decimal(38)          comment '钞空响应时长',
+  lv10_close_time  decimal(38)           comment '钞空关闭时长',
+  lv11_NUMBER  decimal(38)               comment '存款箱满次数',
+  lv11_onsite_time  decimal(38)          comment '存款箱满响应时长',
+  lv11_close_time  decimal(38)           comment '存款箱满关闭时长',
+  lv12_NUMBER  decimal(38)               comment '一般硬件故障次数',
+  lv12_onsite_time  decimal(38)          comment '一般硬件故障响应时长',
+  lv12_close_time  decimal(38)           comment '一般硬件故障关闭时长',
+  lv13_NUMBER  decimal(38)               comment '严重硬件故障次数',
+  lv13_onsite_time  decimal(38)          comment '严重硬件故障响应时长',
+  lv13_close_time  decimal(38)           comment '严重硬件故障关闭时长',
+  lv14_NUMBER  decimal(38)               comment '钞箱故障次数',
+  lv14_onsite_time  decimal(38)          comment '钞箱故障响应时长',
+  lv14_close_time  decimal(38)           comment '钞箱故障关闭时长',
+  lv15_NUMBER  decimal(38)               comment '通讯故障次数',
+  lv15_onsite_time  decimal(38)          comment '通讯故障响应时长',
+  lv15_close_time  decimal(38)           comment '通讯故障关闭时长',
+  constraint PK_RPT_FAULT_DEV_MONTH_MOD primary key (DEV_NO,DATE_TIME,MOD_NO)
+) comment = '故障统计表（每台每月每个模块）';
+
+create table fail_tx_table 
+(
+  tx_time        varchar(20)      not null comment '交易时间',
+  tx_detail      varchar(2000)    comment '交易报文明细',
+  constraint PK_ATMC_FUNCTION_DEF primary key (tx_time)
+) comment = '故障交易表';

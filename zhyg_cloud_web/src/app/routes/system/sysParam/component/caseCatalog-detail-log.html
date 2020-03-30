@@ -1,0 +1,79 @@
+<form nz-form [formGroup]="validateForm" >
+    <div nz-form-item nz-row >
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label>分类名称</label>
+        </div>
+        <div nz-form-control nz-col [nzSm]="14" [nzXs]="24">
+            <span>{{caseCatalog.catalogName}}</span>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'responsorCatalog'" >负责人类型</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="responsorCatalog" [nzId]="'responsorCatalog'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24" >
+            <label [attr.for]="'onsiteInterval'" >要求在行响应时间(分钟)</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="onsiteInterval" [nzId]="'onsiteInterval'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'onsiteInterval1'">要求在行关闭时间(分钟)</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="onsiteInterval1" [nzId]="'onsiteInterval1'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24" >
+            <label [attr.for]="'closeInterval'" >要求离行响应时间(分钟)</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="closeInterval" [nzId]="'closeInterval'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'closeInterval1'" >要求离行关闭时间(分钟)</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="closeInterval1" [nzId]="'closeInterval1'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'sendMsgMethod'" >升级通知方式</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14"  >
+            <nz-input [nzSize]="'large'" formControlName="sendMsgMethod" [nzId]="'sendMsgMethod'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24" >
+            <label [attr.for]="'maxGrade'" >通知次数</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="maxGrade" [nzId]="'maxGrade'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSm]="6" [nzXs]="24">
+            <label [attr.for]="'notifyWay'">通知方式</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="14" >
+            <nz-input [nzSize]="'large'" formControlName="notifyWay" [nzId]="'notifyWay'" [nzDisabled]="true"></nz-input>
+        </div>
+    </div>
+    <div nz-form-item nz-row style="text-align:center;">
+    <div nz-form-control nz-col [nzSpan]="14" [nzOffset]="6">
+        <button nz-button [nzSize]="'large'" [nzType]="'default'" (click)="cancel()">返回</button>
+    </div>
+    </div>
+</form>

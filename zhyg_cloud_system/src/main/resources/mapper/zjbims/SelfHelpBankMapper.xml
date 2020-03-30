@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.SelfHelpBankDao">
+    <insert id="add" parameterType="SelfHelpBank">
+        insert into selfhelp_bank_table(logic_id,bank_name,bank_area,fhorgno,area_no_province,area_no_city,area_no_county,x,y)
+        values (#{logicId},#{bankName},#{bankArea,jdbcType=VARCHAR},#{fhOrgNo,jdbcType=VARCHAR},#{areaNoProvince,jdbcType=VARCHAR},#{areaNoCity,jdbcType=VARCHAR},#{areaNoCounty,jdbcType=VARCHAR},#{x,jdbcType=VARCHAR},#{y,jdbcType=VARCHAR})
+    </insert>
+     <delete id="del" parameterType="String">
+         delete from selfhelp_bank_table where logic_id=#{logicId}
+     </delete>
+    <update id="mod" parameterType="SelfHelpBank">
+        update selfhelp_bank_table set bank_name=#{bankName},bank_area=#{bankArea,jdbcType=VARCHAR},fhorgno=#{fhOrgNo,jdbcType=VARCHAR},
+        area_no_province=#{areaNoProvince,jdbcType=VARCHAR},area_no_city=#{areaNoCity,jdbcType=VARCHAR},area_no_county=#{areaNoCounty,jdbcType=VARCHAR},x=#{x,jdbcType=VARCHAR},y=#{y,jdbcType=VARCHAR}
+        where logic_id=#{logicId}
+    </update>
+    <select id="qry" resultType="SelfHelpBank" parameterType="Map">
+        select a.*,b.name as orgName from selfhelp_bank_table a,sys_org b where a.fhorgno=b.no
+        <if test="bankName != null&amp;&amp;bankName != ''">
+            and a.bank_name=#{bankName}
+        </if>
+        <if test="bankArea != null&amp;&amp;bankArea != ''">
+            and a.bank_area=#{bankArea}
+        </if>
+        <if test="fhOrgLeftNo != null&amp;&amp;fhOrgLeftNo != ''">
+            and a.fhorgno in
+            (select no from sys_org where left_no >= #{fhOrgLeftNo} and right_no &lt;= #{fhOrgRightNo})
+        </if>
+        <if test="areaNoProvince != null&amp;&amp;areaNoProvince != ''">
+            and a.area_no_province=#{areaNoProvince}
+        </if>
+        <if test="areaNoCity != null&amp;&amp;areaNoCity != ''">
+            and a.area_no_city=#{areaNoCity}
+        </if>
+        <if test="areaNoCounty != null&amp;&amp;areaNoCounty != ''">
+            and a.area_no_county=#{areaNoCounty}
+        </if>
+    </select>
+    <select id="qryById" resultType="SelfHelpBank" parameterType="String">
+        select a.*,b.name as orgName from selfhelp_bank_table a,sys_org b where a.fhorgno=b.no and a.logic_id=#{logicId}
+    </select>
+    <select id="getPronvinces" resultType="Map">
+        select code,code_name from province_city_code where length(code)=2
+    </select>
+    <select id="getCitys" resultType="Map" parameterType="String">
+        select code,code_name from province_city_code where province_code=#{provinceCode} and city_code is null
+    </select>
+    <select id="getCountys" resultType="Map" parameterType="String">
+        select code,code_name from province_city_code where code like concat(#{cityCode},'%') and city_code is not null
+    </select>
+    <select id="qryAreaNameByCode" resultType="String" parameterType="String">
+        select code_name from province_city_code where code=#{code}
+    </select>
+    <select id="getOrgByNo" parameterType="String" resultType="Org">
+        select * from sys_org where no = #{fhOrgNo}
+    </select>
+
+</mapper>

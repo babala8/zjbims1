@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.zhyg.system.dao.DevModCatalogDao">
+    <select id="qryAllModCatalog" resultType="com.zjft.zhyg.system.pojo.DevModCatalog">
+        select no,name from mod_catalog_table
+    </select>
+</mapper>

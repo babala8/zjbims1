@@ -1,0 +1,93 @@
+<div class="sum-container">
+    <!--头部-->
+    <div class="page-top-title">
+        <div class="timer"><i class="anticon anticon-clock-circle-o"></i><span >{{curDateTime|date: 'yyyy-MM-dd HH: mm: ss'}}</span></div>
+        <span class="close">
+                  <i class="anticon anticon-close" (click)="back()"></i>
+            </span>
+        <span class="word-title">全行管理类大屏展示</span>
+    </div>
+    <!--头部结束-->
+    <!--    上面部分start-->
+    <div class="charts-top ">
+
+        <div class="top-item chart-item width1">
+            <div class="chart-title">
+                <img src="../../../../assets/img/devNumber.png" alt=""/>
+                设备数量
+            </div>
+            <div class="chart3" #deviceNumCharts echarts [options]="deviceNumPie_option"></div>
+        </div>
+        <div class="top-item chart-item width3">
+            <div class="chart-title">
+                <img src="../../../../assets/img/devOperatingRate.png" alt=""/>
+                设备开机率
+            </div>
+            <div class="chart3" #bootRatioCharts echarts [options]="bootRatio_option"></div>
+        </div>
+        <div class="top-item chart-item width2">
+            <div class="chart-title">
+                <img src="../../../../assets/img/devCash.png" alt=""/>
+                设备现金库存
+            </div>
+            <div class="chart3" #cashInventoryBar echarts [options]="cashInventory_option"></div>
+        </div>
+
+        <div class="top-item chart-item width1">
+            <div class="chart-title">
+                <img src="../../../../assets/img/devNumber.png" alt=""/>
+                设备吞卡率排名
+            </div>
+            <div class="table" >
+                <div class="self-th">
+                    <div class="self-td size1">排名</div>
+                    <div class="self-td size2">设备品牌</div>
+                    <div class="self-td size2">平均吞卡率</div>
+                </div>
+                <div class="self-tr" *ngFor="let item of dataSet;let i = index">
+                    <div class="self-td size1">
+                        <i *ngIf="i===0"><img src="assets/img/Trophy.png" alt=""></i>
+                        <i *ngIf="i===1"><img src="assets/img/Trophy1.png" alt="" ></i>
+                        <i *ngIf="i===2"><img src="assets/img/Trophy2.png" alt="" ></i>
+                        {{i>2?i+1:''}}
+                    </div>
+                    <div class="self-td size2">
+                        {{item.name}}
+                    </div>
+                    <div class="self-td size2">{{item.value}}</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--    上面部分 end-->
+    <!--    下面部分start-->
+    <div class="charts-bottom">
+        <div class="b-item chart-item">
+            <div class="chart-title">
+                <img src="../../../../assets/img/paperOutageRate.png" alt=""/>
+                缺纸停机率
+            </div>
+            <div class="chart4" #paperDownCharts echarts [options]="paperDowntime_option"></div>
+        </div>
+        <div class="b-item chart-item">
+            <div class="chart-title">
+                <img src="../../../../assets/img/dailyWorkTrend.png" alt=""/>
+                每日工单走势
+            </div>
+            <div class="chart4" #faultAnalysisCharts echarts [options]="faultAnalysis_option"></div>
+        </div>
+        <div class="b-item chart-item">
+            <div class="chart-title">
+                <img src="../../../../assets/img/dailyWorkTrend.png" alt=""/>
+                柜面走势
+            </div>
+            <div class="chart4"  #CounterCharts echarts [options]="option_counter" ></div>
+        </div>
+    </div>
+    <!--    下面部分end-->
+</div>
+
+    <ng-template #trigger>
+        <i class="anticon anticon-up"></i>
+    </ng-template>
