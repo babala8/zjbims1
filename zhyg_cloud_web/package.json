@@ -63,7 +63,7 @@
         "jquery": "^3.4.1",
         "jquery-mousewheel": "^3.1.13",
         "jsoneditor": "^5.14.0",
-        "jspdf": "^1.5.3",
+        "jspdf": "^2.3.1",
         "mobx": "^3.6.2",
         "moment": "^2.19.3",
         "ng-zorro-antd": "^0.6.5",
